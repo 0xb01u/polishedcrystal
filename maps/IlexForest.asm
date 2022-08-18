@@ -418,8 +418,13 @@ MapIlexForestSignpost4Script:
 	iftrue .AskCelebiEvent
 .DontDoCelebiEvent:
 	checkevent EVENT_TIME_TRAVEL_FINISHED
-	iftrue .DontDoGiovanniEvent
+	iftrue .RedoGiovanniEvent
 	checkpoke CELEBI
+	iftrue .StartGiovanniEvent
+.RedoGiovanniEvent
+	checkpoke CELEBI
+	iffalse .DontDoGiovanniEvent
+	writeText Text_RedoGiovanniEvent
 	iftrue .StartGiovanniEvent
 .DontDoGiovanniEvent
 	jumptext Text_IlexForestShrine
@@ -464,6 +469,7 @@ MapIlexForestSignpost4Script:
 
 .StartGiovanniEvent:
 	showtext Text_IlexForestShrine
+.RestartGiovanniEvent:
 	showemote EMOTE_SHOCK, PLAYER, 15
 	appear ILEXFOREST_CELEBI
 	playsound SFX_BALL_POOF
@@ -1095,6 +1101,23 @@ Text_IlexForestLyraGoodbye:
 	line "too, <PLAYER>."
 
 	para "See you!"
+	done
+
+Text_RedoGiovanniEvent:
+	text "Ilex Forest"
+	line "Shrine…"
+
+	para "It's in honor of"
+	line "the forest's"
+	cont "protector…"
+
+	para "Oh? What is this?"
+
+	para "A distant whisper"
+	line "can be heard:"
+
+	para "… Do you want to"
+	line "relive that day?…"
 	done
 
 Bug_catcherWayneSeenText:
