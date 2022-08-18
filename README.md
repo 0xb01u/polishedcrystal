@@ -5,6 +5,7 @@ This repository contains my custom, modified version of Pokémon Polished Crysta
 ## List of modifications
 
  - Considerably increased the chance of Pokémon to be shiny: from 1/4096 to 1/64 (1.56%); and from 3/4096 to 1/16 (6.25%) if the player has the shiny charm.
+ - Made the Move Reminder free (no longer requires one Gold Leaf per move reminded).
  - [SPOILERS for that one Celebi event] Allow to rebattle Giovanni by bringing Celebi to the Ilex Forest again.
 
 # Original Pokémon Polished Crystal README

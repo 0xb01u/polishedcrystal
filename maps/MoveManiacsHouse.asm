@@ -19,9 +19,9 @@ MoveReminderScript:
 	faceplayer
 	opentext
 	writetext MoveReminderIntroText
-	waitbutton
-	checkitem GOLD_LEAF
-	iffalse .no_gold_leaf
+	; waitbutton
+	; checkitem GOLD_LEAF
+	; iffalse .no_gold_leaf
 	writetext MoveReminderPromptText
 	yesorno
 	iffalse .refused
@@ -45,11 +45,13 @@ MoveReminderIntroText::
 	line "Move Maniac."
 
 	para "I'll make your"
-	line "#mon remember"
+	; line "#mon remember"
+	line "#mon remember a"
 
-	para "a move if you'll"
-	line "trade me a"
-	cont "Gold Leaf!"
+	; para "a move if you'll"
+	; line "trade me a"
+	; cont "Gold Leaf!"
+	cont "move if you want!"
 	done
 
 MoveReminderPromptText::
@@ -85,6 +87,7 @@ MoveReminderCancelText::
 	text "If your #mon"
 	line "needs to learn a"
 
-	para "move, come back"
-	line "with a Gold Leaf!"
+	; para "move, come back"
+	; line "with a Gold Leaf!"
+	para "move, come back!"
 	done
