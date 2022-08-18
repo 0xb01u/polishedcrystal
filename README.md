@@ -1,4 +1,12 @@
-# Pokémon Polished Crystal
+# Bolu's modifications to Pokémon Polished Crystal
+
+This repository contains my custom, modified version of Pokémon Polished Crystal. The modifications consist on small tweaks that make the experience more ejoyable for me.
+
+## List of modifications
+
+ - Considerably increased the chance of Pokémon to be shiny: from 1/4096 to 1/64 (1.56%); and from 3/4096 to 1/16 (6.25%) if the player has the shiny charm.
+
+# Original Pokémon Polished Crystal README
 
 This is a custom Pokémon game based on [the Pokémon Crystal disassembly](https://github.com/pret/pokecrystal).
 
