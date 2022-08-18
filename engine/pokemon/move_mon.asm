@@ -334,9 +334,9 @@ endr
 	jr z, .not_shiny
 
 .shiny_check
-	call Random
-	and a
-	jr nz, .not_shiny ; 255/256 not shiny
+	; call Random
+	; and a
+	; jr nz, .not_shiny ; 255/256 not shiny
 	ld a, [wCurKeyItem]
 	push af
 	ld a, SHINY_CHARM
