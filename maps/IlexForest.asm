@@ -425,7 +425,7 @@ MapIlexForestSignpost4Script:
 	checkpoke CELEBI
 	iffalse .DontDoGiovanniEvent
 	writeText Text_RedoGiovanniEvent
-	iftrue .StartGiovanniEvent
+	iftrue .RestartGiovanniEvent
 .DontDoGiovanniEvent
 	jumptext Text_IlexForestShrine
 
