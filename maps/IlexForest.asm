@@ -424,8 +424,15 @@ MapIlexForestSignpost4Script:
 .RedoGiovanniEvent
 	checkpoke CELEBI
 	iffalse .DontDoGiovanniEvent
-	writeText Text_RedoGiovanniEvent
-	iftrue .RestartGiovanniEvent
+	opentext
+	writetext Text_RedoGiovanniEvent
+	; TODO: Show emotes here, not only text
+	yesorno
+	iftrue .CloseTextAndRestartGiovanniEvent
+	endtext
+.CloseTextAndRestartGiovanniEvent
+	closetext
+	sjump .RestartGiovanniEvent
 .DontDoGiovanniEvent
 	jumptext Text_IlexForestShrine
 
@@ -948,7 +955,7 @@ Text_IlexForestTutorTaught:
 	done
 
 Text_IlexForestLass:
-	text "Did something"
+	text "Text_IlexForestShrineDid something"
 	line "happen to the"
 	cont "forest's guardian?"
 	done

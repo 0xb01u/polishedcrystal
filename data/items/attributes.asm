@@ -585,4 +585,8 @@ KeyItemAttributes:
 	key_item_attribute 0, ITEMMENU_CURRENT, ITEMMENU_NOUSE
 ; TYPE CHART
 	key_item_attribute 0, ITEMMENU_CURRENT, ITEMMENU_CURRENT
+; EXP.ALL
+	key_item_attribute 0, ITEMMENU_CURRENT, ITEMMENU_NOUSE
+; EXP.SHARE V6
+	key_item_attribute 0, ITEMMENU_CURRENT, ITEMMENU_NOUSE
 	assert_table_length NUM_KEY_ITEMS

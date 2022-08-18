@@ -615,4 +615,6 @@ NUM_APRICORNS EQU const_value - 1
 	const SILPHSCOPE2  ; 1b
 	const APRICORN_BOX ; 1c
 	const TYPE_CHART   ; 1d
+	const EXP_ALL      ; 1e
+	const EXP_SHARE_V6 ; 1f
 NUM_KEY_ITEMS EQU const_value

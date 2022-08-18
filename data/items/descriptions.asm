@@ -287,6 +287,8 @@ KeyItemDescriptions:
 	dw SilphScope2Desc
 	dw ApricornBoxDesc
 	dw TypeChartDesc
+	dw ExpAllDesc
+	dw ExpShareV6Desc
 
 PokeBallDesc:
 	db   "An item for catch-"
@@ -1377,3 +1379,11 @@ ApricornBoxDesc:
 TypeChartDesc:
 	db   "Summarizes all"
 	next "type advantages.@"
+
+ExpAllDesc:
+	db   "Gives Exp. to all"
+	next "#mon in party.@"
+
+ExpShareV6Desc:
+	db   "Combines Exp."
+	next "Share + Exp.All.@"

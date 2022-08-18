@@ -1947,6 +1947,30 @@ GetExpShareParticipants:
 	pop hl
 	jr z, .next
 
+	ld a, [wCurKeyItem]
+	push af
+	ld a, EXP_ALL
+	ld [wCurKeyItem], a
+	push hl
+	push bc
+	push de
+	call CheckKeyItem
+	pop de
+	pop bc
+	pop hl
+	jr c, .add_one_participant
+
+	ld a, EXP_SHARE_V6
+	ld [wCurKeyItem], a
+	push hl
+	push bc
+	push de
+	call CheckKeyItem
+	pop de
+	pop bc
+	pop hl
+	jr c, .add_one_participant
+
 	push hl
 	push bc
 	ld bc, MON_ITEM
@@ -1956,11 +1980,16 @@ GetExpShareParticipants:
 	pop hl
 
 	cp EXP_SHARE
-	jr nz, .next
+	jr nz, .pre_next
+
+.add_one_participant
 	ld a, d
 	or c
 	ld d, a
 
+.pre_next
+	pop af
+	ld [wCurKeyItem], a
 .next
 	sla c
 	push de
@@ -6584,19 +6613,60 @@ GiveExperiencePoints:
 	; If p or e is zero, just do 1/p or 1/e.
 	; Otherwise; P=e if participant, otherwise 0, E=p if holder, otherwise 0
 	; exp = current(E+P)/(2ep)
+
+	; First check if Exp All or Gen 6 Exp Share is active
+	ld a, [wCurKeyItem]
+	push af
+	ld a, EXP_ALL
+	ld [wCurKeyItem], a
+	push hl
+	push bc
+	push de
+	call CheckKeyItem
+	pop de
+	pop bc
+	pop hl
+	jr c, .pre_not_single_factor
+
+	ld a, EXP_SHARE_V6
+	ld [wCurKeyItem], a
+	push hl
+	push bc
+	push de
+	call CheckKeyItem
+	pop de
+	pop bc
+	pop hl
+	jr c, .pre_not_single_factor
+
+	pop af
+	ld [wCurKeyItem], a
+
 	ld a, [wGivingExperienceToExpShareHolders]
 	ld d, a
 	call GetParticipantsNotFainted
 	ld e, a
 	and a
 	ld a, d
-	jr z, .single_factor
+	jr z, .single_factor_middle_fixup
 	and a
 	ld a, e
-	jr z, .single_factor
+	jr z, .single_factor_middle_fixup
+	jr .not_single_factor
 
 	; We are dealing with both participants and exp share holders.
 	; First, verify that we are a participant.
+.pre_not_single_factor
+	; Repeated code to properly set d, e and a, due to
+	; Exp.All / Gen 6 Exp.Share checks
+	pop af
+	ld [wCurKeyItem], a
+
+	ld a, [wGivingExperienceToExpShareHolders]
+	ld d, a
+	call GetParticipantsNotFainted
+	ld e, a
+.not_single_factor	
 	push de
 	ld b, 0
 	ld hl, wGivingExperienceToExpShareHolders
@@ -6626,18 +6696,75 @@ GiveExperiencePoints:
 	pop af
 	jr z, .done_participants_pe
 	set 1, b
+	jr .done_participants_pe
+
+.single_factor_middle_fixup
+	jr .single_factor
 
 .done_participants_pe
+	ld a, [wCurKeyItem]
+	push af
+
 	push de
 	xor a
-	bit 0, b
-	jr z, .not_a_participant
-	add e
-.not_a_participant
 	bit 1, b
-	jr z, .not_a_holder
+	jr z, .not_a_participant
 	add d
+	
+	; If Exp All or Gen 6 Exp Share, participants can't be holders
+	; at the same time.
+	push af
+	ld a, EXP_ALL
+	ld [wCurKeyItem], a
+	push hl
+	push bc
+	push de
+	call CheckKeyItem
+	pop de
+	pop bc
+	pop hl
+	jr c, .subtract_participants_from_holders
+
+	ld a, EXP_SHARE_V6
+	ld [wCurKeyItem], a
+	push hl
+	push bc
+	push de
+	call CheckKeyItem
+	pop de
+	pop bc
+	pop hl
+	jr c, .gen_6_participant
+	pop af
+	jr .not_a_participant
+
+.subtract_participants_from_holders ; Exp.All thing
+	ld a, d
+	sub e
+	ld d, a
+	jr .post_not_a_holder
+
+.not_a_participant
+	bit 0, b
+	jr z, .not_a_holder
+	add e
 .not_a_holder
+	; Check if Gen 6 Exp Share is active,
+	; to modify the divisor properly
+	push af
+.post_not_a_holder
+	ld a, EXP_SHARE_V6
+	ld [wCurKeyItem], a
+	push hl
+	push bc
+	push de
+	call CheckKeyItem
+	pop de
+	pop bc
+	pop hl
+	jr c, .gen_6_shared
+	pop af
+
 	ldh [hMultiplier], a
 	call Multiply
 	pop de
@@ -6648,6 +6775,28 @@ GiveExperiencePoints:
 	ldh [hDivisor], a
 	ld b, 4
 	call Divide
+	pop af
+	ld [wCurKeyItem], a
+	jr .done_sharing_exp
+
+.gen_6_participant
+	pop af
+	; TODO: Check if exp should be divided
+	; among participants
+	pop de
+	pop af
+	ld [wCurKeyItem], a
+	jr .done_sharing_exp
+
+.gen_6_shared
+	pop af
+	pop de
+	ld a, 2
+	ldh [hDivisor], a
+	ld b, 4
+	call Divide
+	pop af
+	ld [wCurKeyItem], a
 	jr .done_sharing_exp
 
 .single_factor

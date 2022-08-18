@@ -149,6 +149,9 @@ ElmCheckEverstone:
 	iftrue_jumpopenedtext ElmText_CallYou
 	checkevent EVENT_SHOWED_TOGEPI_TO_ELM
 	iftrue ElmGiveEverstoneScript
+	checkevent EVENT_GOT_EXP_SHARE_FROM_PROF_OAKS_AIDE
+	; TODO: make this cancellable
+	iftrue ElmGiveExpAllScript
 	checkevent EVENT_TOLD_ELM_ABOUT_TOGEPI_OVER_THE_PHONE
 	iffalse ElmCheckTogepiEgg
 	setval TOGEPI
@@ -486,6 +489,35 @@ ElmGiveTicketScript:
 	turnobject ELMSLAB_LYRA, UP
 	turnobject PLAYER, DOWN
 	end
+
+ElmGiveExpAllScript:
+	checkkeyitem EXP_ALL
+	iftrue ElmTakeExpAllScript
+	checkkeyitem EXP_SHARE_V6
+	iftrue ElmChangeToExpAllScript
+
+	writetext ElmExpShareV6Text
+	waitbutton
+	verbosegivekeyitem EXP_SHARE_V6
+	endtext
+
+ElmChangeToExpAllScript:
+	writetext ElmExpAllText
+	yesorno
+	iffalse .end
+	takekeyitem EXP_SHARE_V6
+	verbosegivekeyitem EXP_ALL
+.end
+	endtext
+
+ElmTakeExpAllScript:
+	writetext ElmExpAllTakeText
+	yesorno
+	iffalse .end
+	takekeyitem EXP_ALL
+.end
+	endtext
+
 
 ElmJumpBackScript1:
 	closetext
@@ -1360,6 +1392,37 @@ ElmChallengeText:
 
 	para "How about it,"
 	line "<PLAYER>?"
+	done
+
+ElmExpShareV6Text:
+	text "Elm: Oh, <PLAYER>,"
+	line "is that an"
+	cont "Exp.Share?"
+
+	para "We recently"
+	line "developed an"
+	cont "improved version"
+	cont "based on the old"
+	cont "Exp.All device."
+
+	para "Here, try it!"
+	done
+
+ElmExpAllText:
+	text "Elm: I still have"
+	line "one Exp.All"
+	cont "around here…"
+
+	para "Do you want to"
+	line "change your"
+	cont "Exp.Share v6"
+	cont "for it?"
+	done
+
+ElmExpAllTakeText:
+	text "Elm: Oh, <PLAYER>,"
+	line "could you give me"
+	cont "back the Exp.All?"
 	done
 
 ElmSeenText:

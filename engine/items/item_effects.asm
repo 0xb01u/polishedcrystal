@@ -312,6 +312,8 @@ KeyItemEffects:
 	dw IsntTheTimeMessage ; SILPHSCOPE2
 	dw ApricornBox        ; APRICORN_BOX
 	dw TypeChart          ; TYPE_CHART
+	dw IsntTheTimeMessage ; EXP.ALL
+	dw IsntTheTimeMessage ; EXP.SHARE V6
 	assert_table_length NUM_KEY_ITEMS
 
 PokeBallEffect:

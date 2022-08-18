@@ -288,3 +288,5 @@ KeyItemIconPointers:
 	dba SilphScope2Icon
 	dba ApricornBoxIcon
 	dba TypeChartIcon
+	dba ExpShareV6Icon
+	dba ExpAllIcon

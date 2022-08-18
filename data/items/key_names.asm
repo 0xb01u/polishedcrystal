@@ -31,4 +31,6 @@ KeyItemNames::
 	li "SilphScope2"
 	li "Apricorn Box"
 	li "Type Chart"
+	li "Exp.All"
+	li "Exp.Share v6"
 	assert_list_length NUM_KEY_ITEMS + 1
