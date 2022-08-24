@@ -149,9 +149,6 @@ ElmCheckEverstone:
 	iftrue_jumpopenedtext ElmText_CallYou
 	checkevent EVENT_SHOWED_TOGEPI_TO_ELM
 	iftrue ElmGiveEverstoneScript
-	checkevent EVENT_GOT_EXP_SHARE_FROM_PROF_OAKS_AIDE
-	; TODO: make this cancellable
-	iftrue ElmGiveExpAllScript
 	checkevent EVENT_TOLD_ELM_ABOUT_TOGEPI_OVER_THE_PHONE
 	iffalse ElmCheckTogepiEgg
 	setval TOGEPI
@@ -490,32 +487,58 @@ ElmGiveTicketScript:
 	turnobject PLAYER, DOWN
 	end
 
-ElmGiveExpAllScript:
+
+AideGiveExpAllScript:
 	checkkeyitem EXP_ALL
-	iftrue ElmTakeExpAllScript
+	iftrue .AideChangeOrTakeExpAll
 	checkkeyitem EXP_SHARE_V6
-	iftrue ElmChangeToExpAllScript
+	iftrue AideTakeExpShareV6Script
 
-	writetext ElmExpShareV6Text
-	waitbutton
-	verbosegivekeyitem EXP_SHARE_V6
-	endtext
-
-ElmChangeToExpAllScript:
-	writetext ElmExpAllText
+	writetext AideExpAllText
 	yesorno
 	iffalse .end
-	takekeyitem EXP_SHARE_V6
 	verbosegivekeyitem EXP_ALL
+	writetext AideExpAllExplainText
+	endtext
 .end
+	writetext AideExpAnsweredNo
 	endtext
 
-ElmTakeExpAllScript:
-	writetext ElmExpAllTakeText
+.AideChangeOrTakeExpAll
+	checkevent EVENT_BEAT_ELITE_FOUR
+	iftrue AideChangeToExpShareV6Script
+
+	writetext AideExpAllTakeText
 	yesorno
 	iffalse .end
 	takekeyitem EXP_ALL
+	writetext AideExpTakePostText
+	endtext
 .end
+	writetext AideExpAnsweredNo
+	endtext
+
+AideChangeToExpShareV6Script:
+	writetext AideExpShareV6Text
+	yesorno
+	iffalse .end
+	takekeyitem EXP_ALL
+	verbosegivekeyitem EXP_SHARE_V6
+	writetext AideExpShareV6ExplainText
+	endtext
+.end
+	writetext AideExpAnsweredNo
+	endtext
+
+AideTakeExpShareV6Script:
+	writetext AideExpShareV6TakeText
+	yesorno
+	iffalse .end
+	takekeyitem EXP_SHARE_V6
+	writetext AideExpTakePostText
+	endtext
+.end
+	writetext AideExpAnsweredNo
 	endtext
 
 
@@ -647,6 +670,8 @@ AideScript_GivePotions:
 	jumpopenedtext AideText_AlwaysBusy
 
 ElmsAideScript:
+	checkevent EVENT_GOT_EXP_SHARE_FROM_PROF_OAKS_AIDE
+	iftrue AideGiveExpAllScript
 	checkevent EVENT_GOT_RIVALS_EGG
 	iftrue_jumptextfaceplayer AideText_AlwaysBusy
 	checkevent EVENT_GOT_TOGEPI_EGG_FROM_ELMS_AIDE
@@ -1394,35 +1419,107 @@ ElmChallengeText:
 	line "<PLAYER>?"
 	done
 
-ElmExpShareV6Text:
-	text "Elm: Oh, <PLAYER>,"
-	line "is that an"
-	cont "Exp.Share?"
+AideExpAllText:
+	text "I heard you've"
+	line "received one"
+	cont "Exp.Share…"
+
+	para "Back in the day"
+	line "we used the"
+	cont "Exp.All instead."
+
+	para "Look, I have one"
+	line "right here."
+
+	para "I can lend it to"
+	line "you if you want."
+	done
+
+AideExpAllExplainText:
+	text "Exp.All shares"
+	line "half of the"
+	cont "battle experience"
+	cont "with the #mon"
+	cont "that did not"
+	cont "battle at all."
+
+	para "It's like if"
+	line "all the #mon"
+	cont "that did not"
+	cont "battle were"
+	cont "holding an"
+	cont "Exp.Share!"
+	done
+
+AideExpShareV6Text:
+	text "Oh, there you"
+	line "are, <PLAYER>."
 
 	para "We recently"
 	line "developed an"
-	cont "improved version"
+	cont "improved"
+	cont "Exp.Share version"
 	cont "based on the old"
 	cont "Exp.All device."
 
-	para "Here, try it!"
+	para "I will give you"
+	line "one in exchange"
+	cont "for the Exp.All."
 	done
 
-ElmExpAllText:
-	text "Elm: I still have"
-	line "one Exp.All"
-	cont "around here…"
+AideExpShareV6ExplainText:
+	text "The Exp.Share v6"
+	line "works like the"
+	cont "Exp.All, but"
+	cont "all #mon receive"
+	cont "more battle"
+	cont "experience."
 
-	para "Do you want to"
-	line "change your"
-	cont "Exp.Share v6"
-	cont "for it?"
+	para "All #mon that did"
+	line "battle receive"
+	cont "the full battle"
+	cont "experience."
+
+	para "All #mon that did"
+	line "not battle"
+	cont "receive half of"
+	cont "the battle"
+	cont "experience."
 	done
 
-ElmExpAllTakeText:
-	text "Elm: Oh, <PLAYER>,"
+AideExpAllTakeText:
+	text "Oh, <PLAYER>,"
 	line "could you give me"
 	cont "back the Exp.All?"
+	done
+
+AideExpShareV6TakeText:
+	text "Oh, <PLAYER>,"
+	line "have you come to"
+	cont "return the"
+	cont "Exp.Share v6?"
+	done
+
+AideExpAllTakeText:
+	text "Oh, <PLAYER>,"
+	line "have you come to"
+	cont "return the"
+	cont "Exp.All?"
+	done
+
+AideExpTakePostText
+	text "If you ever"
+	line "want to use any"
+	cont "of my devices"
+	cont "again, just"
+	cont "tell me."
+	done
+
+AideExpAnsweredNo
+	text "If you change"
+	line "your mind, you"
+	cont "know where to"
+	cont "find me."
 	done
 
 ElmSeenText:
