@@ -490,7 +490,7 @@ ElmGiveTicketScript:
 
 AideGiveExpAllScript:
 	checkkeyitem EXP_ALL
-	iftrue .AideChangeOrTakeExpAll
+	iftrue AideChangeOrTakeExpAll
 	checkkeyitem EXP_SHARE_V6
 	iftrue AideTakeExpShareV6Script
 
@@ -504,7 +504,7 @@ AideGiveExpAllScript:
 	writetext AideExpAnsweredNo
 	endtext
 
-.AideChangeOrTakeExpAll
+AideChangeOrTakeExpAll:
 	checkevent EVENT_BEAT_ELITE_FOUR
 	iftrue AideChangeToExpShareV6Script
 
@@ -1487,12 +1487,6 @@ AideExpShareV6ExplainText:
 	cont "experience."
 	done
 
-AideExpAllTakeText:
-	text "Oh, <PLAYER>,"
-	line "could you give me"
-	cont "back the Exp.All?"
-	done
-
 AideExpShareV6TakeText:
 	text "Oh, <PLAYER>,"
 	line "have you come to"
@@ -1507,15 +1501,15 @@ AideExpAllTakeText:
 	cont "Exp.All?"
 	done
 
-AideExpTakePostText
+AideExpTakePostText:
 	text "If you ever"
-	line "want to use any"
+	line "want to use one"
 	cont "of my devices"
 	cont "again, just"
 	cont "tell me."
 	done
 
-AideExpAnsweredNo
+AideExpAnsweredNo:
 	text "If you change"
 	line "your mind, you"
 	cont "know where to"
