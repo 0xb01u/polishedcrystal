@@ -1392,6 +1392,7 @@ RadioChannels:
 	dbw 40, .BuenasPassword
 	dbw 52, .RuinsOfAlphRadio
 	dbw 64, .PlacesAndPeople
+	dbw 70, .SpookiRadio
 	dbw 72, .LetsAllSing
 	dbw 78, .PokeFluteRadio
 	dbw 80, .EvolutionRadio
@@ -1436,6 +1437,12 @@ RadioChannels:
 	bit 3, a
 	jr z, NoRadioStation
 	jmp LoadStation_PlacesAndPeople
+
+.SpookiRadio:
+	ld a, [wPokegearMapPlayerIconLandmark]
+	cp LAVENDER_TOWN
+	jr nz, NoRadioStation
+	jmp LoadStation_SpookiRadio
 
 .LetsAllSing:
 	call .InJohto
@@ -1545,6 +1552,11 @@ LoadStation_PlacesAndPeople:
 	ld de, PlacesAndPeopleName
 	jr LoadRadioStation
 
+LoadStation_PlacesAndPeople:
+	ld a, SPOOKI_RADIO
+	ld de, SpookiRadioName
+	jr LoadRadioStation
+
 LoadStation_LetsAllSing:
 	ld a, LETS_ALL_SING
 	ld de, LetsAllSingName
@@ -1610,6 +1622,7 @@ LuckyChannelName:     db "Lucky Channel@"
 UnknownStationName:   db "?????@"
 
 PlacesAndPeopleName:  db "Places & People@"
+SpookiRadioName:      db "Bad frequency@"
 LetsAllSingName:      db "Let's All Sing!@"
 PokeFluteStationName: db "# Flute@"
 

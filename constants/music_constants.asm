@@ -192,7 +192,7 @@
 	const MUSIC_TRAINER_BATTLE_PRISM           ; bc ; unused
 	const MUSIC_GYM_LEADER_BATTLE_PRISM        ; bd ; unused
 	const MUSIC_PALETTE_BATTLE_PRISM           ; be ; unused
-	const MUSIC_UNDERTALE_MEGALOVANIA          ; bf ; unused
+	const MUSIC_UNDERTALE_MEGALOVANIA          ; bf ; ~~unused~~ Now it is ;)
 NUM_MUSIC_SONGS EQU const_value
 
 ; GetMapMusic picks music for these values (see data/maps/special_map_music.asm)
