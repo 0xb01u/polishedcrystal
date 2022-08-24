@@ -1123,8 +1123,8 @@ Text_RedoGiovanniEvent:
 	para "A distant whisper"
 	line "can be heard:"
 
-	para "… Do you want to"
-	line "relive that day?…"
+	para "“… Do you want to"
+	line "relive that day?…”"
 	done
 
 Bug_catcherWayneSeenText:
