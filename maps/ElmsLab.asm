@@ -489,6 +489,8 @@ ElmGiveTicketScript:
 
 
 AideGiveExpAllScript:
+	faceplayer
+	opentext
 	checkkeyitem EXP_ALL
 	iftrue AideChangeOrTakeExpAll
 	checkkeyitem EXP_SHARE_V6
@@ -499,9 +501,11 @@ AideGiveExpAllScript:
 	iffalse .end
 	verbosegivekeyitem EXP_ALL
 	writetext AideExpAllExplainText
+	waitbutton
 	endtext
 .end
 	writetext AideExpAnsweredNo
+	waitbutton
 	endtext
 
 AideChangeOrTakeExpAll:
@@ -513,9 +517,11 @@ AideChangeOrTakeExpAll:
 	iffalse .end
 	takekeyitem EXP_ALL
 	writetext AideExpTakePostText
+	waitbutton
 	endtext
 .end
 	writetext AideExpAnsweredNo
+	waitbutton
 	endtext
 
 AideChangeToExpShareV6Script:
@@ -525,9 +531,11 @@ AideChangeToExpShareV6Script:
 	takekeyitem EXP_ALL
 	verbosegivekeyitem EXP_SHARE_V6
 	writetext AideExpShareV6ExplainText
+	waitbutton
 	endtext
 .end
 	writetext AideExpAnsweredNo
+	waitbutton
 	endtext
 
 AideTakeExpShareV6Script:
@@ -536,9 +544,11 @@ AideTakeExpShareV6Script:
 	iffalse .end
 	takekeyitem EXP_SHARE_V6
 	writetext AideExpTakePostText
+	waitbutton
 	endtext
 .end
 	writetext AideExpAnsweredNo
+	waitbutton
 	endtext
 
 
@@ -1420,8 +1430,8 @@ ElmChallengeText:
 	done
 
 AideExpAllText:
-	text "I heard you've"
-	line "received one"
+	text "I heard you"
+	line "received an"
 	cont "Exp.Share…"
 
 	para "Back in the day"
@@ -1446,9 +1456,8 @@ AideExpAllExplainText:
 	para "It's like if"
 	line "all the #mon"
 	cont "that did not"
-	cont "battle were"
-	cont "holding an"
-	cont "Exp.Share!"
+	cont "battle were hold-"
+	cont "ing an Exp.Share!"
 	done
 
 AideExpShareV6Text:
@@ -1470,18 +1479,19 @@ AideExpShareV6Text:
 AideExpShareV6ExplainText:
 	text "The Exp.Share v6"
 	line "works like the"
-	cont "Exp.All, but"
-	cont "all #mon receive"
+	cont "Exp.All, but all"
+	cont "#mon receive"
 	cont "more battle"
 	cont "experience."
 
-	para "All #mon that did"
-	line "battle receive"
-	cont "the full battle"
-	cont "experience."
+	para "All #mon that"
+	line "did battle"
+	cont "receive the full"
+	cont "battle experien-"
+	cont "ce."
 
-	para "All #mon that did"
-	line "not battle"
+	para "All #mon that"
+	line "did not battle"
 	cont "receive half of"
 	cont "the battle"
 	cont "experience."
