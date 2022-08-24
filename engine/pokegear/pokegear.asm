@@ -1403,11 +1403,14 @@ RadioChannels:
 
 ; Oak's Pokémon Talk in the afternoon and evening
 	call .InJohto
-	jr nc, NoRadioStation
+	jr nc, .NoRadioStation_far_fixup
 	ld a, [wTimeOfDay]
 	and a
 	jmp z, LoadStation_PokedexShow
 	jmp LoadStation_OaksPokemonTalk
+	
+.NoRadioStation_far_fixup:
+	jr NoRadioStation
 
 .PokemonMusic:
 	call .InJohto

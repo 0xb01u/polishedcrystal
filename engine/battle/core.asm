@@ -6648,10 +6648,10 @@ GiveExperiencePoints:
 	ld e, a
 	and a
 	ld a, d
-	jr z, .single_factor_middle_fixup
+	jr z, .single_factor_far_fixup
 	and a
 	ld a, e
-	jr z, .single_factor_middle_fixup
+	jr z, .single_factor_far_fixup
 	jr .not_single_factor
 
 	; We are dealing with both participants and exp share holders.
@@ -6698,7 +6698,7 @@ GiveExperiencePoints:
 	set 1, b
 	jr .done_participants_pe
 
-.single_factor_middle_fixup
+.single_factor_far_fixup
 	jr .single_factor
 
 .done_participants_pe
