@@ -1552,7 +1552,7 @@ LoadStation_PlacesAndPeople:
 	ld de, PlacesAndPeopleName
 	jr LoadRadioStation
 
-LoadStation_PlacesAndPeople:
+LoadStation_SpookiRadio:
 	ld a, SPOOKI_RADIO
 	ld de, SpookiRadioName
 	jr LoadRadioStation
