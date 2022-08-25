@@ -313,8 +313,6 @@ DragonairFrontpic:        INCBIN "gfx/pokemon/dragonair/front.animated.2bpp.lz"
 DragonairBackpic:         INCBIN "gfx/pokemon/dragonair/back.2bpp.lz"
 DragoniteFrontpic:        INCBIN "gfx/pokemon/dragonite/front.animated.2bpp.lz"
 DragoniteBackpic:         INCBIN "gfx/pokemon/dragonite/back.2bpp.lz"
-MewFrontpic:              INCBIN "gfx/pokemon/mew/front.animated.2bpp.lz"
-MewBackpic:               INCBIN "gfx/pokemon/mew/back.2bpp.lz"
 
 
 SECTION "Pokemon Pics 16", ROMX
@@ -727,6 +725,11 @@ MewtwoPlainBackpic:       INCBIN "gfx/pokemon/mewtwo_plain/back.2bpp.lz"
 MewtwoArmoredFrontpic:    INCBIN "gfx/pokemon/mewtwo_armored/front.animated.2bpp.lz"
 MewtwoArmoredBackpic:     INCBIN "gfx/pokemon/mewtwo_armored/back.2bpp.lz"
 
+SECTION "Mew Pics", ROMX
+MewFrontpic:              INCBIN "gfx/pokemon/mew/front.animated.2bpp.lz"
+MewBackpic:               INCBIN "gfx/pokemon/mew/back.2bpp.lz"
+MewArmoredFrontpic:              INCBIN "gfx/pokemon/mew_armored/front.animated.2bpp.lz"
+MewArmoredBackpic:               INCBIN "gfx/pokemon/mew_armored/back.2bpp.lz"
 
 SECTION "Gyarados Pics", ROMX
 

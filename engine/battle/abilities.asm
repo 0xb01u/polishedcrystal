@@ -39,6 +39,7 @@ BattleEntryAbilities:
 	dbw PRESSURE, PressureAbility
 	dbw MOLD_BREAKER, MoldBreakerAbility
 	dbw NEUTRALIZING_GAS, NeutralizingGasAbility
+	dbw PSYCHIC_BOOST, PsychicBoostAbility
 	; fallthrough
 StatusHealAbilities:
 ; Status immunity abilities that autoproc if the user gets the status or the ability
@@ -535,6 +536,69 @@ SynchronizeAbility:
 .is_brn
 	farcall BattleCommand_burn
 	jmp EnableAnimations
+
+PsychicBoostAbility:
+	call DisableAnimations
+	call ShowAbilityActivation
+	ld hl, NotifyPsychicBoost
+	call StdBattleTextbox
+	call EnableAnimations
+
+	ld a, 5
+	call BattleRandomRange
+	
+	cp 0
+	push af
+	jr z, .atk_up_twice
+	ld b, ATTACK
+	jr .post_atk
+.atk_up_twice
+	ld b, $10 | ATTACK
+.post_atk
+	call .forceraisestat
+
+	pop af
+	cp 1
+	push af
+	jr z, .def_up_twice
+	ld b, DEFENSE
+	jr .post_def
+.def_up_twice
+	ld b, $10 | DEFENSE
+.post_def
+	call .forceraisestat
+
+	pop af
+	cp 2
+	push af
+	jr z, .sat_up_twice
+	ld b, SP_ATTACK
+	jr .post_sat
+.sat_up_twice
+	ld b, $10 | SP_ATTACK
+.post_sat
+	call .forceraisestat
+
+	pop af
+	cp 3
+	push af
+	jr z, .sdf_up_twice
+	ld b, SP_DEFENSE
+	jr .post_sdf
+.sdf_up_twice
+	ld b, $10 | SP_DEFENSE
+.post_sdf
+	call .forceraisestat
+
+	pop af
+	cp 4
+	jr z, .spd_up_twice
+	ld b, SPEED
+	jr .forceraisestat
+.spd_up_twice
+	ld b, $10 | SPEED
+.forceraisestat
+	farjp ForceRaiseStat
 
 ResolveOpponentBerserk_CheckMultihit:
 ; Does nothing if we're currently in an ongoing multihit move.

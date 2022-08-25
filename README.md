@@ -9,6 +9,7 @@ This repository contains my custom, modified version of Pokémon Polished Crysta
  - [SPOILERS for that one Celebi event] Allow to rebattle Giovanni by bringing Celebi to the Ilex Forest again.
  - Added Exp. All (Gen 1 Exp. Share) and Gen 6 Exp. Share key items. The experience given by the Gen 6 Exp. Share might be tweaked in the future. The palettes for the new key items _should_ be changed (but look cool by default, though).
  - Added a Megalovania easter egg in the PokéGear's radio.
+ - [SPOILERS for that one Celebi event] Added a new Mew form with an unique ability, as an easter egg. The new form is activated when Mew holds that one Mewtwo object.
 
 # Original Pokémon Polished Crystal README
 

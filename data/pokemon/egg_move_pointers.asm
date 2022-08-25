@@ -287,4 +287,5 @@ EggMovePointers::
 	dw NoEggMoves
 	dw NoEggMoves
 	dw NoEggMoves
+	dw NoEggMoves ; Armored Mew
 	assert_table_length NUM_EXT_POKEMON

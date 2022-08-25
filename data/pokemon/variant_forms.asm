@@ -89,6 +89,7 @@ VariantSpeciesAndFormTable:
 	dp ARTICUNO,  GALARIAN_FORM
 	dp ZAPDOS,    GALARIAN_FORM
 	dp MOLTRES,   GALARIAN_FORM
+	dp MEW,       MEW_ARMORED_FORM
 	assert_table_length NUM_VARIANT_FORMS
 	; fallthrough
 

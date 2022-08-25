@@ -422,6 +422,10 @@ GALARIAN_FORM EQU 2
 	const_skip ; 14f zapdos
 	const_skip ; 150 moltres
 
+; mew
+	ext_const_def 2
+	ext_const MEW_ARMORED_FORM ; 151 (2)
+
 NUM_VARIANT_FORMS EQU const_value - FIRST_VARIANT_FORM_MON ; 1d
 
 FIRST_EXT_MON EQU const_value ; 151

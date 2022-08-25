@@ -344,5 +344,6 @@ BitmasksPointers:
 	dw ArticunoGalarianBitmasks
 	dw ZapdosGalarianBitmasks
 	dw MoltresGalarianBitmasks
+	dw MewArmoredBitmasks
 
 	assert_table_length NUM_UNIQUE_POKEMON

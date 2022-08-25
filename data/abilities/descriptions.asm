@@ -146,6 +146,7 @@ AbilityDescriptions:
 	dw NeutralizingGasDescription
 	dw PastelVeilDescription
 	dw QuickDrawDescription
+	dw PsychicBoostDescription
 	assert_table_length NUM_ABILITIES
 
 NoAbilityDescription:
@@ -716,3 +717,7 @@ NeutralizingGasDescription:
 QuickDrawDescription:
 	db    "Moves first"
 	next1 "occasionally.@"
+
+PsychicBoostDescription:
+	db    "Boosts all stats,"
+	next1 "harms the user.@"

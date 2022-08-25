@@ -1467,6 +1467,18 @@ NotifyNeutralizingGas:
 	line "filled the area!"
 	prompt
 
+NotifyPsychicBoost:
+	text "<USER> is"
+	line "psyched up"
+	cont "for battle!"
+	prompt
+
+PsychicBoostHurtText:
+	text "<USER>"
+	line "hurt itself from"
+	cont "overextension!"
+	prompt
+
 FriskedItemText:
 	text "<USER>"
 	line "frisked its foe"

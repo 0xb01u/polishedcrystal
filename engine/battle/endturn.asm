@@ -210,6 +210,7 @@ HandleEndturnBlockA:
 	call HasUserFainted
 	ret z
 	farcall EndturnAbilitiesA
+	call HandlePsychicBoost
 	jmp HandleLeftovers
 	; healer
 
@@ -432,6 +433,17 @@ HandleFutureSight:
 	ld [hl], 0
 	call UpdateBattleMonInParty
 	jmp UpdateEnemyMonInParty
+
+HandlePsychicBoost:
+	call HasUserFainted
+	ret z
+	call GetTrueUserAbility
+	cp PSYCHIC_BOOST
+	ret nz
+	call GetEighthMaxHP
+	predef SubtractHPFromUser
+	ld hl, PsychicBoostHurtText
+	jmp StdBattleTextbox
 
 HandleLeftovers:
 	call HasUserFainted

@@ -587,6 +587,8 @@ INCLUDE "gfx/pokemon/zapdos_galarian/hgss/normal.pal"
 INCLUDE "gfx/pokemon/zapdos_galarian/hgss/shiny.pal"
 INCLUDE "gfx/pokemon/moltres_galarian/hgss/normal.pal"
 INCLUDE "gfx/pokemon/moltres_galarian/hgss/shiny.pal"
+INCLUDE "gfx/pokemon/mew/hgss/normal.pal" ; TODO
+INCLUDE "gfx/pokemon/mew/hgss/shiny.pal"  ; TODO
 	assert_table_length NUM_EXT_POKEMON + 1
 
 else
@@ -1164,6 +1166,8 @@ INCLUDE "gfx/pokemon/zapdos_galarian/normal.pal"
 INCLUDE "gfx/pokemon/zapdos_galarian/shiny.pal"
 INCLUDE "gfx/pokemon/moltres_galarian/normal.pal"
 INCLUDE "gfx/pokemon/moltres_galarian/shiny.pal"
+INCLUDE "gfx/pokemon/mew_armored/normal.pal"
+INCLUDE "gfx/pokemon/mew_armored/shiny.pal"
 	assert_table_length NUM_EXT_POKEMON + 1
 
 endc

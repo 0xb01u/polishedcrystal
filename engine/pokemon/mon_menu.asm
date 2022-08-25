@@ -457,7 +457,7 @@ UpdateMewtwoForm:
 _UpdateMewtwoForm:
 	ld a, [wCurPartySpecies]
 	cp MEWTWO
-	ret nz
+	jr nz, .mew
 	ld a, [de]
 	cp ARMOR_SUIT
 	ld a, MEWTWO_ARMORED_FORM
@@ -469,7 +469,17 @@ _UpdateMewtwoForm:
 	and $ff - SPECIESFORM_MASK
 	or d
 	ld [hl], a
+	farcall UpdatePkmnStats
 	ret
+.mew
+	cp MEW
+	ret nz
+	ld a, [de]
+	cp ARMOR_SUIT
+	ld a, MEW_ARMORED_FORM
+	jr z, .got_form
+	dec a ; PLAIN_FORM
+	jr .got_form
 
 GiveTakeItemMenuData:
 	db %01010000
