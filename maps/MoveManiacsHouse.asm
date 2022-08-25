@@ -19,7 +19,7 @@ MoveReminderScript:
 	faceplayer
 	opentext
 	writetext MoveReminderIntroText
-	; waitbutton
+	waitbutton
 	; checkitem GOLD_LEAF
 	; iffalse .no_gold_leaf
 	writetext MoveReminderPromptText
@@ -89,5 +89,5 @@ MoveReminderCancelText::
 
 	; para "move, come back"
 	; line "with a Gold Leaf!"
-	para "move, come back!"
+	cont "move, come back!"
 	done
