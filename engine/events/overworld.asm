@@ -65,6 +65,10 @@ CheckBadge:
 CheckPartyMove:
 ; Check if a monster in your party has move d.
 
+	push af
+	ld a, d
+	ld [wPutativeTMHMMove], a ; Load TM move for CanLearnTMHMMove.
+	pop af
 	ld e, 0
 	xor a
 	ld [wCurPartyMon], a
@@ -74,6 +78,7 @@ CheckPartyMove:
 	ld hl, wPartySpecies
 	add hl, bc
 	ld a, [hl]
+	ld [wCurPartySpecies], a ; Added to call GetBaseData later.
 	call IsAPokemon
 	jr c, .no
 
@@ -83,15 +88,23 @@ CheckPartyMove:
 	rst AddNTimes
 	bit MON_IS_EGG_F, [hl]
 	jr nz, .next
-	ld bc, MON_MOVES - MON_FORM
-	add hl, bc
-	ld b, NUM_MOVES
-.check
-	ld a, [hli]
-	cp d
-	jr z, .yes
-	dec b
-	jr nz, .check
+
+; Check if the mon can learn the move:
+	predef CanLearnTMHMMove
+	ld a, c
+	and a
+	jr nz, .yes
+
+; ORIGINAL CODE:
+;	ld bc, MON_MOVES - MON_FORM
+;	add hl, bc
+;	ld b, NUM_MOVES
+;.check
+;	ld a, [hli]
+;	cp d
+;	jr z, .yes
+;	dec b
+;	jr nz, .check
 
 .next
 	inc e
@@ -352,6 +365,11 @@ TryFlashOW::
 	ld d, FLASH
 	call CheckPartyMove
 	jr c, .quit
+	; Check has the HM in the bag:
+	ld a, FLASH
+	call CheckTMHM
+	jr nc, .quit
+	; End check
 	call GetPartyNickname
 	ld a, BANK(AskFlashScript)
 	ld hl, AskFlashScript
@@ -595,6 +613,15 @@ TrySurfOW::
 	ld d, SURF
 	call CheckPartyMove
 	jr c, .quit
+	; Check has the HM in the bag:
+	;ld b, a
+	;push bc
+	;ld a, SURF
+	;call CheckTMHM
+	;pop bc
+	;ld a, b
+	;jr nc, .quit
+	; End check
 
 	ld hl, wOWState
 	bit OWSTATE_BIKING_FORCED, [hl]
@@ -832,6 +859,11 @@ TryWaterfallOW::
 	ld d, WATERFALL
 	call CheckPartyMove
 	jr c, .failed
+	; Check has the HM in the bag:
+	ld a, WATERFALL
+	call CheckTMHM
+	jr nc, .failed
+	; End check
 	ld de, ENGINE_RISINGBADGE
 	call CheckEngineFlag
 	jr c, .failed
@@ -1131,6 +1163,11 @@ TryStrengthOW:
 	ld d, STRENGTH
 	call CheckPartyMove
 	jr c, .nope
+	; Check has the HM in the bag:
+	ld a, STRENGTH
+	call CheckTMHM
+	jr nc, .nope
+	; End check
 
 	ld de, ENGINE_PLAINBADGE
 	call CheckEngineFlag
@@ -1281,6 +1318,11 @@ TryWhirlpoolOW::
 	ld d, WHIRLPOOL
 	call CheckPartyMove
 	jr c, .failed
+	; Check has the HM in the bag:
+	ld a, WHIRLPOOL
+	call CheckTMHM
+	jr nc, .failed
+	; End check
 	ld de, ENGINE_GLACIERBADGE
 	call CheckEngineFlag
 	jr c, .failed
@@ -1369,6 +1411,11 @@ TryHeadbuttOW::
 	ld d, HEADBUTT
 	call CheckPartyMove
 	jr c, .no
+	; Check has the HM in the bag:
+	ld a, HEADBUTT
+	call CheckTMHM
+	jr nc, .no
+	; End check
 
 	ld a, BANK(AskHeadbuttScript)
 	ld hl, AskHeadbuttScript
@@ -1488,11 +1535,24 @@ AskRockSmashScript:
 	farjumptext _MaySmashText
 
 HasRockSmash:
+	; Check has the HM in the bag:
+	ld b, a
+	push bc
+	ld a, ROCK_SMASH
+	call CheckTMHM
+	pop bc
+	ld a, b
+	jr nc, .no
+	; End check
 	ld d, ROCK_SMASH
 	call CheckPartyMove
 	; a = carry ? 1 : 0
 	sbc a
 	and 1
+	ldh [hScriptVar], a
+	ret
+.no
+	ld a, 0
 	ldh [hScriptVar], a
 	ret
 
@@ -1848,6 +1908,11 @@ HasCutAvailable::
 	ld d, CUT
 	call CheckPartyMove
 	jr c, .no
+	; Check has the HM in the bag:
+	ld a, CUT
+	call CheckTMHM
+	jr nc, .no
+	; End check
 
 	ld de, ENGINE_HIVEBADGE
 	call CheckEngineFlag
