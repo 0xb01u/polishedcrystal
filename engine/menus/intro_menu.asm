@@ -308,7 +308,8 @@ Continue:
 	call DelayFrames
 	call ConfirmContinue
 	jmp c, CloseWindow
-	call WarnVBA
+	;call WarnVBA ; The 3DS' GBC emulator is not perfect.
+	              ; But I don't want to be constantly bothered by this.
 	call Continue_CheckRTC_RestartClock
 	jmp c, CloseWindow
 	call Continue_CheckEGO_ResetInitialOptions
