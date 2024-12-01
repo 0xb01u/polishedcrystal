@@ -4670,7 +4670,7 @@ endr
 	call LoadTileMapToTempTileMap
 	xor a
 	ld [wBattlePlayerAction], a
-	ld a, $f
+	ld a, BATTLEACTION_FORFEIT
 	ld [wCurMoveNum], a
 	xor a
 	ld [wCurPlayerMove], a
@@ -5912,7 +5912,7 @@ GenerateWildForm:
 	ld [wCurForm], a
 	jmp PopBCDEHL
 
-random_wild_form: MACRO
+MACRO random_wild_form
 	if _NARG == 3
 		dp \1, \2
 		dw \3
