@@ -10,6 +10,9 @@ This repository contains my custom, modified version of Pokémon Polished Crysta
  - Added Exp. All (Gen 1 Exp. Share) and Gen 6 Exp. Share key items. The experience given by the Gen 6 Exp. Share might be tweaked in the future. The palettes for the new key items _should_ be changed (but look cool by default, though).
  - Added a Megalovania easter egg in the PokéGear's radio.
  - [SPOILERS for that one Celebi event] Added a new Mew form with an unique ability, as an easter egg. The new form is activated when Mew holds that one Mewtwo object.
+ - Made field moves (e.g. HMs) usable outside of battle by Pokémon that have not learned them. All that is needed is that the Pokémon can learn the respective move, and the corresponding HM/TM item in the bag (plus the vanilla badge requirements).
+    * Field moves that are triggered by an overworld interaction are used automatically by the first able Pokémon in the party.
+    * Field moves that are not triggered by an overworld interaction can be selected from any able Pokémon in the party menu.
 
 # Original Pokémon Polished Crystal README
 
