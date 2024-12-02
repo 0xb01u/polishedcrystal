@@ -122,6 +122,7 @@ GetMonSubmenuItems:
 	call GetPartyParamLocation
 	ld d, h
 	ld e, l
+	ld b, 0 ; b stores the amount of moves displayed.
 	ld c, NUM_MOVES
 .loop
 	push bc
@@ -132,13 +133,21 @@ GetMonSubmenuItems:
 	push hl
 	call IsFieldMove
 	pop hl
-	call c, AddMonMenuItem
+	jr nc, .next
+	pop de
+	pop bc
+	inc b ; increase move displayed count.
+	push bc
+	push de
+	call AddMonMenuItem
 .next
 	pop de
 	inc de
 	pop bc
 	dec c
 	jr nz, .loop
+
+	call AddLearnableTMHMItems
 
 .skip_moves
 	ld a, MONMENUITEM_STATS
@@ -229,4 +238,125 @@ AddMonMenuItem:
 	ld [hl], a
 	pop de
 	pop hl
+	ret
+
+AddLearnableTMHMItems:
+	; The menu has a hard limit on the number of options it can display.
+	; (The game will crash if it is exceeded.)
+	; As a compromise, only show in the menu the field moves that are not
+	; triggered by an overworld event.
+	; Also, do add options past the 4 moves limit.
+	ld a, b
+	cp 4
+	jr z, .end
+	; CUT
+.cut
+	;FLY
+.fly
+	; Check the mon can learn fly:
+	ld a, FLY
+	ld [wPutativeTMHMMove], a
+	predef CanLearnTMHMMove
+	ld a, c
+	and a
+	jr z, .surf
+	; Check the mon does not know fly:
+	ld a, MON_MOVES
+	call GetPartyParamLocation
+	ld d, h
+	ld e, l
+	ld c, NUM_MOVES
+.loop_fly
+	ld a, [de]
+	and a
+	jr z, .add_fly
+	cp FLY
+	jr z, .surf
+	inc de
+	dec c
+	jr nz, .loop_fly
+.add_fly
+	ld a, MONMENUITEM_FLY
+	call AddMonMenuItem
+	inc b
+	ld a, b
+	cp 4
+	jr z, .end
+	; SURF
+.surf
+	; STRENGTH
+.strength
+	; FLASH
+.flash
+	; Check the mon can learn flash:
+	ld a, FLASH
+	ld [wPutativeTMHMMove], a
+	predef CanLearnTMHMMove
+	ld a, c
+	and a
+	jr z, .waterfall
+	; Check the mon does not know flash:
+	ld a, MON_MOVES
+	call GetPartyParamLocation
+	ld d, h
+	ld e, l
+	ld c, NUM_MOVES
+.loop_flash
+	ld a, [de]
+	and a
+	jr z, .add_flash
+	cp FLASH
+	jr z, .waterfall
+	inc de
+	dec c
+	jr nz, .loop_flash
+.add_flash
+	ld a, MONMENUITEM_FLASH
+	call AddMonMenuItem
+	ld a, b
+	cp 4
+	jr z, .end
+	; WATERFALL
+.waterfall
+	; WHIRLPOOL
+.whirlpool
+	; DIG
+.dig
+	; Check the mon can learn dig:
+	ld a, DIG
+	ld [wPutativeTMHMMove], a
+	predef CanLearnTMHMMove
+	ld a, c
+	and a
+	jr z, .teleport
+	; Check the mon does not know dig:
+	ld a, MON_MOVES
+	call GetPartyParamLocation
+	ld d, h
+	ld e, l
+	ld c, NUM_MOVES
+.loop_dig
+	ld a, [de]
+	and a
+	jr z, .add_dig
+	cp DIG
+	jr z, .teleport
+	inc de
+	dec c
+	jr nz, .loop_dig
+.add_dig
+	ld a, MONMENUITEM_DIG
+	call AddMonMenuItem
+	ld a, b
+	cp 4
+	jr z, .end
+	; TELEPORT
+.teleport ; Omitted to make things interestign.
+	; FRESH_SNACK
+.fresh_snack ; Omitted to make things interestign.
+	; HEADBUTT
+.headbutt
+	; ROCK_SMASH
+.rocksmash
+.end
 	ret
