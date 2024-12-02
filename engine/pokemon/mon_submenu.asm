@@ -279,7 +279,8 @@ AddLearnableTMHMItems:
 .check_item_fly
 	; Check has the HM in the bag:
 	push bc
-	ld a, FLY
+	ld a, HM_FLY
+	ld [wCurTMHM], a
 	call CheckTMHM
 	pop bc
 	jr nc, .surf
@@ -321,10 +322,11 @@ AddLearnableTMHMItems:
 .check_item_flash
 	; Check has the HM in the bag:
 	push bc
-	ld a, FLASH
+	ld a, TM_FLASH
+	ld [wCurTMHM], a
 	call CheckTMHM
 	pop bc
-	jr nc, .dig
+	jr nc, .waterfall
 	; Add option:
 	ld a, MONMENUITEM_FLASH
 	call AddMonMenuItem
@@ -362,7 +364,8 @@ AddLearnableTMHMItems:
 .check_item_dig
 	; Check has the TM in the bag:
 	push bc
-	ld a, DIG
+	ld a, TM_DIG
+	ld [wCurTMHM], a
 	call CheckTMHM
 	pop bc
 	jr nc, .teleport
@@ -373,9 +376,9 @@ AddLearnableTMHMItems:
 	cp 4
 	jr z, .end
 	; TELEPORT:
-.teleport ; Omitted to make things interesting
+.teleport ; Omitted to make things more interesting
 	; FRESH_SNACK:
-.fresh_snack ; Omitted to make things interesting.
+.fresh_snack ; Omitted to make things more interesting.
 	; HEADBUTT:
 .headbutt
 	; ROCK_SMASH:
