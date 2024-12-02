@@ -245,13 +245,14 @@ AddLearnableTMHMItems:
 	; (The game will crash if it is exceeded.)
 	; As a compromise, only show in the menu the field moves that are not
 	; triggered by an overworld event.
-	; Also, do add options past the 4 moves limit.
+	; Also, do not add options past the 4 moves limit.
 	ld a, b
 	cp 4
-	jr z, .end
-	; CUT
+	jr nz, .cut
+	ret
+	; CUT:
 .cut
-	;FLY
+	; FLY:
 .fly
 	; Check the mon can learn fly:
 	ld a, FLY
@@ -269,24 +270,31 @@ AddLearnableTMHMItems:
 .loop_fly
 	ld a, [de]
 	and a
-	jr z, .add_fly
+	jr z, .check_item_fly
 	cp FLY
 	jr z, .surf
 	inc de
 	dec c
 	jr nz, .loop_fly
-.add_fly
+.check_item_fly
+	; Check has the HM in the bag:
+	push bc
+	ld a, FLY
+	call CheckTMHM
+	pop bc
+	jr nc, .surf
+	; Add option:
 	ld a, MONMENUITEM_FLY
 	call AddMonMenuItem
 	inc b
 	ld a, b
 	cp 4
 	jr z, .end
-	; SURF
+	; SURF:
 .surf
-	; STRENGTH
+	; STRENGTH:
 .strength
-	; FLASH
+	; FLASH:
 .flash
 	; Check the mon can learn flash:
 	ld a, FLASH
@@ -304,23 +312,30 @@ AddLearnableTMHMItems:
 .loop_flash
 	ld a, [de]
 	and a
-	jr z, .add_flash
+	jr z, .check_item_flash
 	cp FLASH
 	jr z, .waterfall
 	inc de
 	dec c
 	jr nz, .loop_flash
-.add_flash
+.check_item_flash
+	; Check has the HM in the bag:
+	push bc
+	ld a, FLASH
+	call CheckTMHM
+	pop bc
+	jr nc, .dig
+	; Add option:
 	ld a, MONMENUITEM_FLASH
 	call AddMonMenuItem
 	ld a, b
 	cp 4
 	jr z, .end
-	; WATERFALL
+	; WATERFALL:
 .waterfall
-	; WHIRLPOOL
+	; WHIRLPOOL:
 .whirlpool
-	; DIG
+	; DIG:
 .dig
 	; Check the mon can learn dig:
 	ld a, DIG
@@ -338,25 +353,32 @@ AddLearnableTMHMItems:
 .loop_dig
 	ld a, [de]
 	and a
-	jr z, .add_dig
+	jr z, .check_item_dig
 	cp DIG
 	jr z, .teleport
 	inc de
 	dec c
 	jr nz, .loop_dig
-.add_dig
+.check_item_dig
+	; Check has the TM in the bag:
+	push bc
+	ld a, DIG
+	call CheckTMHM
+	pop bc
+	jr nc, .teleport
+	; Add option:
 	ld a, MONMENUITEM_DIG
 	call AddMonMenuItem
 	ld a, b
 	cp 4
 	jr z, .end
-	; TELEPORT
-.teleport ; Omitted to make things interestign.
-	; FRESH_SNACK
-.fresh_snack ; Omitted to make things interestign.
-	; HEADBUTT
+	; TELEPORT:
+.teleport ; Omitted to make things interesting
+	; FRESH_SNACK:
+.fresh_snack ; Omitted to make things interesting.
+	; HEADBUTT:
 .headbutt
-	; ROCK_SMASH
+	; ROCK_SMASH:
 .rocksmash
 .end
 	ret
