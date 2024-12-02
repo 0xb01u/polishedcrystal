@@ -614,13 +614,13 @@ TrySurfOW::
 	call CheckPartyMove
 	jr c, .quit
 	; Check has the HM in the bag:
-	;ld b, a
-	;push bc
-	;ld a, SURF
-	;call CheckTMHM
-	;pop bc
-	;ld a, b
-	;jr nc, .quit
+	ld b, a
+	push bc
+	ld a, SURF
+	call CheckTMHM
+	pop bc
+	ld a, b
+	jr nc, .quit
 	; End check
 
 	ld hl, wOWState
