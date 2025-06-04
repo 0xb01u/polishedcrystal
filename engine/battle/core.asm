@@ -6698,9 +6698,6 @@ GiveExperiencePoints:
 	set 1, b
 	jr .done_participants_pe
 
-.single_factor_far_fixup
-	jr .single_factor
-
 .done_participants_pe
 	ld a, [wCurKeyItem]
 	push af
@@ -6738,6 +6735,9 @@ GiveExperiencePoints:
 	pop af
 	jr .not_a_participant
 
+.single_factor_far_fixup
+	jr .single_factor
+
 .subtract_participants_from_holders ; Exp.All thing
 	ld a, d
 	sub e
@@ -6772,6 +6772,10 @@ GiveExperiencePoints:
 	ld c, e
 	call SimpleMultiply
 	add a
+	; Avoid division by zero:
+	jr nz, .at_least_one_participant
+	inc a
+.at_least_one_participant
 	ldh [hDivisor], a
 	ld b, 4
 	call Divide
