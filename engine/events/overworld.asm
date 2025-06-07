@@ -64,6 +64,8 @@ CheckBadge:
 
 CheckPartyMove:
 ; Check if a monster in your party has move d.
+; Added: checks if it can learn the move (not necessarily knows it already),
+; for more convenient field moves.
 
 	push af
 	ld a, d
@@ -366,7 +368,8 @@ TryFlashOW::
 	call CheckPartyMove
 	jr c, .quit
 	; Check has the HM in the bag:
-	ld a, FLASH
+	ld a, TM_FLASH
+	ld [wCurTMHM], a
 	call CheckTMHM
 	jr nc, .quit
 	; End check
@@ -616,7 +619,8 @@ TrySurfOW::
 	; Check has the HM in the bag:
 	ld b, a
 	push bc
-	ld a, SURF
+	ld a, HM_SURF
+	ld [wCurTMHM], a
 	call CheckTMHM
 	pop bc
 	ld a, b
@@ -860,7 +864,8 @@ TryWaterfallOW::
 	call CheckPartyMove
 	jr c, .failed
 	; Check has the HM in the bag:
-	ld a, WATERFALL
+	ld a, HM_WATERFALL
+	ld [wCurTMHM], a
 	call CheckTMHM
 	jr nc, .failed
 	; End check
@@ -1164,7 +1169,8 @@ TryStrengthOW:
 	call CheckPartyMove
 	jr c, .nope
 	; Check has the HM in the bag:
-	ld a, STRENGTH
+	ld a, HM_STRENGTH
+	ld [wCurTMHM], a
 	call CheckTMHM
 	jr nc, .nope
 	; End check
@@ -1319,7 +1325,8 @@ TryWhirlpoolOW::
 	call CheckPartyMove
 	jr c, .failed
 	; Check has the HM in the bag:
-	ld a, WHIRLPOOL
+	ld a, HM_WHIRLPOOL
+	ld [wCurTMHM], a
 	call CheckTMHM
 	jr nc, .failed
 	; End check
@@ -1411,11 +1418,7 @@ TryHeadbuttOW::
 	ld d, HEADBUTT
 	call CheckPartyMove
 	jr c, .no
-	; Check has the HM in the bag:
-	ld a, HEADBUTT
-	call CheckTMHM
-	jr nc, .no
-	; End check
+	; Headbutt does not have an associated TM/HM.
 
 	ld a, BANK(AskHeadbuttScript)
 	ld hl, AskHeadbuttScript
@@ -1538,13 +1541,22 @@ HasRockSmash:
 	; Check has the HM in the bag:
 	ld b, a
 	push bc
-	ld a, ROCK_SMASH
+if DEF(FAITHFUL)
+	ld a, TM_ROCK_SMASH
+else ; !FAITHFUL
+	ld a, TM_BRICK_BREAK
+endc ; FAITHFUL
+	ld [wCurTMHM], a
 	call CheckTMHM
 	pop bc
 	ld a, b
 	jr nc, .no
 	; End check
+if DEF(FAITHFUL)
 	ld d, ROCK_SMASH
+else ; !FAITHFUL
+	ld d, BRICK_BREAK
+endc ; FAITHFUL
 	call CheckPartyMove
 	; a = carry ? 1 : 0
 	sbc a
@@ -1909,7 +1921,8 @@ HasCutAvailable::
 	call CheckPartyMove
 	jr c, .no
 	; Check has the HM in the bag:
-	ld a, CUT
+	ld a, HM_CUT
+	ld [wCurTMHM], a
 	call CheckTMHM
 	jr nc, .no
 	; End check
