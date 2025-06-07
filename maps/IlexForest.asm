@@ -377,8 +377,6 @@ IlexForestHeadbuttGuyScript:
 IlexForestTutorHeadbuttScript:
 	writetext Text_IlexForestTutorHeadbutt
 	waitbutton
-	checkitem SILVER_LEAF
-	iffalse .NoSilverLeaf
 	writetext Text_IlexForestTutorQuestion
 	yesorno
 	iffalse .TutorRefused
@@ -389,11 +387,7 @@ IlexForestTutorHeadbuttScript:
 .TutorRefused
 	jumpopenedtext Text_IlexForestTutorRefused
 
-.NoSilverLeaf
-	jumpopenedtext Text_IlexForestTutorNoSilverLeaf
-
 .TeachMove
-	takeitem SILVER_LEAF
 	jumpopenedtext Text_IlexForestTutorTaught
 
 GenericTrainerBug_catcherWayne:
@@ -912,6 +906,10 @@ Text_HeadbuttIntro:
 	para "I'm shaking trees"
 	line "using Headbutt."
 
+	para "If you have the"
+	line "Hive Badge, you"
+	cont "can do it too."
+
 	para "It's fun. Here,"
 	line "you try it too!"
 	done
@@ -919,22 +917,14 @@ Text_HeadbuttIntro:
 Text_IlexForestTutorHeadbutt:
 	text "I can teach your"
 	line "#mon to use"
+	cont "Headbutt,"
 
-	para "Headbutt in ex-"
-	line "change for a"
-	cont "Silver Leaf."
-	done
+	para "but it is not"
+	line "necessary to"
+	cont "shake trees."
 
-Text_IlexForestTutorNoSilverLeaf:
-	text "Oh, but you don't"
-	line "have any Silver"
-	cont "Leaves."
-
-	para "Sometimes you can"
-	line "find them on wild"
-
-	para "Oddish, or lying"
-	line "on the ground."
+	para "I'll do it for"
+	cont "free!"
 	done
 
 Text_IlexForestTutorQuestion:

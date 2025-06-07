@@ -172,7 +172,6 @@ CutFunction:
 	ret
 
 .Jumptable:
-
 	dw .CheckAble
 	dw .DoCut
 	dw .FailCut
@@ -1419,6 +1418,10 @@ TryHeadbuttOW::
 	call CheckPartyMove
 	jr c, .no
 	; Headbutt does not have an associated TM/HM.
+	; At least, we'll make it mandatory to have the Hive Badge (2nd gym).
+	ld de, ENGINE_HIVEBADGE
+	call CheckBadge
+	jr c, .no
 
 	ld a, BANK(AskHeadbuttScript)
 	ld hl, AskHeadbuttScript

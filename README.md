@@ -13,6 +13,7 @@ This repository contains my custom, modified version of Pokémon Polished Crysta
  - Made field moves (e.g. HMs) usable outside of battle by Pokémon that have not learned them. All that is needed is that the Pokémon can learn the respective move, and the corresponding HM/TM item in the bag (plus the vanilla badge requirements).
     * Field moves that are triggered by an overworld interaction are used automatically by the first able Pokémon in the party.
     * Field moves that are not triggered by an overworld interaction can be selected from any able Pokémon in the party menu.
+    * Headbutt will only be usable after obtaining the Hive Badge (2nd badge), as a balancing measure.
 
 # Original Pokémon Polished Crystal README
 
