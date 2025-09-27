@@ -1,4 +1,4 @@
-HiddenPowerDamageStats:
+SetHiddenPowerType:
 ; Override Hidden Power's type based on the user's DVs.
 
 	ld hl, wBattleMonDVs
@@ -16,12 +16,6 @@ HiddenPowerDamageStats:
 	call GetBattleVarAddr
 	pop af
 	ld [hl], a
-
-; Get the rest of the damage formula variables
-; based on the new type.
-	push af
-	farcall BattleCommand_damagestats ; damagestats
-	pop af
 	ret
 
 GetHiddenPowerType::
@@ -43,7 +37,7 @@ GetHiddenPowerType::
 	sla e
 	dec c
 	jr nz, .loop
-	; b = %00fedcba (SpD, SpA, Spe, Def, Atk, HP)
+	; b = %00fedcba (SDf, SAt, Spe, Def, Atk, HP)
 if DEF(FAITHFUL)
 ; type = %fedcba * 15 / 63 + 1 (1-16, Fighting-Dark)
 	inc c

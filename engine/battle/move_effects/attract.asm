@@ -16,19 +16,19 @@ BattleCommand_attract:
 	jr nz, .no_ability_protection
 
 	; don't display anything in case we're in cute charm
-	ld a, [wAnimationsDisabled]
+	ld a, [wInAbility]
 	and a
 	ret nz
 
-	farcall DisableAnimations
+	farcall BeginAbility
 	farcall ShowEnemyAbilityActivation
 	ld hl, DoesntAffectText
 	call StdBattleTextbox
-	farjp EnableAnimations
+	farjp EndAbility
 
 .failed
 	; don't display anything in case we're in cute charm
-	ld a, [wAnimationsDisabled]
+	ld a, [wInAbility]
 	and a
 	ret nz
 
@@ -36,7 +36,7 @@ BattleCommand_attract:
 
 .no_ability_protection
 	; maybe this was called by cute charm
-	call ShowPotentialAbilityActivation
+	farcall ShowPotentialAbilityActivation
 	set SUBSTATUS_IN_LOVE, [hl]
 	call AnimateCurrentMove
 
@@ -96,7 +96,7 @@ BattleCommand_attract:
 	farjp RunStatusHealAbilities
 
 CheckOpponentMentalHerb:
-	call CallOpponentTurn
+	call StackCallOpponentTurn
 CheckMentalHerb:
 	; Check if we hold it
 	predef GetUserItemAfterUnnerve

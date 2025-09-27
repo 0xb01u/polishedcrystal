@@ -29,7 +29,7 @@ _TitleScreen:
 
 ; Clear screen palettes
 	hlbgcoord 0, 0
-	ld bc, SCREEN_WIDTH * BG_MAP_WIDTH
+	ld bc, SCREEN_WIDTH * TILEMAP_WIDTH
 	xor a
 	rst ByteFill
 
@@ -39,7 +39,7 @@ _TitleScreen:
 
 ; line 0 (copyright)
 	hlbgcoord 0, 0, vBGMap1
-	ld bc, BG_MAP_WIDTH
+	ld bc, TILEMAP_WIDTH
 	ld a, 7 ; palette
 	rst ByteFill
 
@@ -49,27 +49,27 @@ _TitleScreen:
 
 ; lines 3-4
 	hlbgcoord 0, 3
-	ld bc, 2 * BG_MAP_WIDTH
+	ld bc, 2 * TILEMAP_WIDTH
 	ld a, 2
 	rst ByteFill
 ; line 5
 	hlbgcoord 0, 5
-	ld bc, BG_MAP_WIDTH
+	ld bc, TILEMAP_WIDTH
 	ld a, 3
 	rst ByteFill
 ; line 6
 	hlbgcoord 0, 6
-	ld bc, BG_MAP_WIDTH
+	ld bc, TILEMAP_WIDTH
 	ld a, 4
 	rst ByteFill
 ; line 7
 	hlbgcoord 0, 7
-	ld bc, BG_MAP_WIDTH
+	ld bc, TILEMAP_WIDTH
 	ld a, 5
 	rst ByteFill
 ; lines 8-9
 	hlbgcoord 0, 8
-	ld bc, 2 * BG_MAP_WIDTH
+	ld bc, 2 * TILEMAP_WIDTH
 	ld a, 6
 	rst ByteFill
 
@@ -81,7 +81,7 @@ _TitleScreen:
 
 ; Suicune gfx
 	hlbgcoord 0, 12
-	ld bc, 6 * BG_MAP_WIDTH ; the rest of the screen
+	ld bc, 6 * TILEMAP_WIDTH ; the rest of the screen
 	ld a, 8
 	rst ByteFill
 
@@ -101,8 +101,8 @@ _TitleScreen:
 
 ; Clear screen tiles
 	hlbgcoord 0, 0
-	ld bc, 64 * BG_MAP_WIDTH
-	ld a, " "
+	ld bc, 64 * TILEMAP_WIDTH
+	ld a, ' '
 	rst ByteFill
 
 ; Draw Pokemon logo
@@ -132,11 +132,11 @@ endc
 	call InitializeBackground
 
 ; Save WRAM bank
-	ldh a, [rSVBK]
+	ldh a, [rWBK]
 	push af
 ; WRAM bank 5
 	ld a, 5
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 ; Update palette colors
 	ld hl, TitleScreenPalettes
@@ -151,13 +151,13 @@ endc
 
 ; Restore WRAM bank
 	pop af
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 ; LY/SCX trickery starts here
 
 	push af
 	ld a, BANK(wLYOverrides)
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 ; Make sure the LYOverrides buffer is empty
 	ld hl, wLYOverrides
@@ -166,18 +166,20 @@ endc
 	rst ByteFill
 
 ; Let LCD Stat know we're messing around with SCX
+	ld hl, rIE
+	set B_IE_STAT, [hl]
 	ld a, rSCX - rJOYP
 	ldh [hLCDCPointer], a
 
 	pop af
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 ; Reset audio
 	call ChannelsOff
 	call EnableLCD
 
 	ldh a, [rLCDC]
-	set 2, a ; 8x16 sprites
+	set B_LCDC_OBJ_SIZE, a
 	ldh [rLCDC], a
 
 	ld a, +112
@@ -215,10 +217,10 @@ SuicuneFrameIterator:
 
 	ld a, c
 	and 3 << 3
-	sla a
+	add a
 	swap a
 	ld e, a
-	ld d, $0
+	ld d, 0
 	ld hl, .Frames
 	add hl, de
 	ld d, [hl]
@@ -297,7 +299,7 @@ DrawTitleGraphic:
 	ret
 
 InitializeBackground:
-	ld hl, wVirtualOAM
+	ld hl, wShadowOAM
 	lb de, -$22, $0
 	ld c, 5
 .loop
@@ -335,7 +337,7 @@ AnimateTitleCrystal:
 
 ; Stop at y=6
 ; y is really from the bottom of the sprite, which is two tiles high
-	ld hl, wVirtualOAM
+	ld hl, wShadowOAM
 	ld a, [hl]
 	cp 6 + $10
 	ret z
@@ -364,166 +366,4 @@ TitleCrystalGFX:
 INCBIN "gfx/title/crystal.2bpp.lz"
 
 TitleScreenPalettes:
-; BG
-if !DEF(MONOCHROME)
-	RGB 00, 00, 00
-	RGB 19, 00, 00
-	RGB 15, 08, 31
-	RGB 15, 08, 31
-
-	RGB 00, 00, 00
-	RGB 31, 31, 31
-	RGB 15, 16, 31
-	RGB 31, 01, 13
-
-	RGB 00, 00, 00
-	RGB 07, 07, 07
-	RGB 31, 31, 31
-	RGB 02, 03, 30
-
-	RGB 00, 00, 00
-	RGB 13, 13, 13
-	RGB 31, 31, 18
-	RGB 02, 03, 30
-
-	RGB 00, 00, 00
-	RGB 19, 19, 19
-	RGB 29, 28, 12
-	RGB 02, 03, 30
-
-	RGB 00, 00, 00
-	RGB 25, 25, 25
-	RGB 28, 25, 06
-	RGB 02, 03, 30
-
-	RGB 00, 00, 00
-	RGB 31, 31, 31
-	RGB 26, 21, 00
-	RGB 02, 03, 30
-
-	RGB 00, 00, 00
-	RGB 11, 11, 19
-	RGB 31, 31, 31
-	RGB 00, 00, 00
-
-; OBJ
-	RGB 00, 00, 00
-	RGB 10, 00, 15
-	RGB 17, 05, 22
-	RGB 19, 09, 31
-
-	RGB 31, 31, 31
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-
-	RGB 31, 31, 31
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-
-	RGB 31, 31, 31
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-
-	RGB 31, 31, 31
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-
-	RGB 31, 31, 31
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-
-	RGB 31, 31, 31
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-
-	RGB 31, 31, 31
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-	RGB 00, 00, 00
-else
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_LIGHT
-	RGB_MONOCHROME_DARK
-	RGB_MONOCHROME_DARK
-
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_LIGHT
-	RGB_MONOCHROME_DARK
-
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_LIGHT
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_DARK
-
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_LIGHT
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_DARK
-
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_LIGHT
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_DARK
-
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_LIGHT
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_DARK
-
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_LIGHT
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_DARK
-
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_DARK
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_BLACK
-
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_DARK
-	RGB_MONOCHROME_LIGHT
-	RGB_MONOCHROME_WHITE
-
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-
-	RGB_MONOCHROME_WHITE
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-	RGB_MONOCHROME_BLACK
-endc
+INCLUDE "gfx/title/title.pal"

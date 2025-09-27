@@ -27,18 +27,18 @@ RuinsOfAlphHoOhChamber_MapScriptHeader:
 RuinsofAlphHoOhChamberTrigger0:
 	special SpecialHoOhChamber
 	checkevent EVENT_WALL_OPENED_IN_HO_OH_CHAMBER
-	iffalse .End
+	iffalsefwd .End
 	sdefer RuinsOfAlphHoOhChamberWallOpenScript
 .End
 	end
 
 RuinsOfAlphHoOhChamberHiddenDoorsCallback:
 	checkevent EVENT_WALL_OPENED_IN_HO_OH_CHAMBER
-	iftrue .WallOpen
+	iftruefwd .WallOpen
 	changeblock 4, 0, $24
 .WallOpen:
 	checkevent EVENT_SOLVED_HO_OH_PUZZLE
-	iffalse .FloorClosed
+	iffalsefwd .FloorClosed
 	endcallback
 
 .FloorClosed:
@@ -53,17 +53,17 @@ RuinsOfAlphHoOhChamberWallOpenScript:
 	pause 30
 	playsound SFX_STRENGTH
 	changeblock 4, 0, $25
-	reloadmappart
+	refreshmap
 	earthquake 50
 	setscene $1
 	endtext
 
 MapRuinsofAlphHoOhChamberSignpost2Script:
-	refreshscreen
+	reanchormap
 	setval $3
 	special Special_UnownPuzzle
 	closetext
-	iftrue .PuzzleComplete
+	iftruefwd .PuzzleComplete
 	end
 
 .PuzzleComplete:
@@ -75,7 +75,7 @@ MapRuinsofAlphHoOhChamberSignpost2Script:
 	showemote EMOTE_SHOCK, PLAYER, 15
 	changeblock 2, 2, $14
 	changeblock 4, 2, $15
-	reloadmappart
+	refreshmap
 	playsound SFX_STRENGTH
 	earthquake 80
 	applyonemovement PLAYER, skyfall_top
@@ -86,10 +86,13 @@ MapRuinsofAlphHoOhChamberSignpost2Script:
 	end
 
 MapRuinsofAlphHoOhChamberSignpost3Script:
+	opentext
 	unowntypeface
-	showtext RuinsOfAlphHoOhChamberDescriptionText
+	writetext RuinsOfAlphHoOhChamberDescriptionText
+	waitbutton
+	closetext
 	restoretypeface
-	special MapCallbackSprites_LoadUsedSpritesGFX
+	special RefreshSprites
 	end
 
 MapRuinsofAlphHoOhChamberSignpost5Script:
@@ -98,9 +101,9 @@ MapRuinsofAlphHoOhChamberSignpost5Script:
 MapRuinsofAlphHoOhChamberSignpost4Script:
 	opentext
 	checkevent EVENT_RUINS_OF_ALPH_OUTSIDE_TOURIST_YOUNGSTERS
-	iftrue .unsolved
+	iftruefwd .unsolved
 	writetext RuinsOfAlphChambersItsUnownText
-	sjump .unownwords
+	sjumpfwd .unownwords
 .unsolved
 	writetext RuinsOfAlphAerodactylChamberWallPatternLeftText
 .unownwords

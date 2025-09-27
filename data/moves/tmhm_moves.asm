@@ -1,6 +1,6 @@
 TMHMMoves:
 ; entries correspond to *_TMNUM constants (see constants/item_constants.asm)
-	table_width 1, TMHMMoves
+	table_width 1
 	db DYNAMICPUNCH ; TM01 (Chuck)
 	db DRAGON_CLAW  ; TM02 (Route 27)
 	db CURSE        ; TM03 (Celadon Mansion)
@@ -65,7 +65,7 @@ TMHMMoves:
 	db ACROBATICS   ; TM62 (Route 39 Farmhouse)
 	db WATER_PULSE  ; TM63 (Misty)
 	db EXPLOSION    ; TM64 (Underground)
-	db SHADOW_CLAW  ; TM65 (Lake of Rage)
+	db SHADOW_CLAW  ; TM65 (Lavender Soul House)
 	db POISON_JAB   ; TM66 (Janine)
 	db AVALANCHE    ; TM67 (Pryce)
 	db GIGA_IMPACT  ; TM68 (Celadon Game Corner)
@@ -74,7 +74,7 @@ TMHMMoves:
 	db STONE_EDGE   ; TM71 (Blue)
 	db VOLT_SWITCH  ; TM72 (Route 10)
 	db THUNDER_WAVE ; TM73 (Rock Tunnel)
-	db GYRO_BALL    ; TM74 (TODO: Magnet Tunnel)
+	db GYRO_BALL    ; TM74 (Magnet Tunnel)
 	db SWORDS_DANCE ; TM75 (Celadon Dept. Store)
 	assert_table_length NUM_TMS
 	db CUT          ; HM01 (Ilex Forest)
@@ -84,17 +84,17 @@ TMHMMoves:
 	db WHIRLPOOL    ; HM05 (Route 42)
 	db WATERFALL    ; HM06 (Ice Path)
 	assert_table_length NUM_TMS + NUM_HMS
-	db AGILITY      ; MT01 (TODO)
+	db AGILITY      ; MT01 (Mahogany Mart)
 	db AQUA_TAIL    ; MT02 (Route 4)
-	db BATON_PASS   ; MT03 (TODO)
+	db BATON_PASS   ; MT03 (Goldenrod Museum)
 	db BODY_SLAM    ; MT04 (Warm Beach)
-	db CHARM        ; MT05 (TODO)
+	db CHARM        ; MT05 (Route 35-Natioal Park Gate)
 	db COUNTER      ; MT06 (Celadon Dept. Store)
 	db DEFENSE_CURL ; MT07 (Mount Mortar)
 	db DOUBLE_EDGE  ; MT08 (Safari Zone)
 	db DREAM_EATER  ; MT09 (Viridian City)
 	db EARTH_POWER  ; MT10 (Cherrygrove Bay)
-	db ENDURE       ; MT11 (TODO)
+	db ENDURE       ; MT11 (Warm Beach)
 	db FIRE_PUNCH   ; MT12 (Goldenrod City)
 	db HEADBUTT     ; MT13 (Ilex Forest)
 	db HYPER_VOICE  ; MT14 (Goldenrod Harbor)
@@ -102,8 +102,8 @@ TMHMMoves:
 	db ICY_WIND     ; MT16 (Ice Path)
 	db IRON_HEAD    ; MT17 (Route 4)
 	db KNOCK_OFF    ; MT18 (Route 40)
-	db PAY_DAY      ; MT20 (Goldenrod Game Corner)
-	db ROLLOUT      ; MT19 (Route 46)
+	db PAY_DAY      ; MT19 (Goldenrod Game Corner)
+	db ROLLOUT      ; MT20 (Route 46)
 	db SEED_BOMB    ; MT21 (Yellow Forest)
 	db SEISMIC_TOSS ; MT22 (Pewter City)
 	db SKILL_SWAP   ; MT23 (Route 27)
@@ -112,9 +112,8 @@ TMHMMoves:
 	db SWAGGER      ; MT26 (Celadon City)
 	db THUNDERPUNCH ; MT27 (Goldenrod City)
 	db TRICK        ; MT28 (Battle Tower)
-	db TRICK_ROOM   ; MT29 (TODO)
+	db TRICK_ROOM   ; MT29 (Route 16 South Gate)
 	db ZAP_CANNON   ; MT30 (Power Plant)
 	db ZEN_HEADBUTT ; MT31 (Saffron City)
 	assert_table_length NUM_TM_HM_TUTOR
-; TODO: Agility, Baton Pass, Charm, Endure, Trick Room
 	db 0 ; end

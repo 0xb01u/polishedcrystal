@@ -15,20 +15,20 @@ LakeOfRageHiddenPowerHouse_MapScriptHeader:
 	bg_event  7,  1, BGEVENT_JUMPSTD, difficultbookshelf
 
 	def_object_events
-	object_event  2,  3, SPRITE_FAT_GUY, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, HiddenPowerGuy, -1
+	object_event  2,  3, SPRITE_FAT_GUY, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, HiddenPowerGuy, -1
 
 HiddenPowerGuy:
 	faceplayer
 	opentext
 	checkevent EVENT_GOT_TM10_HIDDEN_POWER
-	iftrue .AlreadyGotItem
+	iftruefwd .AlreadyGotItem
 	writetext .Text1
 	promptbutton
 	verbosegivetmhm TM_HIDDEN_POWER
 	setevent EVENT_GOT_TM10_HIDDEN_POWER
 	writetext .Text2
 	waitbutton
-	sjump .CheckHiddenPower
+	sjumpfwd .CheckHiddenPower
 .AlreadyGotItem:
 	writetext .Text4
 	waitbutton
@@ -40,7 +40,7 @@ HiddenPowerGuy:
 	promptbutton
 	special Special_HiddenPowerGuru
 	iffalse_jumpopenedtext .Text4
-	ifequal $1, .Egg
+	ifequalfwd $1, .Egg
 	jumpthisopenedtext
 
 	text "I can sense it…"

@@ -12,6 +12,7 @@
 	const MARTTYPE_TM
 	const MARTTYPE_BLUECARD
 	const MARTTYPE_BP
+	const MARTTYPE_EXP_CANDY
 
 ; Marts indexes (see data/items/marts.asm)
 	const_def
@@ -51,8 +52,12 @@
 	const MART_SILPH_CO
 	const MART_FUCHSIA
 	const MART_SHAMOUTI_1
+	const MART_SHAMOUTI_1_SOUVENIR
 	const MART_SHAMOUTI_2
-	const MART_BT_1
-	const MART_BT_2
-	const MART_BT_3
-NUM_MARTS EQU const_value
+	const MART_BATTLETOWER_1
+	const MART_BATTLETOWER_2
+	const MART_BATTLETOWER_3
+	const MART_BATTLEFACTORY_1
+	const MART_BATTLEFACTORY_2
+	const MART_BATTLEFACTORY_3
+DEF NUM_MARTS EQU const_value

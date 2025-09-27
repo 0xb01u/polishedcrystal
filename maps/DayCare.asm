@@ -17,9 +17,9 @@ DayCare_MapScriptHeader:
 	bg_event  5,  1, BGEVENT_JUMPSTD, difficultbookshelf
 
 	def_object_events
-	object_event  5,  3, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, DayCareLadyScript, -1
-	object_event  0,  5, SPRITE_LYRA, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_LYRA_DAYCARE
-	object_event  2,  3, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, DayCareManScript_Inside, EVENT_DAYCARE_MAN_IN_DAYCARE
+	object_event  5,  3, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, DayCareLadyScript, -1
+	object_event  0,  5, SPRITE_LYRA, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_LYRA_DAYCARE
+	object_event  2,  3, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, DayCareManScript_Inside, EVENT_DAYCARE_MAN_IN_DAYCARE
 
 	object_const_def
 	const DAYCARE_GRANNY
@@ -31,7 +31,7 @@ DayCareTrigger0:
 
 DayCareEggCheckCallback:
 	checkflag ENGINE_DAY_CARE_MAN_HAS_EGG
-	iftrue .PutDayCareManOutside
+	iftruefwd .PutDayCareManOutside
 	clearevent EVENT_DAYCARE_MAN_IN_DAYCARE
 	setevent EVENT_DAYCARE_MAN_ON_ROUTE_34
 	endcallback
@@ -48,26 +48,13 @@ DayCare_MeetGrandma:
 	turnobject PLAYER, UP
 	turnobject DAYCARE_GRANNY, DOWN
 	opentext
-	checkflag ENGINE_PLAYER_IS_FEMALE
-	iftrue .IntroduceFemale
-	writetext DayCareLyraHelloText1
-	sjump .Continue1
-.IntroduceFemale:
-	writetext DayCareLyraHelloText2
-.Continue1:
+	writetext DayCareLyraHelloText
 	waitbutton
-	closetext
+	readvar VAR_PLAYERGENDER
+	scalltable DayCareGrandmaISeeTable
 	showemote EMOTE_SHOCK, DAYCARE_LYRA, 15
-	opentext
-	checkflag ENGINE_PLAYER_IS_FEMALE
-	iftrue .ProtestFemale
-	writetext DayCareLyraProtestText1
-	sjump .Continue2
-.ProtestFemale:
-	writetext DayCareLyraProtestText2
-.Continue2:
-	waitbutton
-	closetext
+	readvar VAR_PLAYERGENDER
+	scalltable DayCareLyraProtestTable
 	turnobject DAYCARE_LYRA, DOWN
 	showtext DayCareLyraGoodbyeText
 	applymovement DAYCARE_LYRA, DayCareMovementData_LyraStartsToLeave
@@ -81,6 +68,8 @@ DayCare_MeetGrandma:
 	playsound SFX_REGISTER_PHONE_NUMBER
 	waitsfx
 	waitbutton
+	writetext DayCareLyraHasInfoText
+	waitbutton
 	closetext
 	turnobject DAYCARE_LYRA, UP
 	showtext DayCareLyraEmbarassedText
@@ -93,7 +82,7 @@ DayCareManScript_Inside:
 	faceplayer
 	opentext
 	checkevent EVENT_GOT_ODD_EGG
-	iftrue .AlreadyHaveOddEgg
+	iftruefwd .AlreadyHaveOddEgg
 	writetext DayCareManText_GiveOddEgg
 	promptbutton
 	special GiveOddEgg
@@ -101,9 +90,9 @@ DayCareManScript_Inside:
 	writetext DayCareText_GotOddEgg
 	playsound SFX_GET_EGG_FROM_DAYCARE_LADY
 	waitsfx
-	ifequal 1, .InParty
+	ifequalfwd 1, .InParty
 	special Special_CurBoxFullCheck
-	iffalse .BoxNotFull
+	iffalsefwd .BoxNotFull
 	farwritetext _CurBoxFullText
 .BoxNotFull
 	special GetCurBoxName
@@ -124,29 +113,26 @@ DayCareLadyScript:
 	checkflag ENGINE_DAY_CARE_MAN_HAS_EGG
 	iftrue_jumpopenedtext Text_GrampsLookingForYou
 	checkevent EVENT_LYRA_GAVE_AWAY_EGG
-	iffalse .NoLyrasEgg
+	iffalsefwd .NoLyrasEgg
 	checkevent EVENT_GOT_LYRAS_EGG
-	iftrue .NoLyrasEgg
+	iftruefwd .NoLyrasEgg
 	writetext DayCareLadyText_GiveLyrasEgg
 	promptbutton
 	checkevent EVENT_GOT_TOTODILE_FROM_ELM
-	iftrue .GiveCyndaquilEgg
+	iftruefwd .GiveCyndaquilEgg
 	checkevent EVENT_GOT_CHIKORITA_FROM_ELM
-	iftrue .GiveTotodileEgg
+	iftruefwd .GiveTotodileEgg
 	giveegg CHIKORITA
-	sjump .GotLyrasEgg
+	sjumpfwd .GotLyrasEgg
 
 .GiveCyndaquilEgg:
 	giveegg CYNDAQUIL
-	sjump .GotLyrasEgg
+	sjumpfwd .GotLyrasEgg
 
 .GiveTotodileEgg:
 	giveegg TOTODILE
 .GotLyrasEgg
 	iffalse_jumpopenedtext DayCareText_PartyAndBoxFull
-	farwritetext _ReceivedEggText
-	playsound SFX_GET_EGG_FROM_DAYCARE_LADY
-	waitsfx
 	writetext DayCareLadyText_DescribeLyrasEgg
 	setevent EVENT_GOT_LYRAS_EGG
 	waitendtext
@@ -179,15 +165,24 @@ DayCareMovementData_LyraLeaves:
 	step_left
 	step_end
 
-DayCareLyraHelloText1:
+DayCareLyraHelloText:
 	text "Lyra: Grandma!"
 
 	para "Let me introduce"
 	line "my friend."
 
 	para "This is <PLAYER>!"
+	done
 
-	para "Grandma: Ah ha."
+DayCareGrandmaISeeTable:
+	dw .Male
+	dw .Female
+	dw .Enby
+
+.Male:
+	jumpthisopenedtext
+
+	text "Grandma: Ah ha."
 
 	para "This is your"
 	line "boy… friend."
@@ -195,15 +190,10 @@ DayCareLyraHelloText1:
 	para "I see. Hmm."
 	done
 
-DayCareLyraHelloText2:
-	text "Lyra: Grandma!"
+.Female:
+	jumpthisopenedtext
 
-	para "Let me introduce"
-	line "my friend."
-
-	para "This is <PLAYER>!"
-
-	para "Grandma: Ah ha."
+	text "Grandma: Ah ha."
 
 	para "This is your"
 	line "girl… friend."
@@ -211,7 +201,25 @@ DayCareLyraHelloText2:
 	para "I see. Hmm."
 	done
 
-DayCareLyraProtestText1:
+.Enby:
+	jumpthisopenedtext
+
+	text "Grandma: Ah ha."
+
+	para "This is your"
+	line "close… friend."
+
+	para "I see. Hmm."
+	done
+
+DayCareLyraProtestTable:
+	dw .Male
+	dw .Female
+	dw .Enby
+
+.Male:
+	jumpthistext
+
 	text "Lyra: What?"
 	line "Grandma…!"
 
@@ -232,7 +240,9 @@ DayCareLyraProtestText1:
 	cont "anytime!"
 	done
 
-DayCareLyraProtestText2:
+.Female:
+	jumpthistext
+
 	text "Lyra: What?"
 	line "Grandma…!"
 
@@ -247,6 +257,29 @@ DayCareLyraProtestText2:
 
 	para "You must be sure"
 	line "she's talented."
+
+	para "Right, <PLAYER>?"
+	line "Come and see us"
+	cont "anytime!"
+	done
+
+.Enby:
+	jumpthistext
+
+	text "Lyra: What?"
+	line "Grandma…!"
+
+	para "What are you"
+	line "talking about?"
+
+	para "They just live"
+	line "nearby…"
+
+	para "Grandma: Hahaha."
+	line "I know, I know."
+
+	para "You must be sure"
+	line "they're talented."
 
 	para "Right, <PLAYER>?"
 	line "Come and see us"
@@ -270,6 +303,20 @@ DayCareLyraForgotText:
 GotLyrasNumberText:
 	text "<PLAYER> got Lyra's"
 	line "phone number."
+	done
+
+DayCareLyraHasInfoText:
+	text "Call me any time"
+	line "you want!"
+
+	para "Grandma and Grand-"
+	line "pa taught me a lot"
+
+	para "about raising"
+	line "#mon, and I'd"
+
+	para "like to share it"
+	line "with you."
 	done
 
 DayCareLyraEmbarassedText:
@@ -354,5 +401,5 @@ DayCareLadyText_DescribeLyrasEgg:
 DayCareText_PartyAndBoxFull:
 	text "You have no room"
 	line "for this, even in"
-	cont "your box."
+	cont "your Box."
 	done

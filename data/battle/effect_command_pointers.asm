@@ -1,18 +1,18 @@
 MACRO command
 	const \1_command
-\1 EQUS "db \1_command"
+	DEF \1 EQUS "db \1_command"
 	dw BattleCommand_\1
 ENDM
 
 MACRO commandx
 	const \1_command
-\1 EQUS "db \1_command,"
+	DEF \1 EQUS "db \1_command,"
 	dw BattleCommand_\1
 ENDM
 
 MACRO commandonly
 	const \1_command
-\1 EQUS "db \1_command"
+	DEF \1 EQUS "db \1_command"
 ENDM
 
 	const_def 1
@@ -27,6 +27,7 @@ BattleCommandPointers:
 	command stab
 	command damagevariation
 	command checkhit
+	command checkpriority
 	command lowersub
 	command moveanimnosub
 	command raisesub
@@ -84,7 +85,6 @@ BattleCommandPointers:
 	command kickcounter
 	command thief
 	command arenatrap
-	command defrost
 	command curse
 	command protect
 	command spikes
@@ -138,8 +138,6 @@ BattleCommandPointers:
 	command roost
 	command skillswap
 	command trick
-	command knockoff
-	command bugbite
 	command toxic
 	command gyroball
 	command checkpowder
@@ -147,14 +145,18 @@ BattleCommandPointers:
 	command brickbreak
 	command trickroom
 
-	; The following commands have an argument: stat to raise/lower.
+	; The following commands have an argument
+	; Argument: check if possible (false) vs perform the action (true)
+	commandx bugbite
+	commandx knockoff
+
+	; Argument: stat to lower
 	; (raise|lower)stat: can miss, silent
 	; force(raise|lower)stat: (always)
 	; (raise|lower)stathit: can miss, respects secondary, silent
 	; (raise|lower)oppstat: can miss, respects sub+mist+clear body
 	; force(raise|lower)oppstat: respects sub+mist+clear body
 	; (raise|lower)oppstathit: can miss, respects secondary+sub+mist+clear body, silent
-
 	commandx raisestat
 	commandx lowerstat
 	commandx forceraisestat
@@ -168,10 +170,10 @@ BattleCommandPointers:
 	commandx raiseoppstathit
 	commandx loweroppstathit
 
-NUM_EFFECT_COMMANDS EQU const_value - 1
+DEF NUM_EFFECT_COMMANDS EQU const_value - 1
 
-FIRST_MOVEARG_COMMAND EQU raisestat_command
-LAST_MOVEARG_COMMAND EQU loweroppstathit_command
+DEF FIRST_MOVEARG_COMMAND EQU raisestat_command
+DEF LAST_MOVEARG_COMMAND EQU loweroppstathit_command
 
 	const_def $ff, -1
 	commandonly endmove

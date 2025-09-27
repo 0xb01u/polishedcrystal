@@ -14,17 +14,17 @@ SilphCo1F_MapScriptHeader:
 	def_bg_events
 
 	def_object_events
-	object_event 13,  1, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, SilphCoOfficerScript, -1
-	object_event  4,  2, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_COMMAND, jumptextfaceplayer, SilphCoReceptionistText, -1
-	object_event 11,  4, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_COMMAND, jumptextfaceplayer, SilphCo1FGentlemanText, -1
-	object_event  8,  2, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptextfaceplayer, SilphCo1FCooltrainerfText, -1
+	object_event 13,  1, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, SilphCoOfficerScript, -1
+	object_event  4,  2, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_COMMAND, jumptextfaceplayer, SilphCoReceptionistText, -1
+	object_event 11,  4, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BROWN, OBJECTTYPE_COMMAND, jumptextfaceplayer, SilphCo1FGentlemanText, -1
+	object_event  8,  2, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptextfaceplayer, SilphCo1FCooltrainerfText, -1
 
 	object_const_def
 	const SILPHCO1F_OFFICER
 
 .SilphCo1FMoveOfficerCallback:
 	checkevent EVENT_RESTORED_POWER_TO_KANTO
-	iffalse .Nothing
+	iffalsefwd .Nothing
 	moveobject SILPHCO1F_OFFICER, 14, 1
 .Nothing
 	endcallback
@@ -33,11 +33,11 @@ SilphCoOfficerScript:
 	faceplayer
 	opentext
 	checkevent EVENT_RESTORED_POWER_TO_KANTO
-	iftrue .OfficerScriptAfterPowerRestored
+	iftruefwd .OfficerScriptAfterPowerRestored
 	jumpopenedtext SilphCoOfficerText
 
 .OfficerScriptAfterPowerRestored
-	jumpopenedtext SilphCoOfficerText_GotUpGrade
+	jumpopenedtext SilphCoOfficerText_GotUpgrade
 
 SilphCoReceptionistText:
 	text "Welcome. This is"
@@ -64,7 +64,7 @@ SilphCoOfficerText:
 	cont "three years ago."
 	done
 
-SilphCoOfficerText_GotUpGrade:
+SilphCoOfficerText_GotUpgrade:
 	text "You're responsible"
 	line "for restoring the"
 	cont "power supply?"

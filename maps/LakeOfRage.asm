@@ -15,6 +15,7 @@ LakeOfRage_MapScriptHeader:
 
 	def_bg_events
 	bg_event 21, 27, BGEVENT_JUMPTEXT, LakeOfRageSignText
+	bg_event  3, 26, BGEVENT_JUMPTEXT, LakeOfRageAdvancedTipsSignText
 	bg_event 25, 31, BGEVENT_READ, LakeOfRageFishingGuruSign
 	bg_event  4,  4, BGEVENT_ITEM + RARE_CANDY, EVENT_LAKE_OF_RAGE_HIDDEN_RARE_CANDY
 	bg_event 35,  5, BGEVENT_ITEM + MAX_POTION, EVENT_LAKE_OF_RAGE_HIDDEN_MAX_POTION
@@ -23,17 +24,17 @@ LakeOfRage_MapScriptHeader:
 	bg_event 11, 27, BGEVENT_JUMPSTD, treegrotto, HIDDENGROTTO_LAKE_OF_RAGE
 
 	def_object_events
-	object_event 21, 28, SPRITE_LANCE, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageLanceScript, EVENT_LAKE_OF_RAGE_LANCE
-	object_event 18, 22, SPRITE_BIG_GYARADOS, SPRITEMOVEDATA_BIG_GYARADOS, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageRedGyaradosScript, EVENT_LAKE_OF_RAGE_RED_GYARADOS
-	object_event  4,  4, SPRITE_POKEMANIAC, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, WesleyScript, EVENT_LAKE_OF_RAGE_WESLEY_OF_WEDNESDAY
-	object_event 20, 29, SPRITE_ENGINEER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, LakeOfRageEngineerText, EVENT_LAKE_OF_RAGE_CIVILIANS
-	object_event  4, 15, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCooltrainermAaron, EVENT_LAKE_OF_RAGE_CIVILIANS
-	object_event 36,  7, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerCooltrainerfLois, EVENT_LAKE_OF_RAGE_CIVILIANS
-	object_event 30, 23, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerFisherAndre, EVENT_LAKE_OF_RAGE_CIVILIANS
-	object_event 24, 26, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerFisherRaymond, EVENT_LAKE_OF_RAGE_CIVILIANS
-	object_event 20, 26, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageGrampsScript, -1
-	object_event 36, 13, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, LakeOfRageSuperNerdText, -1
-	object_event 25, 29, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_COMMAND, jumptextfaceplayer, LakeOfRageCooltrainerFText, -1
+	object_event 21, 28, SPRITE_LANCE, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageLanceScript, EVENT_LAKE_OF_RAGE_LANCE
+	object_event 18, 22, SPRITE_BIG_GYARADOS, SPRITEMOVEDATA_BIG_GYARADOS, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageRedGyaradosScript, EVENT_LAKE_OF_RAGE_RED_GYARADOS
+	object_event  4,  4, SPRITE_POKEMANIAC, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, WesleyScript, EVENT_LAKE_OF_RAGE_WESLEY_OF_WEDNESDAY
+	object_event 20, 29, SPRITE_ENGINEER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, LakeOfRageEngineerText, EVENT_LAKE_OF_RAGE_CIVILIANS
+	object_event  4, 15, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCooltrainermAaron, EVENT_LAKE_OF_RAGE_CIVILIANS
+	object_event 36,  7, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerCooltrainerfLois, EVENT_LAKE_OF_RAGE_CIVILIANS
+	object_event 30, 23, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerFisherAndre, EVENT_LAKE_OF_RAGE_CIVILIANS
+	object_event 24, 26, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerFisherRaymond, EVENT_LAKE_OF_RAGE_CIVILIANS
+	object_event 20, 26, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageGrampsScript, -1
+	object_event 36, 13, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, LakeOfRageSuperNerdText, -1
+	object_event 25, 29, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 0, 1, -1, PAL_NPC_BLUE, OBJECTTYPE_COMMAND, jumptextfaceplayer, LakeOfRageCooltrainerFText, -1
 	itemball_event 13,  2, ELIXIR, 1, EVENT_LAKE_OF_RAGE_ELIXIR
 	itemball_event  7, 10, MAX_REVIVE, 1, EVENT_LAKE_OF_RAGE_MAX_REVIVE
 	tmhmball_event 35,  2, TM_SUBSTITUTE, EVENT_LAKE_OF_RAGE_TM_SUBSTITUTE
@@ -54,11 +55,11 @@ LakeOfRageFlyPoint:
 
 LakeOfRageWesleyAndEngineer:
 	checkevent EVENT_LAKE_OF_RAGE_CIVILIANS
-	iftrue .NoEngineer
+	iftruefwd .NoEngineer
 	moveobject LAKEOFRAGE_LANCE, 18, 29
 .NoEngineer
 	readvar VAR_WEEKDAY
-	ifequal WEDNESDAY, .WesleyAppears
+	ifequalfwd WEDNESDAY, .WesleyAppears
 	disappear LAKEOFRAGE_WESLEY
 	endcallback
 
@@ -68,7 +69,7 @@ LakeOfRageWesleyAndEngineer:
 
 LakeOfRageFloodScript:
 	special Special_GetOvercastIndex
-	ifequal LAKE_OF_RAGE_OVERCAST, .flood
+	ifequalfwd LAKE_OF_RAGE_OVERCAST, .flood
 	changemapblocks LakeOfRage_BlockData
 	endcallback
 
@@ -82,11 +83,26 @@ LakeOfRageSignText:
 	cont "Gyarados Lake."
 	done
 
+LakeOfRageAdvancedTipsSignText:
+	text "Advanced Tips!"
+
+	para "The Hidden Power"
+	line "move can take on"
+if DEF(FAITHFUL)
+	cont "any type, except"
+else
+	cont "any type, even"
+endc
+
+	para "the newly disco-"
+	line "vered Fairy type!"
+	done
+
 LakeOfRageFishingGuruSign:
 	opentext
 	writetext .Text
 	checkevent EVENT_CLEARED_ROCKET_HIDEOUT
-	iftrue .Continue
+	iftruefwd .Continue
 	waitendtext
 
 .Continue:
@@ -101,14 +117,14 @@ LakeOfRageFishingGuruSign:
 
 LakeOfRageLanceScript:
 	checkevent EVENT_REFUSED_TO_HELP_LANCE_AT_LAKE_OF_RAGE
-	iftrue .AskForHelpAgain
+	iftruefwd .AskForHelpAgain
 	opentext
 	writetext .OverheardText
 	promptbutton
 	faceplayer
 	writetext .IntroText
 	yesorno
-	iffalse .Refused
+	iffalsefwd .Refused
 .Agreed:
 	writetext .YesText
 	waitbutton
@@ -221,9 +237,9 @@ LakeOfRageRedGyaradosScript:
 	pause 15
 	closetext
 	loadwildmon GYARADOS, GYARADOS_RED_FORM, 35
-	loadvar VAR_BATTLETYPE, BATTLETYPE_RED_GYARADOS
+	loadvar VAR_BATTLETYPE, BATTLETYPE_NEVER_SHINY
 	startbattle
-	ifequal $1, .Continue
+	ifequalfwd $1, .Continue
 	disappear LAKEOFRAGE_RED_GYARADOS
 .Continue:
 	reloadmapafterbattle
@@ -231,8 +247,9 @@ LakeOfRageRedGyaradosScript:
 	givekeyitem RED_SCALE
 	waitsfx
 	writetext .RedScaleText
-	playsound SFX_ITEM
-	waitsfx
+	special ShowKeyItemIcon
+	playsound SFX_KEY_ITEM
+	waitbutton
 	keyitemnotify
 	closetext
 	appear LAKEOFRAGE_LANCE
@@ -243,7 +260,7 @@ LakeOfRageRedGyaradosScript:
 	done
 
 .RedScaleText:
-	text "<PLAYER> obtained a"
+	text "<PLAYER> found"
 	line "Red Scale."
 	done
 
@@ -255,7 +272,7 @@ WesleyScript:
 	faceplayer
 	opentext
 	checkevent EVENT_MET_WESLEY_OF_WEDNESDAY
-	iftrue .MetWesley
+	iftruefwd .MetWesley
 	writetext .MeetText
 	promptbutton
 	setevent EVENT_MET_WESLEY_OF_WEDNESDAY

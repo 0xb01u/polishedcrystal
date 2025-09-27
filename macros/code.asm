@@ -12,6 +12,14 @@ MACRO ln ; r, hi, lo[, hi, lo]
 	endc
 ENDM
 
+MACRO lp ; r, species[, form]
+	if _NARG == 2
+		lb \1, HIGH(\2) << MON_EXTSPECIES_F, LOW(\2)
+	else
+		lb \1, HIGH(\2) << MON_EXTSPECIES_F | \3, LOW(\2)
+	endc
+ENDM
+
 MACRO maskbits
 ; masks just enough bits to cover the first argument
 ; the second argument is an optional shift amount
@@ -23,17 +31,11 @@ MACRO maskbits
 ; 	maskbits 26
 ; 	cp 26
 ; 	jr nc, .loop
-	def x = 1
-	rept 8
-		if x + 1 < (\1)
-			redef x = (x << 1) | 1
-		endc
-	endr
+	def x = (1 << BITWIDTH((\1) - 1)) - 1
 	if _NARG == 2
-		and x << (\2)
-	else
-		and x
+		def x <<= \2
 	endc
+	and x
 ENDM
 
 MACRO ldpixel
@@ -44,15 +46,15 @@ MACRO ldpixel
 	endc
 ENDM
 
-depixel EQUS "ldpixel de,"
-bcpixel EQUS "ldpixel bc,"
+DEF depixel EQUS "ldpixel de,"
+DEF bcpixel EQUS "ldpixel bc,"
 
 
 ; Design patterns
 
-eventflagset   EQUS "flagset wEventFlags,"
-eventflagreset EQUS "flagreset wEventFlags,"
-eventflagcheck EQUS "flagcheck wEventFlags,"
+DEF eventflagset   EQUS "flagset wEventFlags,"
+DEF eventflagreset EQUS "flagreset wEventFlags,"
+DEF eventflagcheck EQUS "flagcheck wEventFlags,"
 
 MACRO flagset
 	ld hl, \1 + (\2 >> 3)

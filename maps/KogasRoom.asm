@@ -16,7 +16,7 @@ KogasRoom_MapScriptHeader:
 	def_bg_events
 
 	def_object_events
-	object_event  5,  7, SPRITE_KOGA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, KogaScript, -1
+	object_event  5,  7, SPRITE_KOGA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, KogaScript, -1
 
 KogasRoomEntranceTrigger:
 	sdefer .Script
@@ -24,11 +24,11 @@ KogasRoomEntranceTrigger:
 
 .Script:
 	applymovement PLAYER, WalkIntoEliteFourRoomMovement
-	refreshscreen
+	reanchormap
 	playsound SFX_STRENGTH
 	earthquake 80
 	changeblock 4, 14, $2a
-	reloadmappart
+	refreshmap
 	closetext
 	setscene $1
 	setevent EVENT_KOGAS_ROOM_ENTRANCE_CLOSED
@@ -37,18 +37,18 @@ KogasRoomEntranceTrigger:
 
 KogasRoomDoorCallback:
 	checkevent EVENT_KOGAS_ROOM_ENTRANCE_CLOSED
-	iffalse .KeepDoorClosed
+	iffalsefwd .KeepDoorClosed
 	changeblock 4, 14, $2a
 .KeepDoorClosed:
 	checkevent EVENT_KOGAS_ROOM_EXIT_OPEN
-	iffalse .OpenDoor
+	iffalsefwd .OpenDoor
 	changeblock 4, 2, $16
 .OpenDoor:
 	endcallback
 
 KogaScript:
 	readvar VAR_BADGES
-	ifequal 16, .Rematch
+	ifequalfwd 16, .Rematch
 	checkevent EVENT_BEAT_ELITE_4_KOGA
 	iftrue_jumptextfaceplayer .AfterText
 	showtextfaceplayer .SeenText
@@ -57,7 +57,7 @@ KogaScript:
 	startbattle
 	reloadmapafterbattle
 	showtext .AfterText
-	sjump .EndBattle
+	sjumpfwd .EndBattle
 
 .Rematch:
 	checkevent EVENT_BEAT_ELITE_4_KOGA
@@ -71,7 +71,7 @@ KogaScript:
 .EndBattle:
 	playsound SFX_ENTER_DOOR
 	changeblock 4, 2, $16
-	reloadmappart
+	refreshmap
 	setevent EVENT_KOGAS_ROOM_EXIT_OPEN
 	setevent EVENT_BEAT_ELITE_4_KOGA
 	waitsfx

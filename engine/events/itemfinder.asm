@@ -45,10 +45,9 @@ ItemFinder:
 	rrca
 	rrca
 	ld e, a
-	farjp ApplyPersonFacing
+	farjp ApplyObjectFacing
 
 .Script_FoundSomething:
-	reloadmappart
 	special UpdateTimePals
 	callasm .ItemfinderEffect
 	iffalse_jumpopenedtext .UnderfootText
@@ -64,7 +63,6 @@ ItemFinder:
 	done
 
 .Script_FoundNothingNearby:
-	reloadmappart
 	special UpdateTimePals
 	jumpthisopenedtext
 
@@ -73,7 +71,6 @@ ItemFinder:
 	done
 
 .Script_FoundNothingAtAll:
-	reloadmappart
 	special UpdateTimePals
 	jumpthisopenedtext
 

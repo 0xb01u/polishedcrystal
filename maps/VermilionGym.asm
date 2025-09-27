@@ -30,16 +30,16 @@ VermilionGym_MapScriptHeader:
 	bg_event  6, 15, BGEVENT_READ, VermilionGymStatue
 
 	def_object_events
-	object_event  4,  5, SPRITE_ELECTRIC_FENCE_LEFT, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptext, VermilionGymElectricFenceText, EVENT_VERMILION_GYM_SWITCH_1
-	object_event  5,  5, SPRITE_ELECTRIC_FENCE_RIGHT, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptext, VermilionGymElectricFenceText, EVENT_VERMILION_GYM_SWITCH_1
-	object_event  4,  4, SPRITE_ELECTRIC_FENCE_LEFT, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptext, VermilionGymElectricFenceText, EVENT_VERMILION_GYM_SWITCH_2
-	object_event  5,  4, SPRITE_ELECTRIC_FENCE_RIGHT, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptext, VermilionGymElectricFenceText, EVENT_VERMILION_GYM_SWITCH_2
-	object_event  5,  2, SPRITE_SURGE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, VermilionGymSurgeScript, -1
-	object_event  8,  8, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerGentlemanGregory, -1
-	object_event  4,  7, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_DOWN, 0, 3, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerGuitaristmVincent, -1
-	object_event  0, 10, SPRITE_JUGGLER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerJugglerHorton, -1
-	object_event  7, 10, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerGuitaristfJanet, -1
-	object_event  7, 15, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 1, VermilionGymGuyScript, -1
+	object_event  4,  5, SPRITE_ELECTRIC_FENCE_LEFT, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptext, VermilionGymElectricFenceText, EVENT_VERMILION_GYM_SWITCH_1
+	object_event  5,  5, SPRITE_ELECTRIC_FENCE_RIGHT, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptext, VermilionGymElectricFenceText, EVENT_VERMILION_GYM_SWITCH_1
+	object_event  4,  4, SPRITE_ELECTRIC_FENCE_LEFT, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptext, VermilionGymElectricFenceText, EVENT_VERMILION_GYM_SWITCH_2
+	object_event  5,  4, SPRITE_ELECTRIC_FENCE_RIGHT, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptext, VermilionGymElectricFenceText, EVENT_VERMILION_GYM_SWITCH_2
+	object_event  5,  2, SPRITE_SURGE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, VermilionGymSurgeScript, -1
+	object_event  8,  8, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerGentlemanGregory, -1
+	object_event  4,  7, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_DOWN, 0, 3, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerGuitaristmVincent, -1
+	object_event  0, 10, SPRITE_JUGGLER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerJugglerHorton, -1
+	object_event  7, 10, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerGuitaristfJanet, -1
+	object_event  7, 15, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 1, VermilionGymGuyScript, -1
 
 	object_const_def
 	const VERMILIONGYM_FENCE_1_LEFT
@@ -49,9 +49,9 @@ VermilionGym_MapScriptHeader:
 
 VermilionGymDoorsScript:
 	checkevent EVENT_VERMILION_GYM_SWITCH_2
-	iftrue .done
+	iftruefwd .done
 	checkevent EVENT_VERMILION_GYM_SWITCH_1
-	iffalse .resample
+	iffalsefwd .resample
 	appear VERMILIONGYM_FENCE_1_LEFT
 	appear VERMILIONGYM_FENCE_1_RIGHT
 .resample
@@ -63,7 +63,7 @@ VermilionGymSurgeScript:
 	faceplayer
 	opentext
 	checkflag ENGINE_THUNDERBADGE
-	iftrue .FightDone
+	iftruefwd .FightDone
 	writetext LtSurgeIntroText
 	waitbutton
 	closetext
@@ -77,32 +77,15 @@ VermilionGymSurgeScript:
 	setevent EVENT_BEAT_JUGGLER_HORTON
 	setevent EVENT_BEAT_GUITARISTF_JANET
 	opentext
-	writetext ReceivedThunderBadgeText
-	playsound SFX_GET_BADGE
-	waitsfx
-	setflag ENGINE_THUNDERBADGE
-	readvar VAR_BADGES
-	ifequal 9, .FirstBadge
-	ifequal 10, .SecondBadge
-	ifequal 12, .LyrasEgg
-	sjump .FightDone
-.FirstBadge:
-	specialphonecall SPECIALCALL_FIRSTBADGE
-	sjump .FightDone
-.SecondBadge:
-	checkevent EVENT_GOT_GS_BALL_FROM_POKECOM_CENTER
-	iftrue .FightDone
-	specialphonecall SPECIALCALL_SECONDBADGE
-	sjump .FightDone
-.LyrasEgg:
-	specialphonecall SPECIALCALL_LYRASEGG
+	givebadge THUNDERBADGE, KANTO_REGION
+	callstd kantopostgymevents
 .FightDone:
-	checkevent EVENT_GOT_TM43_WILD_CHARGE
+	checkevent EVENT_GOT_TM57_WILD_CHARGE
 	iftrue_jumpopenedtext LtSurgeFightDoneText
 	writetext LtSurgeThunderBadgeText
 	promptbutton
 	verbosegivetmhm TM_WILD_CHARGE
-	setevent EVENT_GOT_TM43_WILD_CHARGE
+	setevent EVENT_GOT_TM57_WILD_CHARGE
 	jumpopenedtext SurgeOutroText
 
 GenericTrainerGentlemanGregory:
@@ -153,11 +136,11 @@ VermilionGymGuyScript:
 
 VermilionGymTrashCanScript:
 	checkevent EVENT_VERMILION_GYM_SWITCH_2
-	iftrue .trash_can
+	iftruefwd .trash_can
 	callasm CheckVermilionGymTrashCan
-	iftrue .open_lock
+	iftruefwd .open_lock
 	checkevent EVENT_VERMILION_GYM_SWITCH_1
-	iftrue .reset_switches
+	iftruefwd .reset_switches
 .trash_can
 	jumpstd trashcan
 
@@ -167,7 +150,7 @@ VermilionGymTrashCanScript:
 	playsound SFX_PUSH_BUTTON
 	promptbutton
 	checkevent EVENT_VERMILION_GYM_SWITCH_1
-	iftrue .second_switch
+	iftruefwd .second_switch
 	writetext VermilionGymFoundFirstSwitchText
 	playsound SFX_ENTER_DOOR
 	disappear VERMILIONGYM_FENCE_1_LEFT
@@ -195,9 +178,9 @@ VermilionGymTrashCanScript:
 	end
 
 VermilionGymStatue:
-	gettrainername LT_SURGE, 1, $1
+	gettrainername LT_SURGE, 1, STRING_BUFFER_4
 	checkflag ENGINE_THUNDERBADGE
-	iftrue .Beaten
+	iftruefwd .Beaten
 	jumpstd gymstatue1
 .Beaten:
 	jumpstd gymstatue2
@@ -231,11 +214,6 @@ LtSurgeWinLossText:
 
 	para "OK, kid. You get"
 	line "the Thunder Badge!"
-	done
-
-ReceivedThunderBadgeText:
-	text "<PLAYER> received"
-	line "the Thunder Badge."
 	done
 
 LtSurgeThunderBadgeText:
@@ -385,10 +363,10 @@ VermilionGymElectricFenceText:
 	done
 
 SampleVermilionGymTrashCans:
-	ldh a, [rSVBK]
+	ldh a, [rWBK]
 	push af
 	ld a, BANK(wVermilionGymTrashCan1)
-	ldh [rSVBK], a
+	ldh [rWBK], a
 .loop
 	call Random
 	ld e, a
@@ -400,7 +378,7 @@ SampleVermilionGymTrashCans:
 	call .GetSecondTrashCan
 	ld [wVermilionGymTrashCan2], a
 	pop af
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 .GetSecondTrashCan:
@@ -436,10 +414,10 @@ SampleVermilionGymTrashCans:
 	db 13, 13,  9,  9 ; 14 ( 9,11)
 
 CheckVermilionGymTrashCan:
-	ldh a, [rSVBK]
+	ldh a, [rWBK]
 	push af
 	ld a, BANK(wVermilionGymTrashCan1)
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	eventflagcheck EVENT_VERMILION_GYM_SWITCH_1
 	jr z, .first
 	ld a, [wVermilionGymTrashCan2]
@@ -450,7 +428,7 @@ CheckVermilionGymTrashCan:
 .done
 	ldh [hScriptVar], a
 	pop af
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 .first:
@@ -459,7 +437,7 @@ CheckVermilionGymTrashCan:
 	jr z, .yes
 	ld a, [wVermilionGymTrashCan2]
 	call .CheckTrashCan
-	ld a, FALSE
+	ld a, FALSE ; no-optimize a = 0
 	jr nz, .done
 	ld a, [wVermilionGymTrashCan1]
 	ld [wVermilionGymTrashCan2], a

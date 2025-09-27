@@ -2,7 +2,7 @@ DragonsDenB1F_MapScriptHeader:
 	def_scene_scripts
 
 	def_callbacks
-	callback MAPCALLBACK_NEWMAP, DragonsDenB1FSilverCallback
+	callback MAPCALLBACK_NEWMAP, DragonsDenB1FRivalCallback
 
 	def_warp_events
 	warp_event 20,  3, DRAGONS_DEN_1F, 3
@@ -18,40 +18,42 @@ DragonsDenB1F_MapScriptHeader:
 	bg_event 31, 15, BGEVENT_ITEM + MAX_ELIXIR, EVENT_DRAGONS_DEN_B1F_HIDDEN_MAX_ELIXIR
 
 	def_object_events
-	object_event 14, 30, SPRITE_CLAIR, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_DRAGONS_DEN_CLAIR
-	object_event 20, 23, SPRITE_SILVER, SPRITEMOVEDATA_WANDER, 2, 2, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, DragonsDenB1FSilverScript, EVENT_RIVAL_DRAGONS_DEN
-	object_event 20,  8, SPRITE_DRAGON_TAMER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerDragonTamerDarin, -1
-	object_event  8,  8, SPRITE_DRAGON_TAMER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerDragonTamerAdam, -1
-	object_event  4, 17, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoDanandcara1, -1
-	object_event  4, 18, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoDanandcara2, -1
-	object_event 30, 29, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerTwinsLeaandpia1, -1
-	object_event 31, 29, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerTwinsLeaandpia2, -1
+	object_event 14, 30, SPRITE_CLAIR, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_DRAGONS_DEN_CLAIR
+	object_event 20, 23, SPRITE_RIVAL, SPRITEMOVEDATA_WANDER, 2, 2, -1, 0, OBJECTTYPE_SCRIPT, 0, DragonsDenB1FRivalScript, EVENT_RIVAL_DRAGONS_DEN
+	object_event 34, 19, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, PAL_NPC_PINK, OBJECTTYPE_SCRIPT, 0, KimonoGirlMinaScript, -1
+	object_event 20,  8, SPRITE_DRAGON_TAMER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerDragonTamerDarin, -1
+	object_event  8,  8, SPRITE_DRAGON_TAMER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerDragonTamerAdam, -1
+	object_event  4, 17, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoDanandcara1, -1
+	object_event  4, 18, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoDanandcara2, -1
+	object_event 30, 29, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerTwinsLeaandpia1, -1
+	object_event 31, 29, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerTwinsLeaandpia2, -1
 	itemball_event 35, 16, DRAGON_FANG, 1, EVENT_DRAGONS_DEN_B1F_DRAGON_FANG
 	itemball_event 30,  4, CALCIUM, 1, EVENT_DRAGONS_DEN_B1F_CALCIUM
 	itemball_event  5, 20, MAX_ELIXIR, 1, EVENT_DRAGONS_DEN_B1F_MAX_ELIXIR
 
 	object_const_def
 	const DRAGONSDENB1F_CLAIR
-	const DRAGONSDENB1F_SILVER
+	const DRAGONSDENB1F_RIVAL
+	const DRAGONSDENB1F_KIMONO_GIRL
 
-DragonsDenB1FSilverCallback:
+DragonsDenB1FRivalCallback:
 	checkevent EVENT_BEAT_RIVAL_IN_MT_MOON
-	iftrue .CheckDay
-	disappear DRAGONSDENB1F_SILVER
+	iftruefwd .CheckDay
+	disappear DRAGONSDENB1F_RIVAL
 	endcallback
 
 .CheckDay:
 	checkevent EVENT_GOT_RIVALS_EGG
-	iffalse .AppearSilver
+	iffalsefwd .AppearRival
 	readvar VAR_WEEKDAY
-	ifequal TUESDAY, .AppearSilver
-	ifequal THURSDAY, .AppearSilver
-	ifequal SATURDAY, .AppearSilver
-	disappear DRAGONSDENB1F_SILVER
+	ifequalfwd TUESDAY, .AppearRival
+	ifequalfwd THURSDAY, .AppearRival
+	ifequalfwd SATURDAY, .AppearRival
+	disappear DRAGONSDENB1F_RIVAL
 	endcallback
 
-.AppearSilver:
-	appear DRAGONSDENB1F_SILVER
+.AppearRival:
+	appear DRAGONSDENB1F_RIVAL
 	endcallback
 
 DragonsDenB1FClairTrigger:
@@ -129,33 +131,33 @@ DragonsDenShrineSignText:
 	line "in Dragon's Den."
 	done
 
-DragonsDenB1FSilverScript:
+DragonsDenB1FRivalScript:
 	playmusic MUSIC_RIVAL_ENCOUNTER
 	faceplayer
 	opentext
 	checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
-	iftrue .SilverTalkAgain
+	iftruefwd .RivalTalkAgain
 	checkevent EVENT_GOT_RIVALS_EGG
-	iftrue .SilverTalk
+	iftruefwd .RivalTalk
 	writetext .Training1Text
 	waitbutton
 	writetext .GiveEggText
 	promptbutton
 	checkevent EVENT_GOT_TOTODILE_FROM_ELM
-	iftrue .GiveChikoritaEgg
+	iftruefwd .GiveChikoritaEgg
 	checkevent EVENT_GOT_CHIKORITA_FROM_ELM
-	iftrue .GiveCyndaquilEgg
+	iftruefwd .GiveCyndaquilEgg
 	giveegg TOTODILE
-	sjump .GotRivalsEgg
+	sjumpfwd .GotRivalsEgg
 
 .GiveChikoritaEgg:
 	giveegg CHIKORITA
-	sjump .GotRivalsEgg
+	sjumpfwd .GotRivalsEgg
 
 .GiveCyndaquilEgg:
 	giveegg CYNDAQUIL
 .GotRivalsEgg
-	iffalse .PartyAndBoxFull 
+	iffalsefwd .PartyAndBoxFull
 	writetext .DescribeEggText
 	waitbutton
 	closetext
@@ -172,7 +174,7 @@ DragonsDenB1FSilverScript:
 	special RestartMapMusic
 	end
 
-.SilverTalk:
+.RivalTalk:
 	writetext .Training1Text
 	waitbutton
 	closetext
@@ -180,7 +182,7 @@ DragonsDenB1FSilverScript:
 	special RestartMapMusic
 	end
 
-.SilverTalkAgain:
+.RivalTalkAgain:
 	writetext .Training2Text
 	waitbutton
 	closetext
@@ -210,7 +212,7 @@ DragonsDenB1FSilverScript:
 .PartyAndBoxFullText:
 	text "Humph. You don't"
 	line "have any room…"
-	cont "Even in your box…"
+	cont "Even in your Box…"
 	done
 
 .Training1Text:
@@ -373,4 +375,83 @@ GenericTrainerTwinsLeaandpia2:
 
 .BeatenText:
 	text "Meanie."
+	done
+
+KimonoGirlMinaScript:
+	checkevent EVENT_GOT_ABILITYPATCH_FROM_KIMONO_GIRL_MINA
+	iftrue_jumptextfaceplayer .OutroText
+	faceplayer
+	checkevent EVENT_BEAT_KIMONO_GIRL_MINA
+	iftruefwd .Beaten
+	checkevent EVENT_BEAT_KIMONO_GIRL_NAOKO
+	iffalse_jumptext .IntroText
+	checkevent EVENT_BEAT_KIMONO_GIRL_SAYO
+	iffalse_jumptext .IntroText
+	checkevent EVENT_BEAT_KIMONO_GIRL_ZUKI
+	iffalse_jumptext .IntroText
+	checkevent EVENT_BEAT_KIMONO_GIRL_KUNI
+	iffalse_jumptext .IntroText
+	checkevent EVENT_BEAT_KIMONO_GIRL_MIKI
+	iffalse_jumptext .IntroText
+	showtext .SeenText
+	winlosstext .BeatenText, 0
+	setlasttalked DRAGONSDENB1F_KIMONO_GIRL
+	loadtrainer KIMONO_GIRL_8, 1
+	startbattle
+	reloadmapafterbattle
+	setevent EVENT_BEAT_KIMONO_GIRL_MINA
+.Beaten:
+	opentext
+	writetext .AfterText
+	promptbutton
+	verbosegiveitem ABILITYPATCH
+	iffalse_endtext
+	setevent EVENT_GOT_ABILITYPATCH_FROM_KIMONO_GIRL_MINA
+	jumpthisopenedtext
+
+.OutroText:
+	text "Coming here from"
+	line "Ecruteak City"
+
+	para "was worth the"
+	line "trouble."
+
+	para "Dragon's Den is an"
+	line "ideal place for me"
+	cont "to train."
+	done
+
+.IntroText:
+	text "I am a Kimono"
+	line "Girl."
+
+	para "Haven't you met my"
+	line "five dancing cou-"
+	cont "sins in Ecruteak?"
+
+	para "Let me know if"
+	line "you do."
+	done
+
+.SeenText:
+	text "She who knows the"
+	line "most speaks the"
+	cont "least!"
+
+	para "Allow me to cha-"
+	line "llenge you and"
+	cont "your #mon!"
+	done
+
+.BeatenText:
+	text "Oh, you are"
+	line "wonderful…"
+	done
+
+.AfterText:
+	text "You are quite the"
+	line "Trainer."
+
+	para "You are worthy of"
+	line "this item!"
 	done

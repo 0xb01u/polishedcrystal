@@ -13,7 +13,7 @@ MoveManiacsHouse_MapScriptHeader:
 	bg_event  7,  1, BGEVENT_JUMPSTD, magazinebookshelf
 
 	def_object_events
-	object_event  2,  3, SPRITE_COSPLAYER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MoveReminderScript, -1
+	object_event  2,  3, SPRITE_COSPLAYER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, MoveReminderScript, -1
 
 MoveReminderScript:
 	faceplayer
@@ -21,15 +21,15 @@ MoveReminderScript:
 	writetext MoveReminderIntroText
 	waitbutton
 	; checkitem GOLD_LEAF
-	; iffalse .no_gold_leaf
+	; iffalsefwd .no_gold_leaf
 	writetext MoveReminderPromptText
 	yesorno
-	iffalse .refused
+	iffalsefwd .refused
 	setval NO_MOVE ; to toggle move relearner
 	writetext MoveReminderWhichMonText
 	waitbutton
 	special Special_MoveTutor
-	ifequal $0, .teach_move
+	ifequalfwd $0, .teach_move
 .refused
 	jumpopenedtext MoveReminderCancelText
 
@@ -45,12 +45,7 @@ MoveReminderIntroText::
 	line "Move Maniac."
 
 	para "I'll make your"
-	; line "#mon remember"
 	line "#mon remember a"
-
-	; para "a move if you'll"
-	; line "trade me a"
-	; cont "Gold Leaf!"
 	cont "move if you want!"
 	done
 
@@ -81,13 +76,10 @@ MoveReminderNoMovesText::
 
 	para "make that #mon"
 	line "remember."
-	done
+	prompt
 
 MoveReminderCancelText::
 	text "If your #mon"
 	line "needs to learn a"
-
-	; para "move, come back"
-	; line "with a Gold Leaf!"
 	cont "move, come back!"
 	done

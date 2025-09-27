@@ -13,16 +13,16 @@ Route27RestHouse_MapScriptHeader:
 	bg_event  7,  1, BGEVENT_JUMPSTD, difficultbookshelf
 
 	def_object_events
-	object_event  2,  4, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Route27RestHouseGranny, -1
+	object_event  2,  4, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, Route27RestHouseGranny, -1
 
 Route27RestHouseGranny:
 	faceplayer
 	opentext
 	checkevent EVENT_LISTENED_TO_SKILL_SWAP_INTRO
-	iftrue .HeardIntro
+	iftruefwd .HeardIntro
 	writetext .IntroText
 	setevent EVENT_LISTENED_TO_SKILL_SWAP_INTRO
-	sjump .Continue
+	sjumpfwd .Continue
 .HeardIntro
 	writetext .HeardIntroText
 .Continue
@@ -45,13 +45,13 @@ Route27RestHouseGranny:
 .Loyal:
 	writetext .QuestionText
 	checkitem SILVER_LEAF
-	iffalse .NoSilverLeaf
+	iffalsefwd .NoSilverLeaf
 	yesorno
-	iffalse .TutorRefused
+	iffalsefwd .TutorRefused
 	setval SKILL_SWAP
 	writetext ClearText
 	special Special_MoveTutor
-	ifequal $0, .TeachMove
+	ifequalfwd $0, .TeachMove
 .TutorRefused
 	jumpopenedtext .RefusedText
 

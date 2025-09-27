@@ -23,16 +23,16 @@ OaksLab_MapScriptHeader:
 	bg_event  8,  7, BGEVENT_JUMPSTD, difficultbookshelf
 	bg_event  9,  7, BGEVENT_JUMPSTD, difficultbookshelf
 	bg_event  4,  0, BGEVENT_JUMPTEXT, OaksLabPoster1Text
-	bg_event  5,  0, BGEVENT_JUMPTEXT, OaksLabPoster2Text	
+	bg_event  5,  0, BGEVENT_JUMPTEXT, OaksLabPoster2Text
 	bg_event  0,  1, BGEVENT_JUMPTEXT, OaksLabPCText
 
 	def_object_events
-	object_event  4,  2, SPRITE_OAK, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Oak, -1
-	object_event  7,  3, SPRITE_MON_ICON, SPRITEMOVEDATA_STILL, 0, EEVEE, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, EeveeDollScript, EVENT_DECO_EEVEE_DOLL
-	object_event  1,  8, SPRITE_AROMA_LADY, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 0, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_COMMAND, jumptextfaceplayer, OaksAssistant1Text, -1
-	object_event  8,  9, SPRITE_SCIENTIST, SPRITEMOVEDATA_WALK_UP_DOWN, 1, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptextfaceplayer, OaksAssistant2Text, -1
-	object_event  1,  4, SPRITE_SCIENTIST, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptextfaceplayer, OaksAssistant3Text, -1
-	object_event  2,  1, SPRITE_BOOK_PAPER_POKEDEX, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptext, OaksLabPokedexText, -1
+	object_event  4,  2, SPRITE_OAK, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, Oak, -1
+	object_event  7,  3, SPRITE_MON_ICON, SPRITEMOVEDATA_STILL, 0, EEVEE, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, NO_FORM, EeveeDollScript, EVENT_DECO_EEVEE_DOLL
+	object_event  1,  8, SPRITE_AROMA_LADY, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 0, 1, -1, PAL_NPC_GREEN, OBJECTTYPE_COMMAND, jumptextfaceplayer, OaksAssistant1Text, -1
+	object_event  8,  9, SPRITE_SCIENTIST, SPRITEMOVEDATA_WALK_UP_DOWN, 1, 0, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptextfaceplayer, OaksAssistant2Text, -1
+	object_event  1,  4, SPRITE_SCIENTIST, SPRITEMOVEDATA_WANDER, 1, 1, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptextfaceplayer, OaksAssistant3Text, -1
+	object_event  2,  1, SPRITE_BOOK_PAPER_POKEDEX, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptext, OaksLabPokedexText, -1
 
 	object_const_def
 	const OAKSLAB_OAK
@@ -42,78 +42,85 @@ Oak:
 	faceplayer
 	opentext
 	checkevent EVENT_OPENED_MT_SILVER
-	iftrue .GiveStarter
+	iftruefwd .GiveStarter
 	checkevent EVENT_TALKED_TO_OAK_IN_KANTO
-	iftrue .GiveStarter
+	iftruefwd .GiveStarter
 	writetext OakWelcomeKantoText
 	promptbutton
 	setevent EVENT_TALKED_TO_OAK_IN_KANTO
 .GiveStarter:
 	checkevent EVENT_GOT_A_POKEMON_FROM_OAK
-	iftrue .CheckBadges
+	iftruefwd .CheckBadges
 	checkevent EVENT_GOT_A_POKEMON_FROM_IVY
-	iffalse .CheckBadges
+	iffalsefwd .CheckBadges
 	writetext OakLabGiveStarterText
 	promptbutton
 	waitsfx
 	checkevent EVENT_GOT_BULBASAUR_FROM_IVY
-	iftrue .Charmander
+	iftruefwd .Charmander
 	checkevent EVENT_GOT_CHARMANDER_FROM_IVY
-	iftrue .Squirtle
-	givepoke BULBASAUR, NO_FORM, 10, SITRUS_BERRY
-	iffalse .PartyAndBoxFull
+	iftruefwd .Squirtle
+	givepoke BULBASAUR, PLAIN_FORM, 10, SITRUS_BERRY
+	iffalsefwd .PartyAndBoxFull
 	setevent EVENT_GOT_A_POKEMON_FROM_OAK
-	sjump .CheckBadges
+	sjumpfwd .CheckBadges
 
 .Charmander:
-	givepoke CHARMANDER, NO_FORM, 10, SITRUS_BERRY
-	iffalse .PartyAndBoxFull
+	givepoke CHARMANDER, PLAIN_FORM, 10, SITRUS_BERRY
+	iffalsefwd .PartyAndBoxFull
 	setevent EVENT_GOT_A_POKEMON_FROM_OAK
-	sjump .CheckBadges
+	sjumpfwd .CheckBadges
 
 .Squirtle:
-	givepoke SQUIRTLE, NO_FORM, 10, SITRUS_BERRY
-	iffalse .PartyAndBoxFull
+	givepoke SQUIRTLE, PLAIN_FORM, 10, SITRUS_BERRY
+	iffalsefwd .PartyAndBoxFull
 	setevent EVENT_GOT_A_POKEMON_FROM_OAK
-	sjump .CheckBadges
+	sjumpfwd .CheckBadges
 
 .PartyAndBoxFull:
 	writetext OakLabPartyAndBoxFullText
 	waitbutton
 .CheckBadges:
 	checkevent EVENT_OPENED_MT_SILVER
-	iftrue .CheckPokedex
+	iftruefwd .CheckPokedex
 	checkevent EVENT_BEAT_ELITE_FOUR_AGAIN
-	iftrue .BattleOak
+	iftruefwd .BattleOak
 	readvar VAR_BADGES
-	ifequal 16, .Complain1
-	ifequal  8, .Complain2
+	ifequalfwd 16, .Complain1
+	ifequalfwd  8, .Complain2
 	writetext OakYesKantoBadgesText
 	promptbutton
 .CheckPokedex:
+	checkkeyitem CATCH_CHARM
+	iftruefwd .GotCatchCharm
+	writetext OakLabCatchMoreText
+	promptbutton
+	verbosegivekeyitem CATCH_CHARM
+	writetext OakLabCatchCharmText
+	waitbutton
+.GotCatchCharm
 	writetext OakLabDexCheckText
 	waitbutton
 	special ProfOaksPCBoot
-	checkevent EVENT_GOT_OVAL_CHARM_FROM_OAK
-	iftrue .NoOvalCharm
-	readvar VAR_DEXSEEN
-	ifless NUM_POKEMON, .NoOvalCharm
+	checkkeyitem OVAL_CHARM
+	iftruefwd .NoOvalCharm
+	setval16 NUM_POKEMON
+	special CountSeen
+	iffalsefwd .NoOvalCharm
 	writetext OakLabSeenAllText
 	promptbutton
 	verbosegivekeyitem OVAL_CHARM
-	setevent EVENT_GOT_OVAL_CHARM_FROM_OAK
 	writetext OakLabOvalCharmText
 	waitbutton
 .NoOvalCharm
-	checkevent EVENT_GOT_SHINY_CHARM_FROM_OAK
-	iftrue .NoShinyCharm
-	readvar VAR_DEXCAUGHT
-	ifless NUM_POKEMON, .NoShinyCharm
+	checkkeyitem SHINY_CHARM
+	iftruefwd .NoShinyCharm
+	setval16 NUM_POKEMON
+	special CountCaught
+	iffalsefwd .NoShinyCharm
 	writetext OakLabCaughtAllText
 	promptbutton
 	verbosegivekeyitem SHINY_CHARM
-	setflag ENGINE_HAVE_SHINY_CHARM
-	setevent EVENT_GOT_SHINY_CHARM_FROM_OAK
 	writetext OakLabShinyCharmText
 	waitbutton
 .NoShinyCharm
@@ -121,14 +128,14 @@ Oak:
 
 .BattleOak:
 	checkevent EVENT_LISTENED_TO_OAK_INTRO
-	iftrue .HeardIntro
+	iftruefwd .HeardIntro
 	writetext OakMightBeReadyText
 	waitbutton
 	setevent EVENT_LISTENED_TO_OAK_INTRO
 .HeardIntro:
 	writetext OakChallengeText
 	yesorno
-	iffalse .NotReady
+	iffalsefwd .NotReady
 	writetext OakSeenText
 	waitbutton
 	closetext
@@ -217,7 +224,7 @@ OakLabGiveStarterText:
 OakLabPartyAndBoxFullText:
 	text "Hm, you don't have"
 	line "room for it, and"
-	line "your box is full."
+	line "your Box is full."
 	done
 
 OakLabDexCheckText:
@@ -225,6 +232,34 @@ OakLabDexCheckText:
 	line "dex coming?"
 
 	para "Let's see…"
+	done
+
+OakLabCatchMoreText:
+	text "I want to thank"
+	line "you for being of"
+
+	para "such help with"
+	line "filling out the"
+	cont "#dex."
+
+	para "Take this as a"
+	line "reward for your"
+	cont "hard work!"
+	done
+
+OakLabCatchCharmText:
+	text "Holding a Catch"
+	line "Charm will improve"
+
+	para "your chances of a"
+	line "critical capture."
+
+	para "That's when your"
+	line "# Ball is"
+
+	para "thrown just right"
+	line "and is more likely"
+	cont "to succeed!"
 	done
 
 OakLabSeenAllText:

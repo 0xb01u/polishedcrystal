@@ -17,11 +17,11 @@ FastShipCabins_SW_SSW_NW_MapScriptHeader:
 	bg_event  7,  2, BGEVENT_READ, FastShipBed
 
 	def_object_events
-	object_event  1, 15, SPRITE_FIREBREATHER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerFirebreatherLyle, EVENT_FAST_SHIP_PASSENGERS_FIRST_TRIP
-	object_event  6, 15, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerBug_catcherKen, EVENT_FAST_SHIP_PASSENGERS_WESTBOUND
-	object_event  5, 27, SPRITE_RICH_BOY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerRichBoyWinston, EVENT_FAST_SHIP_PASSENGERS_FIRST_TRIP
-	object_event  1, 26, SPRITE_BEAUTY, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerBeautyCassie, EVENT_FAST_SHIP_PASSENGERS_EASTBOUND
-	object_event  3, 28, SPRITE_ROCKER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 2, TrainerGuitaristmClyde, EVENT_FAST_SHIP_PASSENGERS_WESTBOUND
+	object_event  1, 15, SPRITE_FIREBREATHER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerFirebreatherLyle, EVENT_FAST_SHIP_PASSENGERS_FIRST_TRIP
+	object_event  6, 15, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerBug_catcherKen, EVENT_FAST_SHIP_PASSENGERS_WESTBOUND
+	object_event  5, 27, SPRITE_RICH_BOY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerRichBoyWinston, EVENT_FAST_SHIP_PASSENGERS_FIRST_TRIP
+	object_event  1, 26, SPRITE_BEAUTY, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerBeautyCassie, EVENT_FAST_SHIP_PASSENGERS_EASTBOUND
+	object_event  3, 28, SPRITE_ROCKER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, 0, OBJECTTYPE_TRAINER, 2, TrainerGuitaristmClyde, EVENT_FAST_SHIP_PASSENGERS_WESTBOUND
 
 GenericTrainerFirebreatherLyle:
 	generictrainer FIREBREATHER, LYLE, EVENT_BEAT_FIREBREATHER_LYLE, FirebreatherLyleSeenText, FirebreatherLyleBeatenText
@@ -67,7 +67,7 @@ GuitaristmClydeScript:
 	endifjustbattled
 	opentext
 	checkbp 0
-	iffalse .BattleTower
+	iffalsefwd .BattleTower
 	jumpopenedtext GuitaristClydeAfterBattleText
 
 .BattleTower:
@@ -84,24 +84,24 @@ FastShipBed:
 	special Special_FadeInQuickly
 	showtext FastShipBedText2
 	checkevent EVENT_FAST_SHIP_HAS_ARRIVED
-	iftrue UnknownScript_0x75ae1
+	iftruefwd .AlreadyArrived
 	checkevent EVENT_FAST_SHIP_FOUND_GIRL
-	iftrue UnknownScript_0x75ae2
+	iftruefwd .CanArrive
 	checkevent EVENT_FAST_SHIP_FIRST_TIME
-	iftrue UnknownScript_0x75ae2
-UnknownScript_0x75ae1:
+	iftruefwd .CanArrive
+.AlreadyArrived:
 	end
 
-UnknownScript_0x75ae2:
+.CanArrive:
 	playsound SFX_ELEVATOR_END
 	pause 30
 	checkevent EVENT_FAST_SHIP_DESTINATION_OLIVINE
-	iftrue UnknownScript_0x75af7
+	iftruefwd .ArrivedOlivine
 	showtext FastShipArrivedVermilionText
 	setevent EVENT_FAST_SHIP_HAS_ARRIVED
 	end
 
-UnknownScript_0x75af7:
+.ArrivedOlivine:
 	showtext FastShipArrivedOlivineText
 	setevent EVENT_FAST_SHIP_HAS_ARRIVED
 	end

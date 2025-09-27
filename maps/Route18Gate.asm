@@ -20,7 +20,7 @@ Route18Gate_MapScriptHeader:
 	def_bg_events
 
 	def_object_events
-	object_event  5,  1, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_COMMAND, jumptextfaceplayer, Route17Route18GateOfficerText, -1
+	object_event  5,  1, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_COMMAND, jumptextfaceplayer, Route17Route18GateOfficerText, -1
 
 	object_const_def
 	const ROUTE18GATE_OFFICER
@@ -29,24 +29,24 @@ Route18GateStepUpOneTrigger:
 	checkkeyitem BICYCLE
 	iftrue DoNothingScript
 	applyonemovement PLAYER, step_up
-	sjump UnknownScript_0x73617
+	sjumpfwd Route18GateNoBicycle
 
 Route18GateStepUpTwoTrigger:
 	checkkeyitem BICYCLE
 	iftrue DoNothingScript
 	applymovement PLAYER, Route18GateStepUpTwoMovementData
-	sjump UnknownScript_0x73617
+	sjumpfwd Route18GateNoBicycle
 
 Route18GateStepUpThreeTrigger:
 	checkkeyitem BICYCLE
 	iftrue DoNothingScript
 	applymovement PLAYER, Route18GateStepUpThreeMovementData
-	sjump UnknownScript_0x73617
+	sjumpfwd Route18GateNoBicycle
 
 Route17Route18GateBicycleCheck:
 	checkkeyitem BICYCLE
 	iftrue DoNothingScript
-UnknownScript_0x73617:
+Route18GateNoBicycle:
 	showemote EMOTE_SHOCK, ROUTE18GATE_OFFICER, 15
 	turnobject PLAYER, UP
 	showtext Route17Route18GateCannotPassText

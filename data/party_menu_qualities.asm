@@ -11,26 +11,26 @@
 	const PLACE_PARTYMON_BATTLETOWER
 
 MACRO partymenuqualities
-for i, 1, _NARG + 1
-	db PLACE_PARTYMON_\<i>
-endr
+	for i, 1, _NARG + 1
+		db PLACE_PARTYMON_\<i>
+	endr
 	db -1 ; end
 ENDM
 
 PartyMenuQualityPointers:
 ; entries correspond to PARTYMENUACTION_* constants
-	table_width 2, PartyMenuQualityPointers
-	dw .Default
-	dw .Default
-	dw .Default
-	dw .TMHM
-	dw .Default
-	dw .EvoStone
-	dw .Gender
-	dw .Gender
-	dw .Default
-	dw .Reminder
-	dw .BTLTower
+	table_width 1
+	dr .Default
+	dr .Default
+	dr .Default
+	dr .TMHM
+	dr .Default
+	dr .EvoStone
+	dr .Gender
+	dr .Gender
+	dr .Default
+	dr .Reminder
+	dr .BTLTower
 	assert_table_length NUM_PARTYMENUACTIONS
 
 .Default:

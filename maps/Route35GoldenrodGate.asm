@@ -14,32 +14,32 @@ Route35GoldenrodGate_MapScriptHeader:
 	def_bg_events
 
 	def_object_events
-	object_event  0,  4, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, RandyScript, -1
-	object_event  6,  4, SPRITE_BREEDER, SPRITEMOVEDATA_WALK_UP_DOWN, 1, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Route35GoldenrodGatePokefanFScript, -1
-	object_event  3,  2, SPRITE_FAT_GUY, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_PURPLE, OBJECTTYPE_COMMAND, jumptextfaceplayer, Route35GoldenrodGateFisherText, -1
+	object_event  0,  4, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, RandyScript, -1
+	object_event  6,  4, SPRITE_BREEDER, SPRITEMOVEDATA_WALK_UP_DOWN, 1, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, Route35GoldenrodGatePokefanFScript, -1
+	object_event  3,  2, SPRITE_FAT_GUY, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, PAL_NPC_PURPLE, OBJECTTYPE_COMMAND, jumptextfaceplayer, Route35GoldenrodGateFisherText, -1
 
 RandyScript:
 	faceplayer
 	opentext
 	checkevent EVENT_GOT_HP_UP_FROM_RANDY
-	iftrue .gothpup
+	iftruefwd .gothpup
 	checkevent EVENT_GAVE_KENYA
-	iftrue .questcomplete
+	iftruefwd .questcomplete
 	checkevent EVENT_GOT_KENYA
-	iftrue .alreadyhavekenya
+	iftruefwd .alreadyhavekenya
 	writetext Route35GoldenrodGateRandyAskTakeThisMonToMyFriendText
 	yesorno
-	iffalse .refused
+	iffalsefwd .refused
 	readvar VAR_PARTYCOUNT
-	ifequal PARTY_LENGTH, .partyfull
+	ifequalfwd PARTY_LENGTH, .partyfull
 	writetext Route35GoldenrodGateRandyThanksText
 	promptbutton
 	waitsfx
 	writetext Route35GoldenrodGatePlayerReceivedAMonWithMailText
 	playsound SFX_KEY_ITEM
 	waitsfx
-	givepoke FARFETCH_D, FEMALE | NO_FORM, 10, NO_ITEM, NET_BALL, NO_MOVE, TRUE, GiftFarfetch_dName, GiftFarfetch_dOTName, GiftFarfetch_dOTIDAndCaughtGender
-	givepokemail GiftFarfetch_dMail
+	givepoke SPEAROW, FEMALE | PLAIN_FORM, 10, NO_ITEM, NET_BALL, NO_MOVE, GiftSpearowName, GiftSpearowOTName, 01001
+	givepokemail GiftSpearowMail
 	setevent EVENT_GOT_KENYA
 .alreadyhavekenya
 	jumpopenedtext Route35GoldenrodGateRandyWeirdTreeBlockingRoadText
@@ -54,7 +54,7 @@ RandyScript:
 	writetext Route35GoldenrodGateRandySomethingForYourTroubleText
 	promptbutton
 	verbosegiveitem HP_UP
-	iffalse .bagfull
+	iffalsefwd .bagfull
 	setevent EVENT_GOT_HP_UP_FROM_RANDY
 .gothpup
 	writetext Route35GoldenrodGateRandyMyPalWasSnoozingRightText
@@ -62,26 +62,24 @@ RandyScript:
 .bagfull
 	endtext
 
-GiftFarfetch_dMail:
+GiftSpearowMail:
 	db   FLOWER_MAIL
+	setcharmap no_ngrams
 	db   "Dark Cave leads"
 	next "to another road@"
+	setcharmap default
 
-GiftFarfetch_dName:
+GiftSpearowName:
 	rawchar "Kenya@"
 
-GiftFarfetch_dOTName:
+GiftSpearowOTName:
 	rawchar "Randy@"
-
-GiftFarfetch_dOTIDAndCaughtGender:
-	bigdw 01001
-	db MALE
 
 Route35GoldenrodGatePokefanFScript:
 	faceplayer
 	opentext
 	checkevent EVENT_FOUGHT_SUDOWOODO
-	iftrue .aftersudowoodo
+	iftruefwd .aftersudowoodo
 	jumpopenedtext Route35GoldenrodGatePokefanFText
 
 .aftersudowoodo

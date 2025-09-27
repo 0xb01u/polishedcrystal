@@ -19,9 +19,9 @@ MrPokemonsHouse_MapScriptHeader:
 	bg_event  3,  1, BGEVENT_READ, MrPokemonsHouse_CabinetScript
 
 	def_object_events
-	object_event  3,  5, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MrPokemonsHouse_MrPokemonScript, -1
-	object_event  6,  5, SPRITE_OAK, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_MR_POKEMONS_HOUSE_OAK
-	object_event  4,  4, SPRITE_BOOK_PAPER_POKEDEX, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_GOT_POKEDEX_FROM_OAK
+	object_event  3,  5, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, MrPokemonsHouse_MrPokemonScript, -1
+	object_event  6,  5, SPRITE_OAK, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_MR_POKEMONS_HOUSE_OAK
+	object_event  4,  4, SPRITE_BOOK_PAPER_POKEDEX, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_GOT_POKEDEX_FROM_OAK
 
 	object_const_def
 	const MRPOKEMONSHOUSE_GENTLEMAN
@@ -56,13 +56,15 @@ if !DEF(DEBUG)
 	waitbutton
 endc
 	closetext
-	sjump MrPokemonsHouse_OakScript
+	sjumpfwd MrPokemonsHouse_OakScript
 
 MrPokemonsHouse_MrPokemonScript:
 	faceplayer
 	opentext
 	checkkeyitem RED_SCALE
-	iftrue .RedScale
+	iftruefwd .RedScale
+	checkitem ODD_SOUVENIR
+	iftrue_jumpopenedtext MrPokemonText_OddSouvenir
 	checkevent EVENT_GAVE_MYSTERY_EGG_TO_ELM
 	iftrue_jumpopenedtext MrPokemonText_AlwaysNewDiscoveries
 	jumpopenedtext MrPokemonText_ImDependingOnYou
@@ -76,9 +78,9 @@ MrPokemonsHouse_MrPokemonScript:
 	writetext MrPokemonText_GotShinyDitto
 	playsound SFX_KEY_ITEM
 	waitsfx
-	ifequal 1, .in_party
+	ifequalfwd 1, .in_party
 	special Special_CurBoxFullCheck
-	iffalse .BoxNotFull
+	iffalsefwd .BoxNotFull
 	farwritetext _CurBoxFullText
 .BoxNotFull
 	special GetCurBoxName
@@ -102,9 +104,7 @@ MrPokemonsHouse_OakScript:
 	turnobject MRPOKEMONSHOUSE_OAK, LEFT
 	pause 10
 	opentext
-	writetext MrPokemonsHouse_GetDexText
-	playsound SFX_ITEM
-	waitsfx
+	givespecialitem POKEDEX
 	setflag ENGINE_POKEDEX
 	writetext MrPokemonsHouse_OakText2
 	waitbutton
@@ -135,9 +135,9 @@ MrPokemonsHouse_OakScript:
 	specialphonecall SPECIALCALL_ROBBED
 	clearevent EVENT_COP_IN_ELMS_LAB
 	checkevent EVENT_GOT_TOTODILE_FROM_ELM
-	iftrue .RivalTakesChikorita
+	iftruefwd .RivalTakesChikorita
 	checkevent EVENT_GOT_CHIKORITA_FROM_ELM
-	iftrue .RivalTakesCyndaquil
+	iftruefwd .RivalTakesCyndaquil
 	setevent EVENT_TOTODILE_POKEBALL_IN_ELMS_LAB
 	end
 
@@ -153,7 +153,7 @@ MrPokemonsHouse_CabinetScript:
 	opentext
 	writetext MrPokemonsHouse_CabinetText
 	checkevent EVENT_TRADED_RED_SCALE
-	iffalse .NoRedScale
+	iffalsefwd .NoRedScale
 	promptbutton
 	writetext MrPokemonsHouse_RedScaleCabinetText
 .NoRedScale
@@ -236,6 +236,27 @@ MrPokemonsHouse_MrPokemonHealText:
 	cont "rest."
 	done
 
+MrPokemonText_OddSouvenir:
+	text "Oh! That souvenir!"
+
+	para "I got one of those"
+	line "on my trip to the"
+	cont "Orange Islands."
+
+	para "I saw some oddly-"
+	line "formed #mon"
+	cont "there too!"
+
+	para "Hmm… I wonder…"
+
+	para "Is there a conn-"
+	line "ection between"
+
+	para "that souvenir and"
+	line "those unusual"
+	cont "forms of #mon?"
+	done
+
 MrPokemonText_ImDependingOnYou:
 	text "I'm depending on"
 	line "you!"
@@ -315,11 +336,6 @@ if !DEF(DEBUG)
 endc
 	done
 
-MrPokemonsHouse_GetDexText:
-	text "<PLAYER> received"
-	line "#dex!"
-	done
-
 MrPokemonsHouse_OakText2:
 	text "Go meet many kinds"
 	line "of #mon and"
@@ -375,7 +391,7 @@ MrPokemonText_SentToPC:
 MrPokemonText_PartyAndBoxFull:
 	text "You don't have any"
 	line "room for this,"
-	cont "even in your box!"
+	cont "even in your Box!"
 	done
 
 MrPokemonText_Disappointed:
@@ -414,5 +430,5 @@ MrPokemonsHouse_CabinetText:
 
 MrPokemonsHouse_RedScaleCabinetText:
 	text "One of them is the"
-	line "shiny red scale!"
+	line "shiny Red Scale!"
 	done

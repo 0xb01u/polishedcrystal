@@ -2,7 +2,7 @@ MACRO map_id
 	db GROUP_\1, MAP_\1
 ENDM
 
-object_const_def EQUS "const_def 1"
+DEF object_const_def EQUS "const_def 1"
 
 MACRO def_scene_scripts
 	REDEF _NUM_SCENE_SCRIPTS EQUS "_NUM_SCENE_SCRIPTS_\@"
@@ -90,81 +90,93 @@ MACRO object_event
 	db \2 + 4 ; y
 	db \1 + 4 ; x
 	db \4 ; movement function
-	dn \5, \6 ; radius: y, x
-	db \7 ; clock_hour
-	db \8 ; clock_daytime
-	dn \9, \<10> ; color, persontype
-	if \<10> == OBJECTTYPE_COMMAND
-		db \<11>_command ; command id
+	if \3 == SPRITE_MON_ICON
+		dn \5, LOW(\6) ; mon index
 	else
-		db \<11> ; sight_range || cry id
+		dn \5, \6 ; radius: y, x
 	endc
-	if _NARG == 14
-		db \<12> ; itemball contents
-		db \<13> ; itemball quantity
-		dw \<14> ; event flag
+	db \8 ; palette
+	db \7 ; time of day
+	db \9 ; type
+	if \9 == OBJECTTYPE_COMMAND
+		db \<10>_command ; command id
+	elif \3 == SPRITE_MON_ICON
+		db (HIGH(\6) << MON_EXTSPECIES_F) | \<10> ; extspecies | form
 	else
-		dw \<12> ; pointer || byte, 0
+		db \<10> ; sight_range
+	endc
+	if _NARG == 13
+		db \<11> ; itemball contents
+		db \<12> ; itemball quantity
 		dw \<13> ; event flag
+	else
+		dw \<11> ; pointer || byte, 0
+		dw \<12> ; event flag
 	endc
 	redef {_NUM_OBJECT_EVENTS} += 1
 ENDM
 
 MACRO itemball_event
-	object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_ITEMBALL, PLAYEREVENT_ITEMBALL, \3, \4, \5
+	object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_POKE_BALL, OBJECTTYPE_ITEMBALL, PLAYEREVENT_ITEMBALL, \3, \4, \5
 ENDM
 
 MACRO keyitemball_event
-	object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_ITEMBALL, PLAYEREVENT_KEYITEMBALL, \3, \4
+	assert _NARG == 4, "No quantity needed for keyitemball_event"
+	object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_KEY_ITEM, OBJECTTYPE_ITEMBALL, PLAYEREVENT_KEYITEMBALL, \3, \4
 ENDM
 
 MACRO tmhmball_event
-	object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_ITEMBALL, PLAYEREVENT_TMHMBALL, \3, \4
+	assert _NARG == 4, "No quantity needed for tmhmball_event"
+	object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_YELLOW, OBJECTTYPE_ITEMBALL, PLAYEREVENT_TMHMBALL, \3, \4
 ENDM
 
 MACRO cuttree_event
-	object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_CUTTABLE_TREE, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumpstd, cuttree, \3
+	object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_CUTTABLE_TREE, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumpstd, cuttree, \3
 ENDM
 
 MACRO fruittree_event
 	if _NARG == 5
-		object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_FRUIT, 0, \3 - 1, -1, -1, \5, OBJECTTYPE_COMMAND, fruittree, \3, \4, -1
+		object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_FRUIT, 0, \3 - 1, -1, \5, OBJECTTYPE_COMMAND, fruittree, \3, \4, -1
 	else
-		object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_FRUIT, 0, \3 - 1, -1, -1, \5, OBJECTTYPE_COMMAND, fruittree, \3, \4, \6
+		object_event \1, \2, SPRITE_BALL_CUT_FRUIT, SPRITEMOVEDATA_FRUIT, 0, \3 - 1, (1 << \6), \5, OBJECTTYPE_COMMAND, fruittree, \3, \4, \7
 	endc
 ENDM
 
 MACRO strengthboulder_event
 	if _NARG == 2
-		object_event \1, \2, SPRITE_BOULDER_ROCK_FOSSIL, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumpstd, strengthboulder, -1
+		object_event \1, \2, SPRITE_BOULDER_ROCK_FOSSIL, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumpstd, strengthboulder, -1
 	else
-		object_event \1, \2, SPRITE_BOULDER_ROCK_FOSSIL, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumpstd, strengthboulder, \3
+		object_event \1, \2, SPRITE_BOULDER_ROCK_FOSSIL, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumpstd, strengthboulder, \3
 	endc
 ENDM
 
 MACRO smashrock_event
 	if _NARG == 2
-		object_event \1, \2, SPRITE_BOULDER_ROCK_FOSSIL, SPRITEMOVEDATA_SMASHABLE_ROCK, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumpstd, smashrock, 0, -1
+		object_event \1, \2, SPRITE_BOULDER_ROCK_FOSSIL, SPRITEMOVEDATA_SMASHABLE_ROCK, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumpstd, smashrock, 0, -1
 	else
-		object_event \1, \2, SPRITE_BOULDER_ROCK_FOSSIL, SPRITEMOVEDATA_SMASHABLE_ROCK, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumpstd, smashrock, 0, \3
+		object_event \1, \2, SPRITE_BOULDER_ROCK_FOSSIL, SPRITEMOVEDATA_SMASHABLE_ROCK, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumpstd, smashrock, 0, \3
 	endc
 ENDM
 
 MACRO pokemon_event
-	object_event \1, \2, SPRITE_MON_ICON, SPRITEMOVEDATA_POKEMON, 0, \3, \4, \5, \6, OBJECTTYPE_POKEMON, \3, \7, \8
+	if _NARG == 8
+		object_event \1, \2, SPRITE_MON_ICON, \4, 0, \3, \5, \6, OBJECTTYPE_POKEMON, NO_FORM, \7, \8
+	else
+		object_event \1, \2, SPRITE_MON_ICON, \5, 0, \3, \6, \7, OBJECTTYPE_POKEMON, \4, \8, \9
+	endc
 ENDM
 
 MACRO pc_nurse_event
-	object_event \1, \2, SPRITE_BOWING_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumpstd, pokecenternurse, -1
+	object_event \1, \2, SPRITE_BOWING_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumpstd, pokecenternurse, -1
 ENDM
 
 MACRO mart_clerk_event
-	object_event \1, \2, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, pokemart, \3, \4, -1
+	object_event \1, \2, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_COMMAND, pokemart, \3, \4, -1
 ENDM
 
 
 MACRO trainer
-	; flag, group, id, seen text, win text, lost text, talk-again text
+	; flag, group, id, seen text, win text, lost text, after script
 	dw \3
 	db \1, \2
 	dw \4, \5, \6, \7
@@ -186,4 +198,77 @@ ENDM
 MACRO stonetable
 	db \1, \2
 	dw \3
+ENDM
+
+; Connections go in order: north, south, west, east
+MACRO connection
+;\1: direction
+;\2: map name
+;\3: map id
+;\4: offset of the target map relative to the current map
+;    (x offset for east/west, y offset for north/south)
+
+; Calculate tile offsets for source (current) and target maps
+	DEF _src = 0
+	DEF _tgt = (\4) + 3
+	if _tgt < 0
+		DEF _src = -_tgt
+		DEF _tgt = 0
+	endc
+
+	if !STRCMP("\1", "north")
+		DEF _blk = \3_WIDTH * (\3_HEIGHT - 3) + _src
+		DEF _map = _tgt
+		DEF _win = (\3_WIDTH + 6) * \3_HEIGHT + 1
+		DEF _y = \3_HEIGHT * 2 - 1
+		DEF _x = (\4) * -2
+		DEF _len = CURRENT_MAP_WIDTH + 3 - (\4)
+		if _len > \3_WIDTH
+			DEF _len = \3_WIDTH
+		endc
+
+	elif !STRCMP("\1", "south")
+		DEF _blk = _src
+		DEF _map = (CURRENT_MAP_WIDTH + 6) * (CURRENT_MAP_HEIGHT + 3) + _tgt
+		DEF _win = \3_WIDTH + 7
+		DEF _y = 0
+		DEF _x = (\4) * -2
+		DEF _len = CURRENT_MAP_WIDTH + 3 - (\4)
+		if _len > \3_WIDTH
+			DEF _len = \3_WIDTH
+		endc
+
+	elif !STRCMP("\1", "west")
+		DEF _blk = (\3_WIDTH * _src) + \3_WIDTH - 3
+		DEF _map = (CURRENT_MAP_WIDTH + 6) * _tgt
+		DEF _win = (\3_WIDTH + 6) * 2 - 6
+		DEF _y = (\4) * -2
+		DEF _x = \3_WIDTH * 2 - 1
+		DEF _len = CURRENT_MAP_HEIGHT + 3 - (\4)
+		if _len > \3_HEIGHT
+			DEF _len = \3_HEIGHT
+		endc
+
+	elif !STRCMP("\1", "east")
+		DEF _blk = (\3_WIDTH * _src)
+		DEF _map = (CURRENT_MAP_WIDTH + 6) * _tgt + CURRENT_MAP_WIDTH + 3
+		DEF _win = \3_WIDTH + 7
+		DEF _y = (\4) * -2
+		DEF _x = 0
+		DEF _len = CURRENT_MAP_HEIGHT + 3 - (\4)
+		if _len > \3_HEIGHT
+			DEF _len = \3_HEIGHT
+		endc
+
+	else
+		fail "Invalid direction for 'connection'."
+	endc
+
+	map_id \3
+	dw wDecompressScratch + _blk
+	dw wOverworldMapBlocks + _map
+	db _len - _src
+	db \3_WIDTH
+	db _y, _x
+	dw wOverworldMapBlocks + _win
 ENDM

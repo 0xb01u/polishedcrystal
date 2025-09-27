@@ -535,6 +535,9 @@ INCLUDE "audio/music/sm/trainerbattle.asm"
 SECTION "Song - sm/wildbattle", ROMX
 INCLUDE "audio/music/sm/wildbattle.asm"
 
+SECTION "Song - swsh/gymleaderbattle", ROMX
+INCLUDE "audio/music/swsh/gymleaderbattle.asm"
+
 SECTION "Song - prism/wildbattle", ROMX
 INCLUDE "audio/music/prism/wildbattle.asm"
 
@@ -561,3 +564,5 @@ INCLUDE "audio/music/m02/lugiassong.asm"
 
 SECTION "Song - undertale/megalovania", ROMX
 INCLUDE "audio/music/undertale/megalovania.asm"
+
+ENDSECTION

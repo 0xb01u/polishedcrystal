@@ -1,5 +1,6 @@
 Music:
-	table_width 3, Music
+; entries correspond to MUSIC_* constants
+	table_width 3
 	dba Music_Nothing
 	dba Music_CrystalOpening
 	dba Music_TitleScreen
@@ -173,6 +174,7 @@ Music:
 	dba Music_GymLeaderBattleDPPt
 	dba Music_GymLeaderBattleBW
 	dba Music_GymLeaderBattleXY
+	dba Music_GymLeaderBattleSwSh
 	dba Music_GymLeaderBattleGo
 	dba Music_EliteFourBattleBW
 	dba Music_CelestialTowerBW_NoIntro
@@ -183,6 +185,7 @@ Music:
 	dba Music_ChampionBattleB2W2
 	dba Music_Credits
 	dba Music_PostCredits
+	dba Music_Printer
 	dba Music_TitleScreenXY
 	dba Music_DewfordTownRSE
 	dba Music_MarineTubeB2W2

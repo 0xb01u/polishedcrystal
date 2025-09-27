@@ -14,20 +14,22 @@ Route35_MapScriptHeader:
 	def_bg_events
 	bg_event  5,  7, BGEVENT_JUMPTEXT, Route35SignText
 	bg_event 15, 31, BGEVENT_JUMPTEXT, Route35SignText
+	bg_event 12, 23, BGEVENT_JUMPTEXT, Route35AdvancedTipsSignText
 	bg_event  4, 11, BGEVENT_ITEM + NUGGET, EVENT_ROUTE_35_HIDDEN_NUGGET
 	bg_event 14, 15, BGEVENT_JUMPSTD, treegrotto, HIDDENGROTTO_ROUTE_35
 	bg_event 15, 15, BGEVENT_JUMPSTD, treegrotto, HIDDENGROTTO_ROUTE_35
 
 	def_object_events
-	object_event  8, 19, SPRITE_CAMPER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerCamperIvan, -1
-	object_event 12, 20, SPRITE_COOL_DUDE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCoupleGailandeli1, -1
-	object_event 11, 20, SPRITE_CUTE_GIRL, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCoupleGailandeli2, -1
-	object_event 14, 26, SPRITE_PICNICKER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerPicnickerKim, -1
-	object_event 18, 29, SPRITE_BREEDER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerBreederTheresa, -1
-	object_event  6, 10, SPRITE_FIREBREATHER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerFirebreatherWalt, -1
-	object_event 20,  7, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 2, -1, -1, 0, OBJECTTYPE_TRAINER, 3, TrainerBug_catcherArnie1, -1
-	object_event  9, 10, SPRITE_JUGGLER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 2, TrainerJugglerIrwin, -1
-	object_event  9,  6, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, TrainerOfficerDirk, -1
+	object_event  8, 19, SPRITE_CAMPER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerCamperIvan, -1
+	object_event 12, 20, SPRITE_COOL_DUDE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCoupleGailandeli1, -1
+	object_event 11, 20, SPRITE_CUTE_GIRL, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCoupleGailandeli2, -1
+	object_event 14, 26, SPRITE_PICNICKER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerPicnickerKim, -1
+	object_event 18, 29, SPRITE_BREEDER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerBreederTheresa, -1
+	object_event  6, 10, SPRITE_FIREBREATHER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerFirebreatherWalt, -1
+	object_event 20,  7, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 2, -1, 0, OBJECTTYPE_TRAINER, 3, TrainerBug_catcherArnie1, -1
+	object_event  9, 10, SPRITE_JUGGLER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_TRAINER, 2, TrainerJugglerIrwin, -1
+	object_event  9,  6, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, TrainerOfficerDirk, -1
+	object_event 24, -5, SPRITE_PSYCHIC, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPsychicMark, -1
 	cuttree_event 21,  6, EVENT_ROUTE_35_CUT_TREE
 	fruittree_event  6, 25, FRUITTREE_ROUTE_35, LEPPA_BERRY, PAL_NPC_RED
 	tmhmball_event 17, 16, TM_HONE_CLAWS, EVENT_ROUTE_35_TM_HONE_CLAWS
@@ -52,24 +54,24 @@ TrainerJugglerIrwin:
 	loadvar VAR_CALLERID, PHONE_JUGGLER_IRWIN
 	opentext
 	checkcellnum PHONE_JUGGLER_IRWIN
-	iftrue Route35NumberAcceptedM
+	iftruefwd Route35NumberAcceptedM
 	checkevent EVENT_IRWIN_ASKED_FOR_PHONE_NUMBER
-	iftrue .AskedAlready
+	iftruefwd .AskedAlready
 	writetext JugglerIrwinAfterBattleText
 	promptbutton
 	setevent EVENT_IRWIN_ASKED_FOR_PHONE_NUMBER
 	scall Route35AskNumber1M
-	sjump .AskForNumber
+	sjumpfwd .AskForNumber
 
 .AskedAlready:
 	scall Route35AskNumber2M
 .AskForNumber:
 	askforphonenumber PHONE_JUGGLER_IRWIN
-	ifequal $1, Route35PhoneFullM
-	ifequal $2, Route35NumberDeclinedM
-	gettrainername JUGGLER, IRWIN1, $0
+	ifequalfwd $1, Route35PhoneFullM
+	ifequalfwd $2, Route35NumberDeclinedM
+	gettrainername JUGGLER, IRWIN1, STRING_BUFFER_3
 	scall Route35RegisteredNumberM
-	sjump Route35NumberAcceptedM
+	sjumpfwd Route35NumberAcceptedM
 
 Route35AskNumber1M:
 	jumpstd asknumber1m
@@ -132,18 +134,18 @@ TrainerBug_catcherArnie1:
 	endifjustbattled
 	opentext
 	checkflag ENGINE_ARNIE_READY_FOR_REMATCH
-	iftrue .WantsBattle
+	iftruefwd .WantsBattle
 	checkflag ENGINE_YANMA_SWARM
-	iftrue .YanmaSwarming
+	iftruefwd .YanmaSwarming
 	checkcellnum PHONE_BUG_CATCHER_ARNIE
 	iftrue Route35NumberAcceptedM
 	checkevent EVENT_ARNIE_ASKED_FOR_PHONE_NUMBER
-	iftrue .AskedAlready
+	iftruefwd .AskedAlready
 	writetext BugCatcherArnieAfterBattleText
 	promptbutton
 	setevent EVENT_ARNIE_ASKED_FOR_PHONE_NUMBER
 	scall Route35AskNumber1M
-	sjump .AskForNumber
+	sjumpfwd .AskForNumber
 
 .AskedAlready:
 	scall Route35AskNumber2M
@@ -151,7 +153,7 @@ TrainerBug_catcherArnie1:
 	askforphonenumber PHONE_BUG_CATCHER_ARNIE
 	ifequal $1, Route35PhoneFullM
 	ifequal $2, Route35NumberDeclinedM
-	gettrainername BUG_CATCHER, ARNIE1, $0
+	gettrainername BUG_CATCHER, ARNIE1, STRING_BUFFER_3
 	scall Route35RegisteredNumberM
 	sjump Route35NumberAcceptedM
 
@@ -159,23 +161,23 @@ TrainerBug_catcherArnie1:
 	scall Route35RematchM
 	winlosstext Bug_catcherArnie1BeatenText, 0
 	readmem wArnieFightCount
-	ifequal 4, .Fight4
-	ifequal 3, .Fight3
-	ifequal 2, .Fight2
-	ifequal 1, .Fight1
-	ifequal 0, .LoadFight0
+	ifequalfwd 4, .Fight4
+	ifequalfwd 3, .Fight3
+	ifequalfwd 2, .Fight2
+	ifequalfwd 1, .Fight1
+	ifequalfwd 0, .LoadFight0
 .Fight4:
 	checkevent EVENT_RESTORED_POWER_TO_KANTO
-	iftrue .LoadFight4
+	iftruefwd .LoadFight4
 .Fight3:
 	checkevent EVENT_BEAT_ELITE_FOUR
-	iftrue .LoadFight3
+	iftruefwd .LoadFight3
 .Fight2:
 	checkflag ENGINE_FLYPOINT_BLACKTHORN
-	iftrue .LoadFight2
+	iftruefwd .LoadFight2
 .Fight1:
 	checkflag ENGINE_FLYPOINT_LAKE_OF_RAGE
-	iftrue .LoadFight1
+	iftruefwd .LoadFight1
 .LoadFight0:
 	loadtrainer BUG_CATCHER, ARNIE1
 	startbattle
@@ -230,9 +232,9 @@ TrainerOfficerDirk:
 	faceplayer
 	opentext
 	checktime 1 << NITE
-	iffalse .NotNight
+	iffalsefwd .NotNight
 	checkevent EVENT_BEAT_OFFICERM_DIRK
-	iftrue .AfterBattle
+	iftruefwd .AfterBattle
 	special SaveMusic
 	playmusic MUSIC_OFFICER_ENCOUNTER
 	writetext OfficerDirkSeenText
@@ -389,4 +391,15 @@ OfficerDirkPrettyToughText:
 
 Route35SignText:
 	text "Route 35"
+	done
+
+Route35AdvancedTipsSignText:
+	text "Advanced Tips!"
+
+	para "You can register"
+	line "up to four Key"
+
+	para "Items for quick"
+	line "use via the"
+	cont "Select button!"
 	done

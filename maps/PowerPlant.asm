@@ -15,13 +15,13 @@ PowerPlant_MapScriptHeader:
 	bg_event  1,  1, BGEVENT_JUMPSTD, difficultbookshelf
 
 	def_object_events
-	object_event  4, 14, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, PowerPlantOfficerScript, -1
-	object_event  2,  9, SPRITE_GYM_GUY, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, PowerPlantGymGuide1Script, -1
-	object_event  6, 11, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, PowerPlantGymGuide2Script, -1
-	object_event  9,  3, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, PowerPlantOfficer2Script, -1
-	object_event  7,  2, SPRITE_GYM_GUY, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, PowerPlantGymGuide4Script, -1
-	object_event 14, 10, SPRITE_FAT_GUY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, PowerPlantManager, -1
-	object_event  5,  5, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_COMMAND, jumptextfaceplayer, PowerPlantForestText, -1
+	object_event  4, 14, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, PowerPlantOfficerScript, -1
+	object_event  2,  9, SPRITE_GYM_GUY, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, PowerPlantGymGuide1Script, -1
+	object_event  6, 11, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, PowerPlantGymGuide2Script, -1
+	object_event  9,  3, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, PowerPlantOfficer2Script, -1
+	object_event  7,  2, SPRITE_GYM_GUY, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 0, 1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, PowerPlantGymGuide4Script, -1
+	object_event 14, 10, SPRITE_FAT_GUY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, PowerPlantManager, -1
+	object_event  5,  5, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_COMMAND, jumptextfaceplayer, PowerPlantForestText, -1
 
 	object_const_def
 	const POWERPLANT_OFFICER1
@@ -76,9 +76,9 @@ PowerPlantManager:
 	faceplayer
 	opentext
 	checkevent EVENT_RESTORED_POWER_TO_KANTO
-	iftrue PowerPlantTutorZapCannonScript
+	iftruefwd PowerPlantTutorZapCannonScript
 	checkkeyitem MACHINE_PART
-	iftrue UnknownScript_0x188e93
+	iftruefwd .FoundMachinePart
 	checkevent EVENT_MET_MANAGER_AT_POWER_PLANT
 	iftrue_jumpopenedtext PowerPlantManagerIWontForgiveCulpritText
 	writetext PowerPlantManagerWhoWouldRuinMyGeneratorText
@@ -90,7 +90,7 @@ PowerPlantManager:
 	setscene $1
 	end
 
-UnknownScript_0x188e93:
+.FoundMachinePart:
 	writetext PowerPlantManagerThatsThePartText
 	promptbutton
 	takekeyitem MACHINE_PART
@@ -107,14 +107,14 @@ PowerPlantTutorZapCannonScript:
 	writetext Text_PowerPlantTutorZapCannon
 	waitbutton
 	checkitem SILVER_LEAF
-	iffalse .NoSilverLeaf
+	iffalsefwd .NoSilverLeaf
 	writetext Text_PowerPlantTutorQuestion
 	yesorno
-	iffalse .TutorRefused
+	iffalsefwd .TutorRefused
 	setval ZAP_CANNON
 	writetext ClearText
 	special Special_MoveTutor
-	ifequal $0, .TeachMove
+	ifequalfwd $0, .TeachMove
 .TutorRefused
 	jumpopenedtext Text_PowerPlantTutorRefused
 

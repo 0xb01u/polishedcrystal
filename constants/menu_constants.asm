@@ -36,6 +36,7 @@
 	const_def 1
 	const SCROLLINGMENU_ITEMS_NORMAL
 	const SCROLLINGMENU_ITEMS_QUANTITY
+	const SCROLLINGMENU_ITEMS_KEY
 
 ; MonMenuOptions indexes (see data/mon_menu.asm)
 ; used by PokemonActionSubmenu (see engine/pokemon/mon_menu.asm)
@@ -54,24 +55,23 @@
 	const MONMENUITEM_HEADBUTT   ; 11
 	const MONMENUITEM_ROCKSMASH  ; 12
 	; options
-	const MONMENUITEM_STATS      ; 13
+	const MONMENUITEM_SUMMARY    ; 13
 	const MONMENUITEM_SWITCH     ; 14
 	const MONMENUITEM_ITEM       ; 15
 	const MONMENUITEM_CANCEL     ; 16
-	const MONMENUITEM_MOVE       ; 17
-	const MONMENUITEM_MAIL       ; 18
-	const MONMENUITEM_ERROR      ; 19
-NUM_MONMENUITEMS EQU const_value - 1
+	const MONMENUITEM_MAIL       ; 17
+	const MONMENUITEM_ERROR      ; 18
+DEF NUM_MONMENUITEMS EQU const_value - 1
 
 ; MonMenuOptions categories
-MONMENU_FIELD_MOVE EQU 0
-MONMENU_MENUOPTION EQU 1
+DEF MONMENU_FIELD_MOVE EQU 0
+DEF MONMENU_MENUOPTION EQU 1
 
-NUM_MONMENU_ITEMS EQU 8
+DEF NUM_MONMENU_ITEMS EQU 8
 
 ; start/select menu return values
-HMENURETURN_SCRIPT EQU %10000000
-HMENURETURN_ASM    EQU %11111111
+DEF HMENURETURN_SCRIPT EQU %10000000
+DEF HMENURETURN_ASM    EQU %11111111
 
 ; PartyMenuQualityPointers indexes (see data/party_menu_qualities.asm)
 	const_def
@@ -86,7 +86,7 @@ HMENURETURN_ASM    EQU %11111111
 	const PARTYMENUACTION_GIVE_ITEM
 	const PARTYMENUACTION_MOVE_RELEARNER
 	const PARTYMENUACTION_BATTLE_TOWER
-NUM_PARTYMENUACTIONS EQU const_value
+DEF NUM_PARTYMENUACTIONS EQU const_value
 ; PrintPartyMenuActionText arguments (see engine/pokemon/party_menu.asm)
 	const_def $f0
 	const PARTYMENUTEXT_HEAL_PSN
@@ -107,4 +107,10 @@ NUM_PARTYMENUACTIONS EQU const_value
 	const NAME_RIVAL
 	const NAME_TRENDY
 	const NAME_BOX
-NUM_NAME_TYPES EQU const_value
+DEF NUM_NAMING_SCREEN_TYPES EQU const_value
+
+; Lure Menu Options (see engine/menus/lure_menu.asm)
+	const_def 1
+	const HARSH_LURE_MENU_OPT  ; 1
+	const POTENT_LURE_MENU_OPT ; 2
+	const MALIGN_LURE_MENU_OPT ; 3

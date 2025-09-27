@@ -25,10 +25,10 @@ SafariZoneNorth_MapScriptHeader:
 	bg_event 31, 19, BGEVENT_ITEM + LUCKY_PUNCH, EVENT_SAFARI_ZONE_NORTH_HIDDEN_LUCKY_PUNCH
 
 	def_object_events
-	object_event 18, 23, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerBattleGirlPadma, -1
-	object_event  7,  7, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerYoungsterTyler, -1
-	object_event 36,  9, SPRITE_BEAUTY, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerBeautyRachael, -1
-	object_event 15, 14, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, SafariZoneNorthCooltrainerFScript, -1
+	object_event 18, 23, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerBattleGirlPadma, -1
+	object_event  7,  7, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerYoungsterTyler, -1
+	object_event 36,  9, SPRITE_BEAUTY, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerBeautyRachael, -1
+	object_event 15, 14, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, SafariZoneNorthCooltrainerFScript, -1
 	itemball_event 24, 18, EVIOLITE, 1, EVENT_SAFARI_ZONE_NORTH_EVIOLITE
 	itemball_event 21,  9, PROTEIN, 1, EVENT_SAFARI_ZONE_NORTH_PROTEIN
 
@@ -67,7 +67,7 @@ SafariZoneNorthCooltrainerFScript:
 	faceplayer
 	opentext
 	checkevent EVENT_LISTENED_TO_DOUBLE_EDGE_INTRO
-	iftrue SafariZoneNorthTutorDoubleEdgeScript
+	iftruefwd SafariZoneNorthTutorDoubleEdgeScript
 	writetext SafariZoneNorthCooltrainerFText
 	waitbutton
 	setevent EVENT_LISTENED_TO_DOUBLE_EDGE_INTRO
@@ -75,14 +75,14 @@ SafariZoneNorthTutorDoubleEdgeScript:
 	writetext Text_SafariZoneNorthTutorDoubleEdge
 	waitbutton
 	checkitem SILVER_LEAF
-	iffalse .NoSilverLeaf
+	iffalsefwd .NoSilverLeaf
 	writetext Text_SafariZoneNorthTutorQuestion
 	yesorno
-	iffalse .TutorRefused
+	iffalsefwd .TutorRefused
 	setval DOUBLE_EDGE
 	writetext ClearText
 	special Special_MoveTutor
-	ifequal $0, .TeachMove
+	ifequalfwd $0, .TeachMove
 .TutorRefused
 	jumpopenedtext Text_SafariZoneNorthTutorRefused
 
@@ -109,12 +109,13 @@ YoungsterTylerSeenText:
 	line "mon anywhere!"
 
 	para "In grass, in"
-	line "water, or up a"
-	cont "girl's skirt!"
+	line "water, in caves,"
+	cont "or up a tree!"
 	done
 
 YoungsterTylerBeatenText:
-	text "I'm sorry!"
+	text "I need to keep"
+	line "looking!"
 	done
 
 BeautyRachaelSeenText:

@@ -1,8 +1,8 @@
 TrainerClassNames::
-	list_start TrainerClassNames
-	li "?"                ; TRAINER_NONE
+	list_start
 	li "<PK><MN> Trainer" ; CARRIE
 	li "<PK><MN> Trainer" ; CAL
+	li "<PK><MN> Trainer" ; JACKY
 	li "Leader"           ; FALKNER
 	li "Leader"           ; BUGSY
 	li "Leader"           ; WHITNEY
@@ -66,6 +66,9 @@ TrainerClassNames::
 	li "Kimono Girl"      ; KIMONO_GIRL_3
 	li "Kimono Girl"      ; KIMONO_GIRL_4
 	li "Kimono Girl"      ; KIMONO_GIRL_5
+	li "Kimono Girl"      ; KIMONO_GIRL_6
+	li "Kimono Girl"      ; KIMONO_GIRL_7
+	li "Kimono Girl"      ; KIMONO_GIRL_8
 	li "Elder"            ; ELDER
 	li "Sr.& Jr."         ; SR_AND_JR
 	li "Couple"           ; COUPLE
@@ -88,7 +91,8 @@ TrainerClassNames::
 	li "Battle Girl"      ; BATTLE_GIRL
 	li "Dragon Tamer"     ; DRAGON_TAMER
 	li "Engineer"         ; ENGINEER
-	li "Teacher"          ; TEACHER
+	li "Teacher"          ; TEACHER_F
+	li "Teacher"          ; TEACHER_M
 	li "Guitarist"        ; GUITARISTM
 	li "Guitarist"        ; GUITARISTF
 	li "Biker"            ; BIKER
@@ -96,6 +100,7 @@ TrainerClassNames::
 	li "Tamer"            ; TAMER
 	li "Artist"           ; ARTIST
 	li "Aroma Lady"       ; AROMA_LADY
+	li "Soldier"          ; SOLDIER
 	li "Waiter"           ; WAITER
 	li "Waitress"         ; WAITRESS
 	li "Sightseer"        ; SIGHTSEERM
@@ -117,6 +122,7 @@ TrainerClassNames::
 	li "Mystery Man"      ; MYSTICALMAN
 	li "Karate King"      ; KARATE_KING
 	li "TowerTycoon"      ; TOWERTYCOON
+	li "FactryHead"       ; FACTORYHEAD
 	li "Jessie"           ; JESSIE_JAMES
 	li "Ex-Elite"         ; LORELEI
 	li "Ex-Elite"         ; AGATHA
@@ -131,14 +137,16 @@ TrainerClassNames::
 	li "<PK><MN> Trainer" ; ANABEL
 	li "Valet"            ; DARACH
 	li "Lady"             ; CAITLIN
-	li "<PK><MN> Trainer" ; CANDELA
-	li "<PK><MN> Trainer" ; BLANCHE
-	li "<PK><MN> Trainer" ; SPARK_T
+	li "Leader"           ; CANDELA
+	li "Leader"           ; BLANCHE
+	li "Leader"           ; SPARK_T
 	li "Trainer"          ; FLANNERY
 	li "Fighter"          ; MAYLENE
-	li "Pilot"            ; SKYLA
+	li "Swimmer"          ; MARLON
 	li "Designer"         ; VALERIE
 	li "<PK><MN> Trainer" ; KUKUI
+	li "Vocalist"         ; PIERS
+	li "Patissier"        ; KATY
 	li "Surfer"           ; VICTOR
 	li "#Maniac"          ; BILL_T
 	li "<PK><MN> Trainer" ; YELLOW
@@ -146,4 +154,4 @@ TrainerClassNames::
 	li "Student"          ; IMAKUNI
 	li "Collector"        ; LAWRENCE
 	li "Shrine"           ; REI
-	assert_list_length NUM_TRAINER_CLASSES + 1
+	assert_list_length NUM_TRAINER_CLASSES

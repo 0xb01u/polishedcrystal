@@ -17,8 +17,8 @@ FarawayIsland_MapScriptHeader:
 	bg_event  4, 34, BGEVENT_JUMPTEXT, FarawayIslandSignText
 
 	def_object_events
-	object_event 12, 42, SPRITE_SAILOR, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, FarawayIslandSailorScript, EVENT_OLIVINE_PORT_SAILOR_AT_GANGWAY
-	object_event  3, 37, SPRITE_LAWRENCE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, FarawayIslandLawrenceScript, EVENT_LAWRENCE_FARAWAY_ISLAND
+	object_event 12, 42, SPRITE_SAILOR, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, FarawayIslandSailorScript, EVENT_OLIVINE_PORT_SAILOR_AT_GANGWAY
+	object_event  3, 37, SPRITE_LAWRENCE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, FarawayIslandLawrenceScript, EVENT_LAWRENCE_FARAWAY_ISLAND
 
 	object_const_def
 	const FARAWAYISLAND_SAILOR
@@ -36,9 +36,9 @@ FarawayIslandVisited:
 FarawayIslandSetupLawrence:
 	disappear FARAWAYISLAND_LAWRENCE
 	checkevent EVENT_BEAT_LAWRENCE
-	iffalse .Done
+	iffalsefwd .Done
 	checkevent EVENT_BEAT_LAWRENCE_AGAIN
-	iftrue .Done
+	iftruefwd .Done
 	appear FARAWAYISLAND_LAWRENCE
 .Done
 	endcallback
@@ -56,7 +56,7 @@ FarawayIslandSailorScript:
 	opentext
 	writetext SeagallopFerryFarawayToVermilionQuestionText
 	yesorno
-	iffalse .RefuseFerry
+	iffalsefwd .RefuseFerry
 	writetext SeagallopFerryFarawayToVermilionText
 	waitbutton
 	closetext
@@ -86,7 +86,7 @@ FarawayIslandLawrenceScript:
 	opentext
 	writetext FarawayIslandLawrenceText1
 	yesorno
-	iffalse .no_battle
+	iffalsefwd .no_battle
 	writetext FarawayIslandLawrenceYesText
 	waitbutton
 	closetext

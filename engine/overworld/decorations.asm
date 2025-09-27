@@ -49,7 +49,7 @@ _PlayerDecorationMenu:
 	dw .category_pointers
 
 .category_pointers:
-	table_width 2 + 2, _PlayerDecorationMenu.category_pointers
+	table_width 2 + 2
 	dw DecoBedMenu,      .bed
 	dw DecoCarpetMenu,   .carpet
 	dw DecoPlantMenu,    .plant
@@ -123,7 +123,7 @@ _PlayerDecorationMenu:
 	jr .loop
 
 .owned_pointers:
-	table_width 3, _PlayerDecorationMenu.owned_pointers
+	table_width 3
 	dwb FindOwnedBeds,      0 ; bed
 	dwb FindOwnedCarpets,   1 ; carpet
 	dwb FindOwnedPlants,    2 ; plant
@@ -423,6 +423,10 @@ GetDecorationData:
 	rst AddNTimes
 	ret
 
+GetDecorationName_c_de:
+	ld a, c
+	ld h, d
+	ld l, e
 GetDecorationName:
 	push hl
 	call GetDecorationData
@@ -448,7 +452,7 @@ DoDecorationAction2:
 	call StackJumpTable
 
 .DecoActions:
-	table_width 2, DoDecorationAction2.DecoActions
+	table_width 2
 	dw DecoAction_nothing
 	dw DecoAction_setupbed
 	dw DecoAction_putawaybed
@@ -475,6 +479,8 @@ GetDecorationFlag:
 	ld e, a
 	ret
 
+DecorationFlagAction_c:
+	ld a, c
 DecorationFlagAction:
 	push bc
 	call GetDecorationFlag
@@ -521,7 +527,7 @@ GetDecoName:
 	ret
 
 .NameFunctions:
-	table_width 2, GetDecoName.NameFunctions
+	table_width 2
 	dw DoNothing
 	dw .plant
 	dw .bed
@@ -565,8 +571,11 @@ GetDecoName:
 	ld a, e
 	; fallthrough
 .getpokename:
+	; TODO: deco attributes should handle 9bit mon indexes
 	push bc
 	ld [wNamedObjectIndex], a
+	xor a
+	ld [wNamedObjectIndex+1], a
 	call GetPokemonName
 	pop bc
 	jr .copy
@@ -868,7 +877,7 @@ QueryWhichSide:
 	ld hl, wDecoRightOrnament
 	ld de, wDecoLeftOrnament
 	ld a, [wBuffer2]
-	cp 1
+	dec a
 	ret z
 	jmp SwapHLDE
 
@@ -906,46 +915,13 @@ DecoText_AlreadySetUp:
 	text_far _AlreadySetUpText
 	text_end
 
-GetDecorationName_c_de:
-	ld a, c
-	ld h, d
-	ld l, e
-	jmp GetDecorationName
-
-DecorationFlagAction_c:
-	ld a, c
-	jmp DecorationFlagAction
-
-GetDecorationName_c:
-	ld a, c
-	call GetDecorationID
-	ld hl, wStringBuffer1
-	push hl
-	call GetDecorationName
-	pop de
-	ret
-
-GetDecorationID:
-	push hl
-	push de
-	ld e, a
-	ld d, 0
-	ld hl, DecorationIDs
-	add hl, de
-	ld a, [hl]
-	pop de
-	pop hl
-	ret
-
-INCLUDE "data/decorations/decorations.asm"
-
 DescribeDecoration::
 	ld a, b
 	call StackJumpTable
 
 .JumpTable:
 ; entries correspond to DECODESC_* constants
-	table_width 2, DescribeDecoration.JumpTable
+	table_width 2
 	dw DecorationDesc_Poster
 	dw DecorationDesc_LeftOrnament
 	dw DecorationDesc_RightOrnament

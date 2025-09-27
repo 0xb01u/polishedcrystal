@@ -14,28 +14,28 @@ Route38EcruteakGate_MapScriptHeader:
 	def_bg_events
 
 	def_object_events
-	object_event  5,  2, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptextfaceplayer, Route38EcruteakGateOfficerText, -1
-	object_event  8,  3, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ProfOaksAide2Script, -1
+	object_event  5,  2, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_COMMAND, jumptextfaceplayer, Route38EcruteakGateOfficerText, -1
+	object_event  8,  3, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ProfOaksAide2Script, -1
 
 ProfOaksAide2Script:
 	faceplayer
 	opentext
-	checkevent EVENT_GOT_EXP_SHARE_FROM_PROF_OAKS_AIDE
-	iftrue .Explain
+	checkevent EVENT_GOT_LINKING_CORD_FROM_PROF_OAKS_AIDE
+	iftruefwd .Explain
 	writetext ProfOaksAide2HiText
 	waitbutton
-	countseencaught
-	readvar VAR_DEXCAUGHT
-	ifgreater 29, .HereYouGo
+	setval16 30
+	special CountCaught
+	iftruefwd .HereYouGo
 .UhOh
 	jumpopenedtext ProfOaksAide2UhOhText
 
 .HereYouGo
 	writetext ProfOaksAide2HereYouGoText
 	waitbutton
-	verbosegiveitem EXP_SHARE
-	iffalse .NoRoom
-	setevent EVENT_GOT_EXP_SHARE_FROM_PROF_OAKS_AIDE
+	verbosegiveitem LINKING_CORD
+	iffalsefwd .NoRoom
+	setevent EVENT_GOT_LINKING_CORD_FROM_PROF_OAKS_AIDE
 .Explain
 	jumpopenedtext ProfOaksAide2ExplainText
 
@@ -77,7 +77,7 @@ ProfOaksAide2UhOhText:
 	line "Uh-oh! You've only"
 
 	para "caught "
-	text_decimal wTempPokedexCaughtCount, 1, 3
+	text_decimal wTempDexOwn, 2, 3
 	text " kinds"
 	line "of #mon."
 
@@ -91,7 +91,7 @@ ProfOaksAide2HereYouGoText:
 	line "Great job! You've"
 
 	para "caught "
-	text_decimal wTempPokedexCaughtCount, 1, 3
+	text_decimal wTempDexOwn, 2, 3
 	text " kinds"
 	line "of #mon."
 
@@ -106,12 +106,14 @@ ProfOaksAide2NoRoomText:
 	done
 
 ProfOaksAide2ExplainText:
-	text "That Exp.Share"
-	line "helps a #mon"
+	text "That Linking Cord"
+	line "gives certain"
 
-	para "gain experience"
-	line "without even"
-	cont "battling."
+	para "#mon a sense"
+	line "of connection"
+
+	para "that may help"
+	line "them evolve."
 
 	para "Use it to com-"
 	line "plete the #dex!"

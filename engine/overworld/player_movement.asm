@@ -23,11 +23,15 @@ DoPlayerMovement::
 	ret z
 
 	ld c, a
-	and D_PAD
+	and PAD_CTRL_PAD
 	ret nz
 
 	ld a, c
-	or D_DOWN
+	and PAD_B ; holding b will brake
+	ret nz
+
+	ld a, c
+	or PAD_DOWN
 	ld [wCurInput], a
 	ret
 
@@ -116,7 +120,7 @@ DoPlayerMovement::
 ; Tiles such as waterfalls and warps move the player
 ; in a given direction, overriding input.
 
-	ld a, [wPlayerStandingTile]
+	ld a, [wPlayerTileCollision]
 	ld c, a
 	cp COLL_WHIRLPOOL
 	jr nz, .not_whirlpool
@@ -126,9 +130,9 @@ DoPlayerMovement::
 
 .not_whirlpool
 	and $f0
-	cp $30 ; moving water
+	cp HI_NYBBLE_CURRENT
 	jr z, .water
-	cp $70 ; warps
+	cp HI_NYBBLE_WARPS
 	jr z, .warps
 	jr .no_walk
 
@@ -223,6 +227,10 @@ DoPlayerMovement::
 	call .CheckLandPerms
 	jr c, .bump
 
+	ld a, [wPanningAroundTinyMap]
+	and a
+	jr nz, .walk
+
 	call .CheckNPC
 	and a
 	jr z, .bump
@@ -233,14 +241,13 @@ DoPlayerMovement::
 	and a
 	jr nz, .spin
 
-	ld a, [wPlayerStandingTile]
+	ld a, [wPlayerTileCollision]
 	cp COLL_ICE
 	jr z, .ice
 
 	call .RunCheck
 	jr z, .run
 
-.DoNotRun
 ; Downhill riding is slower when not moving down.
 	call .BikeCheck
 	jr nz, .walk
@@ -279,14 +286,12 @@ DoPlayerMovement::
 .run
 	ld a, STEP_RUN
 	call .DoStep
-;   Trainer faces player -- not a current feature
-;	push af
-;	ld a, [wWalkingDirection]
-;	cp STANDING
-;	jr z, .skip_trainer
-;	call CheckTrainerRun
-;.skip_trainer
-;	pop af
+; Trainer faces player if they're running
+	push af
+	ld a, [wWalkingDirection]
+	cp STANDING
+	call nz, CheckTrainerRun
+	pop af
 	scf
 	ret
 
@@ -339,10 +344,10 @@ DoPlayerMovement::
 	ret
 
 .TryJump:
-	ld a, [wPlayerStandingTile]
+	ld a, [wPlayerTileCollision]
 	ld e, a
 	and $f0
-	cp $a0 ; ledge
+	cp HI_NYBBLE_LEDGES
 	jr nz, .DontJump
 
 	ld a, e
@@ -352,8 +357,25 @@ DoPlayerMovement::
 	ld hl, .ledge_table
 	add hl, de
 	ld a, [wFacingDirection]
+	ld e, a
 	and [hl]
 	jr z, .DontJump
+
+	ld a, [wPlayerMapX]
+	ld d, a
+	ld a, [wWalkingX]
+	add a
+	add d
+	ld d, a
+	ld a, [wPlayerMapY]
+	ld e, a
+	ld a, [wWalkingY]
+	add a
+	add e
+	ld e, a
+	call GetCoordTileCollision
+	call .CheckWalkable
+	jr c, .DontJump
 
 	ld de, SFX_JUMP_OVER_LEDGE
 	call PlaySFX
@@ -378,10 +400,10 @@ DoPlayerMovement::
 	db FACE_UP | FACE_LEFT
 
 .TryStairs:
-	ld a, [wPlayerStandingTile]
+	ld a, [wPlayerTileCollision]
 	ld e, a
 	and $f0
-	cp $c0 ; sideways stairs
+	cp HI_NYBBLE_SIDEWAYS_STAIRS
 	jr nz, .DontStairs
 
 	ld a, e
@@ -394,7 +416,7 @@ DoPlayerMovement::
 	and [hl]
 	jr z, .DontStairs
 
-	ld a, [wPlayerStandingTile]
+	ld a, [wPlayerTileCollision]
 	cp COLL_STAIRS_RIGHT_UP
 	; a = carry ? FALSE : TRUE
 	sbc a
@@ -426,7 +448,7 @@ DoPlayerMovement::
 	ld d, 0
 	ld hl, .EdgeWarps
 	add hl, de
-	ld a, [wPlayerStandingTile]
+	ld a, [wPlayerTileCollision]
 	cp [hl]
 	jr nz, .not_warp
 
@@ -480,12 +502,19 @@ DoPlayerMovement::
 	ld a, [hl]
 	ld [wPlayerTurningDirection], a
 
+	ld a, [wOverworldWeatherCooldown]
+	and a
+	jr z, .no_cooldown
+	dec a
+	ld [wOverworldWeatherCooldown], a
+.no_cooldown
+
 	ld a, 4
 	ret
 
 .Steps:
 ; entries correspond to STEP_* constants (see constants/map_object_constants.asm)
-	table_width 2, DoPlayerMovement.Steps
+	table_width 2
 	dw .SlowStep ; x0.5
 	dw .NormalStep ; x1
 	dw .FastStep ; x4
@@ -598,13 +627,13 @@ DoPlayerMovement::
 	ld hl, .forced_dpad
 	add hl, de
 	ld a, [wCurInput]
-	and BUTTONS
+	and PAD_BUTTONS
 	or [hl]
 	ld [wCurInput], a
 	ret
 
 .forced_dpad
-	db D_DOWN, D_UP, D_LEFT, D_RIGHT
+	db PAD_DOWN, PAD_UP, PAD_LEFT, PAD_RIGHT
 
 .GetAction:
 ; Poll player input and update movement info.
@@ -612,22 +641,25 @@ DoPlayerMovement::
 	ld hl, .table
 	ld de, .table2 - .table1
 	ld a, [wCurInput]
-	bit D_DOWN_F, a
+	bit B_PAD_DOWN, a
 	jr nz, .d_down
-	bit D_UP_F, a
+	bit B_PAD_UP, a
 	jr nz, .d_up
-	bit D_LEFT_F, a
+	bit B_PAD_LEFT, a
 	jr nz, .d_left
-	bit D_RIGHT_F, a
+	bit B_PAD_RIGHT, a
 	jr nz, .d_right
 ; Standing
 	jr .update
 
-.d_down 	add hl, de
-.d_up   	add hl, de
-.d_left 	add hl, de
-.d_right	add hl, de
-
+.d_down
+	add hl, de
+.d_up
+	add hl, de
+.d_left
+	add hl, de
+.d_right
+	add hl, de
 .update
 	ld a, [hli]
 	ld [wWalkingDirection], a
@@ -642,8 +674,8 @@ DoPlayerMovement::
 	ld l, a
 if DEF(DEBUG)
 	ldh a, [hJoyDown]
-	and A_BUTTON | B_BUTTON
-	cp A_BUTTON | B_BUTTON
+	or ~(PAD_A | PAD_B)
+	inc a
 	ld a, [hl]
 	jr nz, .no_wtw
 	cp COLL_VOID
@@ -653,7 +685,7 @@ if DEF(DEBUG)
 else
 	ld a, [hl]
 endc
-	ld [wWalkingTile], a
+	ld [wWalkingTileCollision], a
 	ret
 
 .table
@@ -665,7 +697,7 @@ endc
 ;	tile collision pointer
 .table1
 	db STANDING, FACE_CURRENT, 0, 0
-	dw wPlayerStandingTile
+	dw wPlayerTileCollision
 .table2
 	db RIGHT, FACE_RIGHT,  1,  0
 	dw wTileRight
@@ -679,31 +711,32 @@ endc
 .CheckNPC:
 ; Returns 0 if there is an NPC in front that you can't move
 ; Returns 1 if there is no NPC in front
-; Returns 2 if there is a movable NPC in front
+; Returns 2 if there is a movable NPC in front. The game actually treats
+; this the same as an NPC in front (bump).
 	xor a
 	ldh [hMapObjectIndexBuffer], a
 ; Load the next X coordinate into d
-	ld a, [wPlayerStandingMapX]
+	ld a, [wPlayerMapX]
 	ld d, a
 	ld a, [wWalkingX]
 	add d
 	ld d, a
 ; Load the next Y coordinate into e
-	ld a, [wPlayerStandingMapY]
+	ld a, [wPlayerMapY]
 	ld e, a
 	ld a, [wWalkingY]
 	add e
 	ld e, a
 ; Find an object struct with coordinates equal to d,e
 	farcall IsNPCAtCoord
-	jr nc, .is_npc
+	jr nc, .no_npc
 	call .CheckStrengthBoulder
 	jr c, .no_bump
 
-	xor a
+	xor a ; bump
 	ret
 
-.is_npc
+.no_npc
 	ld a, 1
 	ret
 
@@ -717,7 +750,7 @@ endc
 	bit OWSTATE_STRENGTH, [hl]
 	jr z, .not_boulder
 
-	ld hl, OBJECT_DIRECTION_WALKING
+	ld hl, OBJECT_WALKING
 	add hl, bc
 	ld a, [hl]
 	cp STANDING
@@ -758,7 +791,7 @@ endc
 	and d
 	jr nz, .NotWalkable
 
-	ld a, [wWalkingTile]
+	ld a, [wWalkingTileCollision]
 	call .CheckWalkable
 	jr c, .NotWalkable
 
@@ -779,7 +812,7 @@ endc
 	and d
 	jr nz, .NotSurfable
 
-	ld a, [wWalkingTile]
+	ld a, [wWalkingTileCollision]
 	call .CheckSurfable
 	jr c, .NotSurfable
 
@@ -791,15 +824,12 @@ endc
 	ret
 
 .BikeCheck:
-
 	ld a, [wPlayerState]
 	cp PLAYER_BIKE
 	ret z
 	cp PLAYER_SKATE
 	ret
 
-; Routine by Victoria Lacroix
-; https://github.com/VictoriaLacroix/pokecrystal/commit/ed7f525d642cb02e84e856f2e506d2a6425d95db
 .RunCheck:
 	; Check if we have regular movement active
 	ld a, [wPlayerState]
@@ -810,12 +840,12 @@ endc
 	push hl
 	ld hl, wOptions2
 	ldh a, [hJoypadDown]
-	and B_BUTTON
+	and PAD_B
 
 	; We want to return z on success, not nz.
 	cpl
 
-	; B_BUTTON is bit 1, RUNNING_SHOES is bit 3
+	; PAD_B is bit 1, RUNNING_SHOES is bit 3
 	add a
 	add a
 	xor [hl]
@@ -826,7 +856,7 @@ endc
 .CheckWalkable:
 ; Return 0 if tile a is land. Otherwise, return carry.
 
-	call GetTileCollision
+	call GetTilePermission
 	and a ; cp LAND_TILE
 	ret z
 	scf
@@ -836,7 +866,7 @@ endc
 ; Return 0 if tile a is water, or 1 if land.
 ; Otherwise, return carry.
 
-	call GetTileCollision
+	call GetTilePermission
 ; Can walk back onto land from water.
 	and a ; cp LAND_TILE
 	jr z, .Land
@@ -857,9 +887,12 @@ endc
 	ret
 
 .BumpSound:
+	ld a, [wPanningAroundTinyMap]
+	and a
+	ret nz
 
 	call CheckSFX
-	ret c
+	ret nz
 	ld de, SFX_BUMP
 	jmp PlaySFX
 
@@ -877,7 +910,7 @@ CheckStandingOnIce::
 	jr z, .not_ice
 	cp $f0
 	jr z, .not_ice
-	ld a, [wPlayerStandingTile]
+	ld a, [wPlayerTileCollision]
 	cp COLL_ICE
 	jr z, .ice
 	ld a, [wPlayerState]
@@ -892,8 +925,165 @@ CheckStandingOnIce::
 	and a
 	ret
 
+CheckTrainerRun:
+; Check if any trainer on the map sees the player.
+
+; Skip the player object.
+	ld a, 1
+	ld de, wMap1Object
+
+.loop
+
+; Have them face the player if the object:
+
+	push af
+	push de
+
+; Is a trainer
+	ld hl, MAPOBJECT_TYPE
+	add hl, de
+	ld a, [hl]
+	cp OBJECTTYPE_TRAINER
+	jr z, .trainer
+	cp OBJECTTYPE_GENERICTRAINER
+	jr nz, .next
+.trainer
+
+; Spins around
+	ld hl, MAPOBJECT_MOVEMENT
+	add hl, de
+	ld a, [hl]
+	cp SPRITEMOVEDATA_SPINRANDOM_SLOW
+	jr z, .spinner
+	cp SPRITEMOVEDATA_SPINRANDOM_FAST
+	jr z, .spinner
+	cp SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE
+	jr z, .spinner
+	cp SPRITEMOVEDATA_SPINCLOCKWISE
+	jr nz, .next
+.spinner
+
+; Has a sprite
+	ld hl, MAPOBJECT_SPRITE
+	add hl, de
+	ld a, [hl]
+	and a
+	jr z, .next
+
+; Is visible on the map
+	ld hl, MAPOBJECT_OBJECT_STRUCT_ID
+	add hl, de
+	ld a, [hl]
+	inc a
+	assert UNASSOCIATED_MAPOBJECT == -1
+	jr z, .next
+
+; You're within their sight range
+	ld hl, MAPOBJECT_OBJECT_STRUCT_ID
+	add hl, de
+	ld a, [hl]
+	call GetObjectStruct
+	push de
+	call AnyFacingPlayerDistance
+	pop de
+	ld hl, MAPOBJECT_SIGHT_RANGE
+	add hl, de
+	ld a, [hl]
+	cp c
+	jr c, .next
+
+; Get them to face you
+	ld a, b
+	push af
+	ld hl, MAPOBJECT_OBJECT_STRUCT_ID
+	add hl, de
+	ld a, [hl]
+	call GetObjectStruct
+	pop af
+	call SetSpriteDirection
+	ld hl, OBJECT_STEP_DURATION
+	add hl, bc
+	ld a, [hl]
+	cp $40
+	jr nc, .next
+	ld [hl], $40
+
+.next
+	pop de
+	ld hl, MAPOBJECT_LENGTH
+	add hl, de
+	ld d, h
+	ld e, l
+
+	pop af
+	inc a
+	cp NUM_OBJECTS
+	jr nz, .loop
+	xor a
+	ret
+
+AnyFacingPlayerDistance:
+; Returns distance in c and direction in b.
+	ld hl, OBJECT_MAP_X
+	add hl, bc
+	ld d, [hl]
+
+	ld hl, OBJECT_MAP_Y
+	add hl, bc
+	ld e, [hl]
+
+	ldh a, [hJoypadDown]
+	ld bc, 0
+	bit B_PAD_DOWN, a
+	jr nz, .down
+	bit B_PAD_UP, a
+	jr nz, .up
+	bit B_PAD_LEFT, a
+	jr nz, .left
+	bit B_PAD_RIGHT, a
+	jr nz, .right
+.down
+	inc b
+	jr .got_vector
+.up
+	dec b
+	jr .got_vector
+.left
+	dec c
+	jr .got_vector
+.right
+	inc c
+.got_vector
+
+	ld a, [wPlayerMapX]
+	add c
+	sub d
+	ld l, OW_RIGHT
+	jr nc, .check_y
+	cpl
+	inc a
+	ld l, OW_LEFT
+.check_y
+	ld d, a
+	ld a, [wPlayerMapY]
+	add b
+	sub e
+	ld h, OW_DOWN
+	jr nc, .compare
+	cpl
+	inc a
+	ld h, OW_UP
+.compare
+	cp d
+	ld c, a
+	ld b, h
+	ret nc
+	ld c, d
+	ld b, l
+	ret
+
 CheckSpinning::
-	ld a, [wPlayerStandingTile]
+	ld a, [wPlayerTileCollision]
 	cp COLL_STOP_SPIN
 	jr z, .stop_spin
 	call CheckSpinTile

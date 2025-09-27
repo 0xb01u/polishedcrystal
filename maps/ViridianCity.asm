@@ -24,12 +24,12 @@ ViridianCity_MapScriptHeader:
 	bg_event 21, 15, BGEVENT_JUMPTEXT, TrainerHouseSignText
 
 	def_object_events
-	object_event 18,  5, SPRITE_GRAMPS, SPRITEMOVEDATA_WANDER, 2, 2, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ViridianCityCoffeeGramps, -1
-	object_event 32,  8, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ViridianCityGrampsNearGym, EVENT_BLUE_IN_CINNABAR
-	object_event 30,  8, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ViridianCityGrampsNearGym, EVENT_VIRIDIAN_GYM_BLUE
-	object_event  6, 23, SPRITE_FAT_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ViridianCityDreamEaterFisher, -1
-	object_event 17, 21, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_WANDER, 3, 3, -1, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, ViridianCityYoungsterText, -1
-	object_event 31, 23, SPRITE_SCHOOLBOY, SPRITEMOVEDATA_WANDER, 1, 2, -1, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, ViridianCityYoungster2Text, -1
+	object_event 18,  5, SPRITE_GRAMPS, SPRITEMOVEDATA_WANDER, 2, 2, -1, 0, OBJECTTYPE_SCRIPT, 0, ViridianCityCoffeeGramps, -1
+	object_event 32,  8, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ViridianCityGrampsNearGym, EVENT_BLUE_IN_CINNABAR
+	object_event 30,  8, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ViridianCityGrampsNearGym, EVENT_VIRIDIAN_GYM_BLUE
+	object_event  6, 23, SPRITE_FAT_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ViridianCityDreamEaterFisher, -1
+	object_event 17, 21, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_WANDER, 3, 3, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, ViridianCityYoungsterText, -1
+	object_event 31, 23, SPRITE_SCHOOLBOY, SPRITEMOVEDATA_WANDER, 1, 2, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, ViridianCityYoungster2Text, -1
 	cuttree_event 14,  4, EVENT_VIRIDIAN_CITY_CUT_TREE_1
 	cuttree_event  8, 22, EVENT_VIRIDIAN_CITY_CUT_TREE_2
 
@@ -54,7 +54,7 @@ ViridianCityDreamEaterFisher:
 	faceplayer
 	opentext
 	checkevent EVENT_LISTENED_TO_DREAM_EATER_INTRO
-	iftrue ViridianCityTutorDreamEaterScript
+	iftruefwd ViridianCityTutorDreamEaterScript
 	writetext ViridianCityDreamEaterFisherText
 	waitbutton
 	setevent EVENT_LISTENED_TO_DREAM_EATER_INTRO
@@ -62,14 +62,14 @@ ViridianCityTutorDreamEaterScript:
 	writetext Text_ViridianCityTutorDreamEater
 	waitbutton
 	checkitem SILVER_LEAF
-	iffalse .NoSilverLeaf
+	iffalsefwd .NoSilverLeaf
 	writetext Text_ViridianCityTutorQuestion
 	yesorno
-	iffalse .TutorRefused
+	iffalsefwd .TutorRefused
 	setval DREAM_EATER
 	writetext ClearText
 	special Special_MoveTutor
-	ifequal $0, .TeachMove
+	ifequalfwd $0, .TeachMove
 .TutorRefused
 	jumpopenedtext Text_ViridianCityTutorRefused
 
@@ -180,7 +180,7 @@ Text_ViridianCityTutorQuestion:
 	cont "Dream Eater?"
 	done
 
-Text_ViridianCityTutorRefused:
+Text_ViridianCityTutorRefused: ; text > text
 	text "OK…"
 	done
 

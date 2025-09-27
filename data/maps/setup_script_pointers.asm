@@ -51,3 +51,13 @@ MapSetupCommands:
 	add_mapsetup InitMapNameSign ; 2c
 	add_mapsetup DecompressMetatiles ; 2d
 	add_mapsetup DeferredLoadMapGraphics ; 2e
+	add_mapsetup LoadMapTilesetGFX ; 2f
+	add_mapsetup DisableDynPalUpdates ; 30
+	add_mapsetup EnableDynPalUpdates ; 31
+	add_mapsetup EnableDynPalUpdatesNoApply ; 32
+	add_mapsetup ClearWeather ; 33
+	add_mapsetup SetCurrentWeather ; 34
+	add_mapsetup MapConnOWFadePalettesInit ; 35
+	add_mapsetup LoadMapObjects_Connection ; 36
+	add_mapsetup GrottoUpdatePlayerTallGrassFlags ; 37
+	add_mapsetup LoadMapAttributes_Connection ; 38

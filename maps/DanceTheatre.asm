@@ -14,16 +14,16 @@ DanceTheatre_MapScriptHeader:
 	bg_event  6,  6, BGEVENT_UP, MapDanceTheatreSignpost1Script
 
 	def_object_events
-	object_event  0,  2, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlNaoko, -1
-	object_event  2,  1, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_PURPLE, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlSayo, -1
-	object_event  6,  2, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlZuki, -1
-	object_event  9,  1, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlKuni, -1
-	object_event 11,  2, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlMiki, -1
-	object_event  7, 10, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, DanceTheaterSurfGuy, -1
-	pokemon_event  6,  8, RHYDON, -1, -1, PAL_NPC_BROWN, RhydonText, -1
-	object_event 10, 10, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, DanceTheatreCooltrainerMText, -1
-	object_event  3,  6, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, DanceTheatreGrannyText, -1
-	object_event  1, 10, SPRITE_LADY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_COMMAND, jumptextfaceplayer, DanceTheatreLadyText, -1
+	object_event  0,  2, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlNaoko, -1
+	object_event  2,  1, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, PAL_NPC_PURPLE, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlSayo, -1
+	object_event  6,  2, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, PAL_NPC_GRAY, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlZuki, -1
+	object_event  9,  1, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlKuni, -1
+	object_event 11,  2, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, PAL_NPC_BROWN, OBJECTTYPE_GENERICTRAINER, 0, GenericTrainerKimono_girlMiki, -1
+	object_event  7, 10, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, DanceTheaterSurfGuy, -1
+	pokemon_event  6,  8, RHYDON, SPRITEMOVEDATA_POKEMON, -1, PAL_NPC_BROWN, RhydonText, -1
+	object_event 10, 10, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, DanceTheatreCooltrainerMText, -1
+	object_event  3,  6, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, DanceTheatreGrannyText, -1
+	object_event  1, 10, SPRITE_LADY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, PAL_NPC_GREEN, OBJECTTYPE_COMMAND, jumptextfaceplayer, DanceTheatreLadyText, -1
 
 GenericTrainerKimono_girlNaoko:
 	generictrainer KIMONO_GIRL_1, NAOKO, EVENT_BEAT_KIMONO_GIRL_NAOKO, Kimono_girlNaokoSeenText, Kimono_girlNaokoBeatenText
@@ -82,15 +82,15 @@ DanceTheaterSurfGuy:
 	checkevent EVENT_GOT_HM03_SURF
 	iftrue_jumpopenedtext SurfGuyElegantKimonoGirlsText
 	checkevent EVENT_BEAT_KIMONO_GIRL_NAOKO
-	iffalse .KimonoGirlsUndefeated
+	iffalsefwd .KimonoGirlsUndefeated
 	checkevent EVENT_BEAT_KIMONO_GIRL_SAYO
-	iffalse .KimonoGirlsUndefeated
+	iffalsefwd .KimonoGirlsUndefeated
 	checkevent EVENT_BEAT_KIMONO_GIRL_ZUKI
-	iffalse .KimonoGirlsUndefeated
+	iffalsefwd .KimonoGirlsUndefeated
 	checkevent EVENT_BEAT_KIMONO_GIRL_KUNI
-	iffalse .KimonoGirlsUndefeated
+	iffalsefwd .KimonoGirlsUndefeated
 	checkevent EVENT_BEAT_KIMONO_GIRL_MIKI
-	iffalse .KimonoGirlsUndefeated
+	iffalsefwd .KimonoGirlsUndefeated
 	writetext SurfGuyLikeADanceText
 	promptbutton
 	verbosegivetmhm HM_SURF
@@ -105,12 +105,9 @@ DanceTheaterSurfGuy:
 	done
 
 .KimonoGirlsUndefeated:
-	checkflag ENGINE_PLAYER_IS_FEMALE
-	iftrue_jumpopenedtext SurfGuyLassieGiftText
 	jumpthisopenedtext
 
-SurfGuyLadGiftText:
-	text "Lad! If you can"
+	text "Kiddo! If you can"
 	line "defeat all the"
 
 	para "Kimono Girls, I'll"
@@ -194,14 +191,6 @@ SurfGuyNeverLeftAScratchText:
 	line "scratch…"
 	done
 
-SurfGuyLassieGiftText:
-	text "Lassie, if you can"
-	line "defeat all the"
-
-	para "Kimono Girls, I'll"
-	line "give you a gift."
-	done
-
 SurfGuyLikeADanceText:
 	text "The way you bat-"
 	line "tled, it was like"
@@ -264,11 +253,14 @@ DanceTheatreLadyText:
 	line "into Leafeon, Gla-"
 	cont "ceon, or Sylveon,"
 
-	para "but none of the"
-	line "Kimono Girls use"
-	cont "those #mon."
+	para "but I don't see"
+	line "any of them here."
 
-	para "I wonder why?"
+	para "I wonder if the"
+	line "Kimono Girls who"
+
+	para "use them are"
+	line "somewhere else?"
 	done
 
 DanceTheatreFancyPanelText:

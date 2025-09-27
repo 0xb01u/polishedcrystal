@@ -4,30 +4,30 @@ ViridianGym_MapScriptHeader:
 	def_callbacks
 
 	def_warp_events
-	warp_event  6, 45, VIRIDIAN_CITY, 1
-	warp_event  7, 45, VIRIDIAN_CITY, 1
+	warp_event  6, 43, VIRIDIAN_CITY, 1
+	warp_event  7, 43, VIRIDIAN_CITY, 1
 
 	def_coord_events
 
 	def_bg_events
-	bg_event  4, 43, BGEVENT_READ, ViridianGymStatue
-	bg_event  9, 43, BGEVENT_READ, ViridianGymStatue
+	bg_event  4, 41, BGEVENT_READ, ViridianGymStatue
+	bg_event  9, 41, BGEVENT_READ, ViridianGymStatue
 
 	def_object_events
-	object_event  7,  2, SPRITE_BLUE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ViridianGymBlueScript, EVENT_VIRIDIAN_GYM_BLUE
-	object_event  8, 43, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ViridianGymGuyScript, EVENT_VIRIDIAN_GYM_BLUE
-	object_event  7, 35, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoAraandbela1, -1
-	object_event  6, 35, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoAraandbela2, -1
-	object_event  3, 34, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCooltrainerfSalma, -1
-	object_event  3, 20, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCooltrainerfBonita, -1
-	object_event  6,  8, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoElanandida1, -1
-	object_event  7,  8, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoElanandida2, -1
+	object_event  7,  2, SPRITE_BLUE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, ViridianGymBlueScript, EVENT_VIRIDIAN_GYM_BLUE
+	object_event  8, 41, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ViridianGymGuyScript, EVENT_VIRIDIAN_GYM_BLUE
+	object_event  7, 33, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoAraandbela1, -1
+	object_event  6, 33, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoAraandbela2, -1
+	object_event  3, 32, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCooltrainerfSalma, -1
+	object_event  3, 18, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerCooltrainerfBonita, -1
+	object_event  6,  8, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoElanandida1, -1
+	object_event  7,  8, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerAceDuoElanandida2, -1
 
 ViridianGymBlueScript:
 	faceplayer
 	opentext
 	checkflag ENGINE_EARTHBADGE
-	iftrue .FightDone
+	iftruefwd .FightDone
 	writetext LeaderBlueBeforeText
 	waitbutton
 	closetext
@@ -41,10 +41,7 @@ ViridianGymBlueScript:
 	setevent EVENT_BEAT_COOLTRAINERF_BONITA
 	setevent EVENT_BEAT_ACE_DUO_ELAN_AND_IDA
 	opentext
-	writetext Text_ReceivedEarthBadge
-	playsound SFX_GET_BADGE
-	waitsfx
-	setflag ENGINE_EARTHBADGE
+	givebadge EARTHBADGE, KANTO_REGION
 	setevent EVENT_FINAL_BATTLE_WITH_LYRA
 .FightDone:
 	checkevent EVENT_GOT_TM71_STONE_EDGE
@@ -114,9 +111,9 @@ GenericTrainerAceDuoElanandida2:
 	done
 
 ViridianGymStatue:
-	gettrainername BLUE, 1, $1
+	gettrainername BLUE, 1, STRING_BUFFER_4
 	checkflag ENGINE_EARTHBADGE
-	iftrue .Beaten
+	iftruefwd .Beaten
 	jumpstd gymstatue1
 .Beaten:
 	jumpstd gymstatue2
@@ -169,11 +166,6 @@ LeaderBlueWinText:
 	line "Badge."
 	done
 
-Text_ReceivedEarthBadge:
-	text "<PLAYER> received"
-	line "the Earth Badge."
-	done
-
 LeaderBlueAfterText:
 	text "Blue: Here! Take"
 	line "this as well!"
@@ -194,7 +186,7 @@ BlueOutroText:
 	para "real deal. You are"
 	line "a good trainer."
 
-	para "With eight badges"
+	para "With eight Badges"
 	line "from Kanto, you"
 
 	para "can challenge the"

@@ -8,38 +8,44 @@ WarehouseEntrance_MapScriptHeader:
 
 	def_warp_events
 	warp_event  1,  2, UNDERGROUND_PATH_SWITCH_ROOM_ENTRANCES, 7
-	warp_event  1, 34, UNDERGROUND_PATH_SWITCH_ROOM_ENTRANCES, 4
+	warp_event  1, 38, UNDERGROUND_PATH_SWITCH_ROOM_ENTRANCES, 4
 	warp_event 16,  6, WAREHOUSE_ENTRANCE, 4
-	warp_event 13, 35, WAREHOUSE_ENTRANCE, 3
-	warp_event 14, 35, WAREHOUSE_ENTRANCE, 3
-	warp_event 14, 31, UNDERGROUND_PATH_SWITCH_ROOM_ENTRANCES, 1
+	warp_event 27, 23, WAREHOUSE_ENTRANCE, 3
+	warp_event 28, 23, WAREHOUSE_ENTRANCE, 3
+	warp_event 28, 19, UNDERGROUND_PATH_SWITCH_ROOM_ENTRANCES, 1
+	warp_event 19, 36, UNDERGROUND_PATH_SWITCH_ROOM_ENTRANCES, 10
 
 	def_coord_events
 
 	def_bg_events
 	bg_event 16,  6, BGEVENT_READ, BasementDoorScript
 	bg_event 17,  6, BGEVENT_JUMPTEXT, GoldenrodUndergroundNoEntryText
-	bg_event  4, 13, BGEVENT_ITEM + PARALYZEHEAL, EVENT_WAREHOUSE_ENTRANCE_HIDDEN_PARALYZEHEAL
-	bg_event  2, 18, BGEVENT_ITEM + SUPER_POTION, EVENT_WAREHOUSE_ENTRANCE_HIDDEN_SUPER_POTION
+	bg_event  4, 17, BGEVENT_ITEM + PARALYZEHEAL, EVENT_WAREHOUSE_ENTRANCE_HIDDEN_PARALYZEHEAL
+	bg_event  2, 22, BGEVENT_ITEM + SUPER_POTION, EVENT_WAREHOUSE_ENTRANCE_HIDDEN_SUPER_POTION
 	bg_event 15,  8, BGEVENT_ITEM + ANTIDOTE, EVENT_WAREHOUSE_ENTRANCE_HIDDEN_ANTIDOTE
+	bg_event 20, 31, BGEVENT_ITEM + X_SP_ATK, EVENT_WAREHOUSE_ENTRANCE_HIDDEN_X_SP_ATK
 
 	def_object_events
-	object_event  5, 11, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BargainMerchantScript, EVENT_WAREHOUSE_ENTRANCE_GRAMPS
-	object_event  5, 14, SPRITE_POKEMANIAC, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, OlderHaircutBrotherScript, EVENT_WAREHOUSE_ENTRANCE_OLDER_HAIRCUT_BROTHER
-	object_event  5, 15, SPRITE_POKEMANIAC, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, YoungerHaircutBrotherScript, EVENT_WAREHOUSE_ENTRANCE_YOUNGER_HAIRCUT_BROTHER
-	object_event  5, 21, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BitterMerchantScript, EVENT_WAREHOUSE_ENTRANCE_GRANNY
-	object_event  3, 31, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerSupernerdEric, -1
-	object_event  4,  9, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerSupernerdTeru, -1
-	object_event  1, 27, SPRITE_POKEMANIAC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerPokemaniacIssac, -1
-	object_event  0,  6, SPRITE_POKEMANIAC, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPokemaniacDonald, -1
-	keyitemball_event  4, 25, COIN_CASE, EVENT_WAREHOUSE_ENTRANCE_COIN_CASE
-	object_event  1, 18, SPRITE_COSPLAYER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerCosplayerClara, -1
+	object_event  5, 15, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BargainMerchantScript, EVENT_WAREHOUSE_ENTRANCE_GRAMPS
+	object_event  5, 18, SPRITE_POKEMANIAC, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, OlderHaircutBrotherScript, EVENT_WAREHOUSE_ENTRANCE_OLDER_HAIRCUT_BROTHER
+	object_event  5, 19, SPRITE_POKEMANIAC, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, YoungerHaircutBrotherScript, EVENT_WAREHOUSE_ENTRANCE_YOUNGER_HAIRCUT_BROTHER
+	object_event  5, 25, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BitterMerchantScript, EVENT_WAREHOUSE_ENTRANCE_GRANNY
+	object_event 13, 29, SPRITE_PIERS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, PiersScript, -1
+	object_event  3, 35, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerSupernerdEric, -1
+	object_event  4,  9, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerSupernerdTeru, -1
+	object_event  1, 31, SPRITE_POKEMANIAC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerPokemaniacIssac, -1
+	object_event  0,  6, SPRITE_POKEMANIAC, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPokemaniacDonald, -1
+	object_event  8, 31, SPRITE_COSPLAYER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerCosplayerClara, -1
+	object_event 14, 29, SPRITE_PIDGEOTTO_SIDE, SPRITEMOVEDATA_MICROPHONE, 0, 0, -1, PAL_NPC_EMOTE_GRAY, OBJECTTYPE_COMMAND, jumptextfaceplayer, PiersMicrophoneText, -1
+	object_event  5, 11, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_BLACK, OBJECTTYPE_SCRIPT, 0, GoldenrodUndergroundCandyManScript, -1
+	keyitemball_event  5, 28, COIN_CASE, EVENT_WAREHOUSE_ENTRANCE_COIN_CASE
 
 	object_const_def
 	const WAREHOUSEENTRANCE_GRAMPS
 	const WAREHOUSEENTRANCE_SUPER_NERD5
 	const WAREHOUSEENTRANCE_SUPER_NERD6
 	const WAREHOUSEENTRANCE_GRANNY
+	const WAREHOUSEENTRANCE_PIERS
 
 WarehouseEntranceResetSwitches:
 	clearevent EVENT_SWITCH_1
@@ -63,7 +69,7 @@ WarehouseEntranceResetSwitches:
 
 WarehouseEntranceCheckBasementKey:
 	checkevent EVENT_USED_BASEMENT_KEY
-	iffalse .LockBasementDoor
+	iffalsefwd .LockBasementDoor
 	endcallback
 
 .LockBasementDoor:
@@ -72,12 +78,12 @@ WarehouseEntranceCheckBasementKey:
 
 WarehouseEntranceCheckDayOfWeek:
 	readvar VAR_WEEKDAY
-	ifequal MONDAY, .Monday
-	ifequal TUESDAY, .Tuesday
-	ifequal WEDNESDAY, .Wednesday
-	ifequal THURSDAY, .Thursday
-	ifequal FRIDAY, .Friday
-	ifequal SATURDAY, .Saturday
+	ifequalfwd MONDAY, .Monday
+	ifequalfwd TUESDAY, .Tuesday
+	ifequalfwd WEDNESDAY, .Wednesday
+	ifequalfwd THURSDAY, .Thursday
+	ifequalfwd FRIDAY, .Friday
+	ifequalfwd SATURDAY, .Saturday
 
 .Sunday:
 	disappear WAREHOUSEENTRANCE_GRAMPS
@@ -89,7 +95,7 @@ WarehouseEntranceCheckDayOfWeek:
 .Monday:
 	disappear WAREHOUSEENTRANCE_GRAMPS
 	checktime 1 << MORN
-	iffalse .NotMondayMorning
+	iffalsefwd .NotMondayMorning
 	appear WAREHOUSEENTRANCE_GRAMPS
 .NotMondayMorning:
 	disappear WAREHOUSEENTRANCE_SUPER_NERD5
@@ -185,8 +191,8 @@ GenericTrainerCosplayerClara:
 
 BitterMerchantScript:
 	readvar VAR_WEEKDAY
-	ifequal SUNDAY, .Open
-	ifequal SATURDAY, .Open
+	ifequalfwd SUNDAY, .Open
+	ifequalfwd SATURDAY, .Open
 	jumptext GoldenrodUndergroundWeAreNotOpenTodayText
 
 .Open:
@@ -196,7 +202,7 @@ BargainMerchantScript:
 	checkflag ENGINE_GOLDENROD_UNDERGROUND_MERCHANT_CLOSED
 	iftrue_jumptext GoldenrodUndergroundWeAreNotOpenTodayText
 	readvar VAR_WEEKDAY
-	ifequal MONDAY, .CheckMorn
+	ifequalfwd MONDAY, .CheckMorn
 	jumptext GoldenrodUndergroundWeAreNotOpenTodayText
 
 .CheckMorn:
@@ -206,51 +212,51 @@ BargainMerchantScript:
 
 OlderHaircutBrotherScript:
 	readvar VAR_WEEKDAY
-	ifequal TUESDAY, .DoHaircut
-	ifequal THURSDAY, .DoHaircut
-	ifequal SATURDAY, .DoHaircut
+	ifequalfwd TUESDAY, .DoHaircut
+	ifequalfwd THURSDAY, .DoHaircut
+	ifequalfwd SATURDAY, .DoHaircut
 	jumptext GoldenrodUndergroundWeAreNotOpenTodayText
 
 .DoHaircut:
 	opentext
 	checkflag ENGINE_GOLDENROD_UNDERGROUND_GOT_HAIRCUT
-	iftrue .AlreadyGotHaircut
+	iftruefwd .AlreadyGotHaircut
 	special PlaceMoneyTopRight
 	writetext GoldenrodUndergroundOlderHaircutBrotherOfferHaircutText
 	yesorno
-	iffalse .Refused
-	checkmoney $0, 500
-	ifequal $2, .NotEnoughMoney
+	iffalsefwd .Refused
+	checkmoney YOUR_MONEY, 500
+	ifequalfwd HAVE_LESS, .NotEnoughMoney
 	writetext GoldenrodUndergroundOlderHaircutBrotherAskWhichMonText
 	promptbutton
 	special Special_OlderHaircutBrother
-	ifequal $0, .Refused
-	ifequal $1, .Refused
+	ifequalfwd $0, .Refused
+	ifequalfwd $1, .Refused
 	setflag ENGINE_GOLDENROD_UNDERGROUND_GOT_HAIRCUT
-	ifequal $2, .two
-	ifequal $3, .three
-	sjump .else
+	ifequalfwd $2, .two
+	ifequalfwd $3, .three
+	sjumpfwd .else
 
 .two
 	setevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_3
-	sjump .then
+	sjumpfwd .then
 
 .three
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
 	setevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_3
-	sjump .then
+	sjumpfwd .then
 
 .else
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
 	setevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_3
-	sjump .then
+	; fallthrough
 
 .then
-	takemoney $0, 500
+	takemoney YOUR_MONEY, 500
 	special PlaceMoneyTopRight
 	writetext GoldenrodUndergroundOlderHaircutBrotherWatchItBecomeBeautifulText
 	waitbutton
@@ -259,16 +265,16 @@ OlderHaircutBrotherScript:
 	special LoadMapPalettes
 	playmusic MUSIC_HEAL
 	pause 60
-	special FadeInPalettes
+	special FadeInPalettes_EnableDynNoApply
 	special RestartMapMusic
 	opentext
 	writetext GoldenrodUndergroundOlderHaircutBrotherAllDoneText
 	waitbutton
 	checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
-	iftrue EitherHaircutBrotherScript_SlightlyHappier
+	iftruefwd EitherHaircutBrotherScript_SlightlyHappier
 	checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
-	iftrue EitherHaircutBrotherScript_Happier
-	sjump EitherHaircutBrotherScript_MuchHappier
+	iftruefwd EitherHaircutBrotherScript_Happier
+	sjumpfwd EitherHaircutBrotherScript_MuchHappier
 
 .Refused:
 	jumpopenedtext GoldenrodUndergroundOlderHaircutBrotherThatsAShameText
@@ -281,49 +287,49 @@ OlderHaircutBrotherScript:
 
 YoungerHaircutBrotherScript:
 	readvar VAR_WEEKDAY
-	ifequal SUNDAY, .DoHaircut
-	ifequal WEDNESDAY, .DoHaircut
-	ifequal FRIDAY, .DoHaircut
+	ifequalfwd SUNDAY, .DoHaircut
+	ifequalfwd WEDNESDAY, .DoHaircut
+	ifequalfwd FRIDAY, .DoHaircut
 	jumptext GoldenrodUndergroundWeAreNotOpenTodayText
 
 .DoHaircut:
 	opentext
 	checkflag ENGINE_GOLDENROD_UNDERGROUND_GOT_HAIRCUT
-	iftrue .AlreadyGotHaircut
+	iftruefwd .AlreadyGotHaircut
 	special PlaceMoneyTopRight
 	writetext GoldenrodUndergroundYoungerHaircutBrotherOfferHaircutText
 	yesorno
-	iffalse .Refused
-	checkmoney $0, 300
-	ifequal $2, .NotEnoughMoney
+	iffalsefwd .Refused
+	checkmoney YOUR_MONEY, 300
+	ifequalfwd HAVE_LESS, .NotEnoughMoney
 	writetext GoldenrodUndergroundYoungerHaircutBrotherAskWhichMonText
 	promptbutton
 	special Special_YoungerHaircutBrother
-	ifequal $0, .Refused
-	ifequal $1, .Refused
+	ifequalfwd $0, .Refused
+	ifequalfwd $1, .Refused
 	setflag ENGINE_GOLDENROD_UNDERGROUND_GOT_HAIRCUT
-	ifequal $2, .two
-	ifequal $3, .three
-	sjump .else
+	ifequalfwd $2, .two
+	ifequalfwd $3, .three
+	sjumpfwd .else
 
 .two
 	setevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_3
-	sjump .then
+	sjumpfwd .then
 
 .three
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
 	setevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_3
-	sjump .then
+	sjumpfwd .then
 
 .else
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
 	clearevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
 	setevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_3
 .then
-	takemoney $0, 300
+	takemoney YOUR_MONEY, 300
 	special PlaceMoneyTopRight
 	writetext GoldenrodUndergroundYoungerHaircutBrotherIllMakeItLookCoolText
 	waitbutton
@@ -332,16 +338,16 @@ YoungerHaircutBrotherScript:
 	special LoadMapPalettes
 	playmusic MUSIC_HEAL
 	pause 60
-	special FadeInPalettes
+	special FadeInPalettes_EnableDynNoApply
 	special RestartMapMusic
 	opentext
 	writetext GoldenrodUndergroundYoungerHaircutBrotherAllDoneText
 	waitbutton
 	checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
-	iftrue EitherHaircutBrotherScript_SlightlyHappier
+	iftruefwd EitherHaircutBrotherScript_SlightlyHappier
 	checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
-	iftrue EitherHaircutBrotherScript_Happier
-	sjump EitherHaircutBrotherScript_MuchHappier
+	iftruefwd EitherHaircutBrotherScript_Happier
+	sjumpfwd EitherHaircutBrotherScript_MuchHappier
 
 .Refused:
 	jumpopenedtext GoldenrodUndergroundYoungerHaircutBrotherHowDisappointingText
@@ -378,9 +384,243 @@ BasementDoorScript::
 	waitbutton
 	closetext
 	changeblock 16, 6, $2e
-	reloadmappart
+	refreshmap
 	setevent EVENT_USED_BASEMENT_KEY
 	endtext
+
+GoldenrodUndergroundCandyManScript:
+	checkevent EVENT_GOT_CANDY_JAR
+	iftruefwd .AlreadyGotCandyJar
+	opentext
+	writetext .GiveCandyJarText1
+	waitbutton
+	verbosegivekeyitem CANDY_JAR
+	setevent EVENT_GOT_CANDY_JAR
+	writetext .GiveCandyJarText2
+	waitbutton
+	setval 1
+	writemem wExpCandySAmount
+	endtext
+
+.AlreadyGotCandyJar:
+	pokemart MARTTYPE_EXP_CANDY, 0
+
+.GiveCandyJarText1:
+	text "Psst! Over here…"
+	line "You look like you"
+	cont "could use a boost."
+
+	para "Don't ask too many"
+	line "questions."
+
+	para "Here, take this."
+	done
+
+.GiveCandyJarText2:
+	text "It's a Candy Jar."
+	
+	para "You'll need it to"
+	line "store my, uh,"
+	cont "special candy."
+
+	para "First one's on me!"
+	line "Try it out."
+
+	para "…For your"
+	line "#mon,"
+	cont "of course."
+	done
+
+PiersScript:
+	faceplayer
+	opentext
+	checkevent EVENT_BEAT_ELITE_FOUR
+	iftruefwd PiersRematchScript
+	checkevent EVENT_BEAT_PIERS
+	iftrue_jumpopenedtext PiersAfterText
+	checkevent EVENT_INTRODUCED_PIERS
+	iftruefwd .AfterIntro
+	writetext PiersIntroText
+	waitbutton
+	setevent EVENT_INTRODUCED_PIERS
+.AfterIntro:
+	writetext PiersAfterIntroText
+	yesorno
+	iffalse_jumpopenedtext PiersNoBattleText
+	writetext PiersSeenText
+	waitbutton
+	closetext
+	winlosstext PiersBeatenText, 0
+	setlasttalked WAREHOUSEENTRANCE_PIERS
+	loadtrainer PIERS, 1
+	startbattle
+	reloadmapafterbattle
+	setevent EVENT_BEAT_PIERS
+	opentext
+	writetext PiersRewardText
+	promptbutton
+	verbosegiveitem THROAT_SPRAY
+	setevent EVENT_GOT_THROAT_SPRAY_FROM_PIERS
+	jumpthisopenedtext
+
+PiersAfterText:
+	text "If you want to be-"
+	line "come the Champion,"
+
+	para "you better get"
+	line "goin'!"
+
+	para "I'll send some sup-"
+	line "port your way with"
+	cont "a yell!"
+	done
+
+PiersRematchScript:
+	checkevent EVENT_BEAT_PIERS_AGAIN
+	iftrue_jumpopenedtext PiersRematchAfterText
+	checkevent EVENT_INTRODUCED_PIERS
+	iffalsefwd .Intro
+	writetext PiersRematchIntroAgainText
+	sjumpfwd .AfterIntro
+.Intro:
+	writetext PiersIntroText
+.AfterIntro:
+	setevent EVENT_INTRODUCED_PIERS
+	waitbutton
+	writetext PiersRematchSeenText
+	waitbutton
+	closetext
+	winlosstext PiersRematchBeatenText, 0
+	setlasttalked WAREHOUSEENTRANCE_PIERS
+	loadtrainer PIERS, 2
+	startbattle
+	reloadmapafterbattle
+	setevent EVENT_BEAT_PIERS_AGAIN
+	opentext
+	checkevent EVENT_GOT_THROAT_SPRAY_FROM_PIERS
+	iftrue_jumpopenedtext PiersRematchAfterText
+	writetext PiersRewardText
+	promptbutton
+	verbosegiveitem THROAT_SPRAY
+	setevent EVENT_GOT_THROAT_SPRAY_FROM_PIERS
+	jumpthisopenedtext
+
+PiersRematchAfterText:
+	text "I have a little"
+	line "sister."
+	cont "Her name's Marnie."
+
+	para "She's about as"
+	line "cute as they come."
+
+	para "When she's older,"
+	line "I don't know if"
+
+	para "she'll want to"
+	line "sing, play music,"
+
+	para "battle with #-"
+	line "mon, or something"
+	cont "totally new."
+
+	para "But whatever she"
+	line "chooses, I hope"
+
+	para "she has as much"
+	line "passion as you"
+	cont "do, <PLAYER>!"
+	done
+
+PiersIntroText:
+	text "Piers: The only"
+	line "thing a humble"
+	cont "singer can do"
+	cont "is sing a humble"
+	cont "song… ♪"
+
+	para "My name's Piers."
+	line "I'm not from Johto,"
+
+	para "but I came here"
+	line "to sing on the"
+
+	para "radio and make"
+	line "everyone smile"
+	cont "in my hometown."
+	done
+
+PiersAfterIntroText:
+	text "Some of my best"
+	line "riffs have come"
+
+	para "from winning a"
+	line "good battle."
+
+	para "How 'bout we have"
+	line "one here and now?"
+	done
+
+PiersNoBattleText:
+	text "Sigh… I feel like"
+	line "my soul's weeping."
+	done
+
+PiersSeenText:
+	text "I make dark music"
+	line "and use Dark-type"
+	cont "#mon!"
+
+	para "It's time to rock!"
+	done
+
+PiersBeatenText:
+	text "Me an' my team"
+	line "gave it our best."
+	done
+
+PiersRewardText:
+	text "I'm glad we were"
+	line "able to battle."
+
+	para "Seems like my"
+	line "#mon feel the"
+	cont "same way."
+
+	para "Here's something"
+	line "to help rock out"
+
+	para "even harder next"
+	line "time!"
+	done
+
+PiersRematchIntroAgainText:
+	text "Piers: Hey there,"
+	line "<PLAYER>."
+	done
+
+PiersRematchSeenText:
+	text "Hah! So you're the"
+	line "new Champion."
+
+	para "You're a big deal"
+	line "now!"
+
+	para "And I'm still just"
+	line "singing my humble"
+	cont "songs…"
+
+	para "So you want an"
+	line "encore?"
+
+	para "I'll make an ex-"
+	line "ception for you,"
+	cont "just this once!"
+	done
+
+PiersRematchBeatenText:
+	text "That's it?!"
+	line "No way!"
+	done
 
 SupernerdEricSeenText:
 	text "I got booted out"
@@ -582,7 +822,11 @@ GoldenrodUndergroundWeAreNotOpenTodayText:
 	line "today."
 	done
 
-GoldenrodUndergroundNoEntryText:
+GoldenrodUndergroundNoEntryText: ; text > text
 	text "NO ENTRY BEYOND"
 	line "THIS POINT"
+	done
+
+PiersMicrophoneText:
+	text "It's a microphone."
 	done

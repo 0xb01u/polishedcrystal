@@ -3,18 +3,12 @@ CheckFaint:
 
 HandleBetweenTurnEffects:
 ; Things handled at endturn. Things commented out are currently not in Polished.
-	ld hl, wTotalBattleTurns
-	inc [hl]
-	jr nz, .done_turn_increment
-	dec [hl]
-
-.done_turn_increment
 	call CheckFaint
 	ret c
 	call HandleWeather
 	call CheckFaint
 	ret c
-	; Self-curing status from high Affection
+	call HandleAffectionSelfCure
 	call HandleFutureSight
 	call CheckFaint
 	ret c
@@ -69,6 +63,8 @@ HandleBetweenTurnEffects:
 	; gravity
 	; terrain (dissipating, grass terrain recovery is elsewhere)
 	call HandleEndturnBlockB
+	call CheckFaint
+	ret c
 	; Things below do not exist in 7gen -- it's here to avoid some quirks
 	call HandleLeppaBerry
 	call HandleHealingItems
@@ -189,14 +185,14 @@ HandleBetweenTurnEffects:
 	jr nz, .not_both2
 
 	farcall SpikesDamageBoth
-	farcall RunBothActivationAbilities
+	farcall RunBothEntryAbilities
 	jmp .endturn_loop
 .not_both2
 	call SetEnemyTurn
 	dec e
 	call z, SetPlayerTurn
 	farcall SpikesDamage
-	farcall RunActivationAbilities
+	farcall RunEntryAbilities
 	jmp .endturn_loop
 
 HandleEndturnBlockA:
@@ -240,7 +236,7 @@ HandleWeather:
 	dec [hl]
 	jr nz, .ongoing
 
-	ld hl, .WeatherEndedMessages
+	ld hl, WeatherEndedMessages
 	ld a, [wBattleWeather]
 	dec a
 	add a
@@ -255,12 +251,6 @@ HandleWeather:
 	ld [wBattleWeather], a
 	ret
 
-.WeatherEndedMessages: ; these are all used with StdBattleTextbox
-	dw BattleText_TheRainStopped ; far-ok
-	dw BattleText_TheSunlightFaded ; far-ok
-	dw BattleText_TheSandstormSubsided ; far-ok
-	dw BattleText_TheHailStopped ; far-ok
-
 .ongoing
 	; the above needs actual [wBattleWeather] to be
 	; able to time it out, but otherwise check
@@ -269,7 +259,7 @@ HandleWeather:
 	and a ; cp WEATHER_NONE
 	ret z
 
-; sandstorm/hail damage, abilities like rain dish, etc.
+	; sandstorm/hail damage, abilities like rain dish, etc.
 	xor a
 	ld [wAlreadySawWeather], a
 	call SetFastestTurn
@@ -323,9 +313,9 @@ HandleWeather:
 	xor a
 	ld [wNumHits], a
 	inc a
-	ld [wKickCounter], a
+	ld [wBattleAnimParam], a
 	ld [wAlreadySawWeather], a
-	farcall Call_PlayBattleAnim
+	farcall PlayBattleAnimDE
 .saw_sandstorm
 
 	ld hl, SandstormHitsText
@@ -362,15 +352,52 @@ endc
 	xor a
 	ld [wNumHits], a
 	inc a
-	ld [wKickCounter], a
+	ld [wBattleAnimParam], a
 	ld [wAlreadySawWeather], a
-	farcall Call_PlayBattleAnim
+	farcall PlayBattleAnimDE
 .saw_hail
 
 	ld hl, HailHitsText
 	call StdBattleTextbox
 	call GetSixteenthMaxHP
 	predef_jump SubtractHPFromUser
+
+WeatherEndedMessages:
+	farbank BattleText
+	fardw BattleText_TheRainStopped
+	fardw BattleText_TheSunlightFaded
+	fardw BattleText_TheSandstormSubsided
+	fardw BattleText_TheHailStopped
+
+HandleAffectionSelfCure:
+	call SetFastestTurn
+	call .do_it
+	call SwitchTurn
+
+.do_it
+	farcall CheckAffection
+	cp 2
+	ret c
+
+	; 20% to heal a status problem.
+	ld a, 5
+	call BattleRandomRange
+	and a
+	ret nz
+
+	; Do we actually have a status problem to heal?
+	ld a, BATTLE_VARS_STATUS
+	call GetBattleVarAddr
+	ld a, [hl]
+	and a
+	ret z
+
+	ld [hl], 0
+	ld hl, PlayerAffectionSelfCureText
+	ld de, EnemyAffectionSelfCureText
+	farcall AffectionText
+	call UpdateBattleMonInParty
+	jmp UpdateEnemyMonInParty
 
 HandleFutureSight:
 	call SetFastestTurn
@@ -417,7 +444,7 @@ HandleFutureSight:
 	xor a
 	ld [wAttackMissed], a
 	ld [wAlreadyDisobeyed], a
-	ld a, $10
+	ld a, EFFECTIVE
 	ld [wTypeModifier], a
 	farcall DoMove
 	xor a
@@ -500,7 +527,7 @@ HandleLeechSeed:
 	call GetBattleVar
 	and 1 << SUBSTATUS_FLYING | 1 << SUBSTATUS_UNDERGROUND
 	jr nz, .no_anim
-	farcall Call_PlayBattleAnim_OnlyIfVisible
+	farcall PlayBattleAnimDE_OnlyIfVisible
 .no_anim
 	call SwitchTurn
 
@@ -520,12 +547,12 @@ HandleLeechSeed:
 	farcall RestoreHP
 	jr .done
 .hurt
-	farcall DisableAnimations
+	farcall BeginAbility
 	farcall ShowEnemyAbilityActivation
 	predef SubtractHPFromUser
 	ld hl, SuckedUpOozeText
 	call StdBattleTextbox
-	farcall EnableAnimations
+	farcall EndAbility
 .done
 	jmp SwitchTurn
 
@@ -544,15 +571,19 @@ HandlePoison:
 	call GetTrueUserAbility
 	cp POISON_HEAL
 	jr nz, DoPoisonBurnDamage
+
+	; Toxic counter should still increase.
+	call IncrementToxic
+
 	; check if we are at full HP
 	farcall CheckFullHP
 	ret z
-	farcall DisableAnimations
+	farcall BeginAbility
 	farcall ShowAbilityActivation
 	ld hl, RegainedHealthText
 	call DoPoisonBurnDamageAnim
 	farcall RestoreHP
-	farjp EnableAnimations
+	farjp EndAbility
 
 HandleBurn:
 	call SetFastestTurn
@@ -581,17 +612,8 @@ DoPoisonBurnDamage:
 	; Burn and Toxic does (or starts at) 1/16 damage as of Gen VII
 	call nz, GetSixteenthMaxHP
 
-	ldh a, [hBattleTurn]
-	and a
-	ld hl, wPlayerToxicCount
-	jr z, .got_toxic_count
-	ld hl, wEnemyToxicCount
-.got_toxic_count
-	ld a, BATTLE_VARS_STATUS
-	call GetBattleVar
-	bit TOX, a
+	call IncrementToxic
 	jr z, .did_toxic
-	inc [hl]
 	ld a, [hl]
 	ld hl, 0
 .add
@@ -603,13 +625,37 @@ DoPoisonBurnDamage:
 .did_toxic
 	predef_jump SubtractHPFromUser
 
+IncrementToxic:
+; Returns nz if we are badly poisoned, and sets hl to the current toxic counter.
+	ldh a, [hBattleTurn]
+	and a
+	ld hl, wPlayerToxicCount
+	jr z, .got_toxic_count
+	ld hl, wEnemyToxicCount
+.got_toxic_count
+	ld a, BATTLE_VARS_STATUS
+	call GetBattleVar
+	bit TOX, a
+	ret z
+
+	inc [hl]
+
+	; Cap toxic counter at 15.
+	ld a, [hl]
+	cp 15
+	jr nz, .no_overflow
+	dec [hl]
+.no_overflow
+	inc [hl]
+	ret
+
 DoPoisonBurnDamageAnim:
 	push de
 	call StdBattleTextbox
 	pop de
 	xor a
 	ld [wNumHits], a
-	farcall Call_PlayBattleAnim_OnlyIfVisible
+	farcall PlayBattleAnimDE_OnlyIfVisible
 	jmp GetEighthMaxHP
 
 HandleCurse:
@@ -627,7 +673,7 @@ HandleCurse:
 	xor a
 	ld [wNumHits], a
 	ld de, ANIM_UNDER_CURSE
-	farcall Call_PlayBattleAnim_OnlyIfVisible
+	farcall PlayBattleAnimDE_OnlyIfVisible
 	call GetQuarterMaxHP
 	predef SubtractHPFromUser
 	ld hl, HurtByCurseText
@@ -764,6 +810,24 @@ EndturnEncoreDisable_End:
 	ld h, d
 	ld l, e
 	jmp StdBattleTextbox
+
+TickDisableAfterMove:
+; If we have 5 turns left of Disable, tick it down. This makes it so that
+; Disable covers 4 move uses.
+	call HasUserFainted
+	ret z
+	ldh a, [hBattleTurn]
+	and a
+	ld hl, wPlayerDisableCount
+	jr z, .got_disable_count
+	ld hl, wEnemyDisableCount
+.got_disable_count
+	ld a, [hl]
+	and $f
+	cp 5
+	ret nz
+	dec [hl]
+	ret
 
 HandleDisable:
 	call SetFastestTurn
@@ -949,6 +1013,7 @@ HandleHealingItems:
 	farcall HandleHPHealingItem
 	farcall UseHeldStatusHealingItem
 	farcall HandleStatBoostBerry
+	farcall CheckMirrorHerb ; for stat boost berry
 	farjp UseConfusionHealingItem
 
 HandleStatusOrbs:
@@ -958,7 +1023,7 @@ HandleStatusOrbs:
 	ret z
 
 	; bypass ineffectiveness checks to avoid residual results from last attack
-	ld a, $10
+	ld a, EFFECTIVE
 	ld [wTypeModifier], a
 
 	farcall GetOpponentItemAfterUnnerve
@@ -972,31 +1037,16 @@ HandleStatusOrbs:
 	push bc
 	ld b, 2
 	farcall CanPoisonTarget
-	pop bc
-	ret nz
-	ld de, ANIM_PSN
-	ld hl, BadlyPoisonedText
 	jr .do_status
 .burn
 	push bc
 	ld b, 2
 	farcall CanBurnTarget
+.do_status
 	pop bc
 	ret nz
-	ld de, ANIM_BRN
-	ld hl, WasBurnedText
 	; fallthrough
-.do_status
-	push hl
-	ld a, BATTLE_VARS_STATUS_OPP
-	call GetBattleVarAddr
-	ld [hl], b
-	xor a
-	ld [wNumHits], a
-	farcall PlayOpponentBattleAnim
-	call RefreshBattleHuds
-	pop hl
-	jmp StdBattleTextbox
+	farjp StatusTarget
 
 HandleRoost:
 	call SetFastestTurn

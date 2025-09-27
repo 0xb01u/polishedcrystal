@@ -8,7 +8,7 @@ SpecialGiveShinyDitto:
 	ld hl, .OTAndExtra
 	ld bc, PLAYER_NAME_LENGTH + 3
 	rst CopyBytes
-	
+
 	ld hl, wTempMonSpecies
 	ld a, DITTO
 	ld [hli], a
@@ -49,13 +49,13 @@ rept MON_PERSONALITY - MON_DVS
 endr
 	ld a, SHINY_MASK | HIDDEN_ABILITY | QUIRKY
 	ld [hli], a
-	ld [hl], MALE
+	ld [hl], MALE | PLAIN_FORM
 	ld hl, wTempMonHappiness
 	ld a, BASE_HAPPINESS
 	ld [hli], a
 	xor a
 	ld [hli], a
-	lb bc, MALE, PREMIER_BALL
+	ld c, PREMIER_BALL
 	farcall SetGiftMonCaughtData
 	inc hl
 	ld [hl], 5
@@ -72,8 +72,7 @@ endr
 	ld [wTempMonSlot], a
 	ld a, b
 	ld [wTempMonBox], a
-	ld a, [wCurPartySpecies]
-	dec a
+	lp bc, DITTO
 	call SetSeenAndCaughtMon
 	farcall UpdateStorageBoxMonFromTemp
 	ld a, 2

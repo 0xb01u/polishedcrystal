@@ -21,12 +21,12 @@ PlayersHouse1F_MapScriptHeader:
 	bg_event  6,  1, BGEVENT_UP, PlayersHouse1FTVScript
 
 	def_object_events
-	object_event  9,  4, SPRITE_MOM, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_1
-	object_event  3,  2, SPRITE_MOM, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, (1 << MORN), 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_2
-	object_event  9,  4, SPRITE_MOM, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, (1 << DAY), 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_2
-	object_event  6,  3, SPRITE_MOM, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, (1 << EVE), 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_2
-	object_event  1,  2, SPRITE_MOM, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, (1 << NITE), 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_2
-	object_event  6,  4, SPRITE_MATRON, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, NeighborScript, EVENT_PLAYERS_HOUSE_1F_NEIGHBOR
+	object_event  9,  4, SPRITE_MOM, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_1
+	object_event  3,  2, SPRITE_MOM, SPRITEMOVEDATA_STANDING_UP, 0, 0, (1 << MORN), 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_2
+	object_event  9,  4, SPRITE_MOM, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, (1 << DAY), 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_2
+	object_event  6,  3, SPRITE_MOM, SPRITEMOVEDATA_STANDING_UP, 0, 0, (1 << EVE), 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_2
+	object_event  1,  2, SPRITE_MOM, SPRITEMOVEDATA_STANDING_UP, 0, 0, (1 << NITE), 0, OBJECTTYPE_SCRIPT, 0, MomScript, EVENT_PLAYERS_HOUSE_MOM_2
+	object_event  6,  4, SPRITE_MATRON, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, NeighborScript, EVENT_PLAYERS_HOUSE_1F_NEIGHBOR
 
 	object_const_def
 	const PLAYERSHOUSE1F_MOM1
@@ -36,21 +36,21 @@ MomTrigger1:
 	showemote EMOTE_SHOCK, PLAYERSHOUSE1F_MOM1, 15
 	turnobject PLAYERSHOUSE1F_MOM1, RIGHT
 	turnobject PLAYER, LEFT
-	sjump MomEventScript
+	sjumpfwd MomEventScript
 
 MomTrigger2:
 	playmusic MUSIC_MOM
 	showemote EMOTE_SHOCK, PLAYERSHOUSE1F_MOM1, 15
 	turnobject PLAYERSHOUSE1F_MOM1, RIGHT
 	applyonemovement PLAYER, slow_step_left
-	sjump MomEventScript
+	sjumpfwd MomEventScript
 
 MomTrigger3:
 	playmusic MUSIC_MOM
 	showemote EMOTE_SHOCK, PLAYERSHOUSE1F_MOM1, 15
 	turnobject PLAYERSHOUSE1F_MOM1, UP
 	applymovement PLAYER, .two_steps_down
-	sjump MomEventScript
+	sjumpfwd MomEventScript
 
 .two_steps_down
 	step_down
@@ -66,8 +66,7 @@ MomEventScript:
 	opentext
 	writetext MomIntroText
 	promptbutton
-	getstring GearName, $1
-	callstd receiveitem
+	givespecialitem POKEGEAR
 	setflag ENGINE_POKEGEAR
 	setflag ENGINE_PHONE_CARD
 	addcellnum PHONE_MOM
@@ -80,11 +79,11 @@ MomEventScript:
 .InitialSetDSTFlag:
 	writetext MomDSTText
 	yesorno
-	iffalse .NotDST
+	iffalsefwd .NotDST
 	special Special_InitialSetDSTFlag
 	yesorno
 	iffalse .InitialSetDSTFlag
-	sjump .InitializedDSTFlag
+	sjumpfwd .InitializedDSTFlag
 .NotDST:
 	special Special_InitialClearDSTFlag
 	yesorno
@@ -92,7 +91,7 @@ MomEventScript:
 .InitializedDSTFlag:
 	writetext MomRunningShoesText
 	yesorno
-	iftrue .NoInstructions
+	iftruefwd .NoInstructions
 	writetext MomInstructionsText
 	promptbutton
 .NoInstructions:
@@ -102,9 +101,6 @@ MomEventScript:
 	turnobject PLAYERSHOUSE1F_MOM1, LEFT
 	special RestartMapMusic
 	end
-
-GearName:
-	db "#gear@"
 
 PlayersHouse1FFridgeText:
 	text "Let's see what's"
@@ -143,14 +139,14 @@ PlayersHouse1FTVScript:
 MomScript:
 	faceplayer
 	checkscene
-	iffalse .MomEvent
+	iffalsefwd .MomEvent
 	opentext
 	checkevent EVENT_FIRST_TIME_BANKING_WITH_MOM
 	iftrue_jumpopenedtext MomDoItText
 	checkevent EVENT_TALKED_TO_MOM_AFTER_MYSTERY_EGG_QUEST
-	iftrue .BankOfMom
+	iftruefwd .BankOfMom
 	checkevent EVENT_GAVE_MYSTERY_EGG_TO_ELM
-	iftrue .FirstTimeBanking
+	iftruefwd .FirstTimeBanking
 	checkevent EVENT_GOT_A_POKEMON_FROM_ELM
 	iftrue_jumpopenedtext MomErrandText
 	jumpthisopenedtext
@@ -277,26 +273,26 @@ NeighborScript:
 	faceplayer
 	opentext
 	checktime 1 << MORN
-	iftrue .MornScript
+	iftruefwd .MornScript
 	checktime 1 << DAY
-	iftrue .DayScript
+	iftruefwd .DayScript
 	checktime (1 << EVE) | (1 << NITE)
-	iftrue .NiteScript
+	iftruefwd .NiteScript
 
 .MornScript:
 	writetext .MornIntroText
 	promptbutton
-	sjump .Main
+	sjumpfwd .Main
 
 .DayScript:
 	writetext .DayIntroText
 	promptbutton
-	sjump .Main
+	sjumpfwd .Main
 
 .NiteScript:
 	writetext .NiteIntroText
 	promptbutton
-	sjump .Main
+	; fallthrough
 
 .Main:
 	writetext .NeighborText

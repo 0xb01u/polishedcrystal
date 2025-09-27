@@ -14,14 +14,14 @@ Route26_MapScriptHeader:
 	bg_event  8,  6, BGEVENT_JUMPTEXT, Route26SignText
 
 	def_object_events
-	object_event  9, 38, SPRITE_DRAGON_TAMER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerDragonTamerKazu, -1
-	object_event 14, 24, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 2, TrainerCooltrainermGaven1, -1
-	object_event 10, 56, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerCooltrainerfJoyce, -1
-	object_event  5,  8, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 4, TrainerCooltrainerfBeth1, -1
-	object_event 13, 79, SPRITE_PSYCHIC, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerPsychicRichard, -1
-	object_event  2, 82, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerBattleGirlRonda, -1
-	object_event  6, 100, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerFisherScott, -1
-	object_event 10, 92, SPRITE_DRAGON_TAMER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerDragonTamerErick, -1
+	object_event  9, 38, SPRITE_DRAGON_TAMER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerDragonTamerKazu, -1
+	object_event 14, 24, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, 0, OBJECTTYPE_TRAINER, 2, TrainerCooltrainermGaven1, -1
+	object_event 10, 56, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerCooltrainerfJoyce, -1
+	object_event  5,  8, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_TRAINER, 4, TrainerCooltrainerfBeth1, -1
+	object_event 13, 79, SPRITE_PSYCHIC, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 2, GenericTrainerPsychicRichard, -1
+	object_event  2, 82, SPRITE_BATTLE_GIRL, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 4, GenericTrainerBattleGirlRonda, -1
+	object_event  6, 100, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 1, GenericTrainerFisherScott, -1
+	object_event 10, 92, SPRITE_DRAGON_TAMER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerDragonTamerErick, -1
 	fruittree_event 14, 54, FRUITTREE_ROUTE_26, SITRUS_BERRY, PAL_NPC_BROWN
 	itemball_event  9, 15, MAX_ELIXIR, 1, EVENT_ROUTE_26_MAX_ELIXIR
 	tmhmball_event 13, 34, TM_DRAGON_CLAW, EVENT_ROUTE_26_TM_DRAGON_CLAW
@@ -50,40 +50,40 @@ TrainerCooltrainermGaven1:
 	loadvar VAR_CALLERID, PHONE_COOLTRAINERM_GAVEN
 	opentext
 	checkflag ENGINE_GAVEN_READY_FOR_REMATCH
-	iftrue .WantsBattle
+	iftruefwd .WantsBattle
 	checkcellnum PHONE_COOLTRAINERM_GAVEN
-	iftrue .NumberAccepted
+	iftruefwd .NumberAccepted
 	checkevent EVENT_GAVEN_ASKED_FOR_PHONE_NUMBER
-	iftrue .AskedAlready
+	iftruefwd .AskedAlready
 	writetext CooltrainermGavenAfterText
 	promptbutton
 	setevent EVENT_GAVEN_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
-	sjump .AskForNumber
+	sjumpfwd .AskForNumber
 
 .AskedAlready:
 	scall .AskNumber2
 .AskForNumber:
 	askforphonenumber PHONE_COOLTRAINERM_GAVEN
-	ifequal $1, .PhoneFull
-	ifequal $2, .NumberDeclined
-	gettrainername COOLTRAINERM, GAVEN1, $0
+	ifequalfwd $1, .PhoneFull
+	ifequalfwd $2, .NumberDeclined
+	gettrainername COOLTRAINERM, GAVEN1, STRING_BUFFER_3
 	scall .RegisteredNumber
-	sjump .NumberAccepted
+	sjumpfwd .NumberAccepted
 
 .WantsBattle:
 	scall .Rematch
 	winlosstext CooltrainermGaven1BeatenText, 0
 	readmem wGavenFightCount
-	ifequal 2, .Fight2
-	ifequal 1, .Fight1
-	ifequal 0, .LoadFight0
+	ifequalfwd 2, .Fight2
+	ifequalfwd 1, .Fight1
+	ifequalfwd 0, .LoadFight0
 .Fight2:
 	checkevent EVENT_RESTORED_POWER_TO_KANTO
-	iftrue .LoadFight2
+	iftruefwd .LoadFight2
 .Fight1:
 	checkevent EVENT_BEAT_ELITE_FOUR
-	iftrue .LoadFight1
+	iftruefwd .LoadFight1
 .LoadFight0:
 	loadtrainer COOLTRAINERM, GAVEN1
 	startbattle
@@ -148,40 +148,40 @@ TrainerCooltrainerfBeth1:
 	loadvar VAR_CALLERID, PHONE_COOLTRAINERF_BETH
 	opentext
 	checkflag ENGINE_BETH_READY_FOR_REMATCH
-	iftrue .WantsBattle
+	iftruefwd .WantsBattle
 	checkcellnum PHONE_COOLTRAINERF_BETH
-	iftrue .NumberAccepted
+	iftruefwd .NumberAccepted
 	checkevent EVENT_BETH_ASKED_FOR_PHONE_NUMBER
-	iftrue .AskedAlready
+	iftruefwd .AskedAlready
 	writetext CooltrainerfBethAfterText
 	promptbutton
 	setevent EVENT_BETH_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
-	sjump .AskForNumber
+	sjumpfwd .AskForNumber
 
 .AskedAlready:
 	scall .AskNumber2
 .AskForNumber:
 	askforphonenumber PHONE_COOLTRAINERF_BETH
-	ifequal $1, .PhoneFull
-	ifequal $2, .NumberDeclined
-	gettrainername COOLTRAINERF, BETH1, $0
+	ifequalfwd $1, .PhoneFull
+	ifequalfwd $2, .NumberDeclined
+	gettrainername COOLTRAINERF, BETH1, STRING_BUFFER_3
 	scall .RegisteredNumber
-	sjump .NumberAccepted
+	sjumpfwd .NumberAccepted
 
 .WantsBattle:
 	scall .Rematch
 	winlosstext CooltrainerfBeth1BeatenText, 0
 	readmem wBethFightCount
-	ifequal 2, .Fight2
-	ifequal 1, .Fight1
-	ifequal 0, .LoadFight0
+	ifequalfwd 2, .Fight2
+	ifequalfwd 1, .Fight1
+	ifequalfwd 0, .LoadFight0
 .Fight2:
 	checkevent EVENT_RESTORED_POWER_TO_KANTO
-	iftrue .LoadFight2
+	iftruefwd .LoadFight2
 .Fight1:
 	checkevent EVENT_BEAT_ELITE_FOUR
-	iftrue .LoadFight1
+	iftruefwd .LoadFight1
 .LoadFight0:
 	loadtrainer COOLTRAINERF, BETH1
 	startbattle

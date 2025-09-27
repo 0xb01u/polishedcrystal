@@ -14,24 +14,27 @@ EvolveAfterBattle:
 	push hl
 	push bc
 	push de
-	ld hl, wPartyCount
-
-	push hl
-
+	ld a, [wPartyCount]
+	and a
+	jr z, EvolveAfterBattle_ReturnToMap
+	push af
 EvolveAfterBattle_MasterLoop:
 	ld hl, wCurPartyMon
 	inc [hl]
 
-	pop hl
+	pop af
+	cp [hl]
+	jr z, EvolveAfterBattle_ReturnToMap
 
-	inc hl
-	ld a, [hl]
-	cp $ff
-	jmp z, .ReturnToMap
-
+	push af
+	ld a, MON_SPECIES
+	call GetPartyParamLocationAndValue
 	ld [wEvolutionOldSpecies], a
+	ld bc, MON_FORM - MON_SPECIES
+	add hl, bc
+	ld a, [hl]
+	ld [wEvolutionOldForm], a
 
-	push hl
 	ld a, [wCurPartyMon]
 	ld c, a
 	ld hl, wEvolvableFlags
@@ -41,8 +44,38 @@ EvolveAfterBattle_MasterLoop:
 	and a
 	jr z, EvolveAfterBattle_MasterLoop
 
+	call CheckHowToEvolve
+	jr z, EvolveAfterBattle_MasterLoop
+
+	ld a, $1
+	ld [wMonTriedToEvolve], a
+
+	call TryToEvolve
+	call c, CancelEvolution
+
+	jr EvolveAfterBattle_MasterLoop
+
+EvolveAfterBattle_ReturnToMap:
+	pop de
+	pop bc
+	pop hl
+	ld a, [wLinkMode]
+	and a
+	ret nz
+	ld a, [wBattleMode]
+	and a
+	ret nz
+	ld a, [wMonTriedToEvolve]
+	and a
+	call nz, RestartMapMusic
+	ret
+
+CheckHowToEvolve:
 	ld a, [wEvolutionOldSpecies]
-	call GetPartyEvosAttacksPointer
+	ld c, a
+	ld a, [wEvolutionOldForm]
+	ld b, a
+	call GetEvosAttacksPointer
 
 	push hl
 	xor a
@@ -52,10 +85,13 @@ EvolveAfterBattle_MasterLoop:
 
 .loop
 	ld a, [hli]
-	and a
-	jr z, EvolveAfterBattle_MasterLoop
-
+	inc a
+	ret z ; cannot evolve
+	dec a
 	ld b, a
+
+	cp EVOLVE_TRADE
+	jr z, .trade
 
 	ld a, [wLinkMode]
 	and a
@@ -66,20 +102,23 @@ EvolveAfterBattle_MasterLoop:
 	jmp z, .item
 
 	ld a, [wForceEvolution]
-	and a
-	jmp nz, .dont_evolve_2
+	assert EVOLVE_LEVEL == 1
+	cp EVOLVE_LEVEL + 1
+	jmp nc, .dont_evolve_2
 
 	ld a, b
+	cp EVOLVE_CRIT
+	jmp z, .crit
 	cp EVOLVE_HOLDING
 	jmp z, .holding
 	cp EVOLVE_LOCATION
 	jmp z, .location
 	cp EVOLVE_MOVE
 	jmp z, .move
-	cp EVOLVE_EVS
-	jmp z, .evs
 	cp EVOLVE_LEVEL
 	jmp z, .level
+	cp EVOLVE_PARTY
+	jmp z, .party
 	cp EVOLVE_HAPPINESS
 	jr z, .happiness
 
@@ -92,10 +131,50 @@ EvolveAfterBattle_MasterLoop:
 	jmp z, .dont_evolve_1
 
 	push hl
+
+	; If EVs affecting stats is disabled, compare based on IVs, not actual
+	; stats. This way, if the player also has IVs and Natures disabled
+	; (perfect stats in the case of IVs), they still retain access to
+	; all stat evolutions.
+	ld a, [wInitialOptions2]
+	and EV_OPTMASK ; sets z if EVS_OPT_DISABLED
+	jr nz, .evs_enabled
+
+	ld hl, wTempMonHPAtkDV
+	ld a, [hli]
+	and $f
+	ld c, a ; c = atk
+	ld a, [hl]
+	and $f0
+	swap a ; a = def
+	cp c ; set carry if atk > def
+	jr .stat_cmp_done
+
+.trade
+	; In modern vanilla, Kadabra evolves anyway. While this is cute, it can
+	; cause problems if a player want to keep the Kadabra upon trade. So don't
+	; let Kadabra bypass Everstone (Maybe in Faithful?)
+	call IsMonHoldingEverstone
+	jmp z, .dont_evolve_2
+
+	; Linking Cord isn't held, it's used as an evo stone.
+	ld a, [hli]
+	ld b, a
+	cp LINKING_CORD
+	jmp nz, .check_held_item
+
+	ld a, [wForceEvolution]
+	cp EVOLVE_TRADE
+	jmp nz, .dont_evolve_3
+	jmp .proceed
+
+.evs_enabled
 	ld hl, wTempMonAttack
 	ld de, wTempMonDefense
 	ld c, 2
 	call StringCmp ; set carry if atk > def
+
+.stat_cmp_done
 	ld a, ATK_EQ_DEF
 	jr z, .got_tyrogue_evo
 	; a = carry ? ATK_GT_DEF : ATK_LT_DEF
@@ -122,11 +201,12 @@ EvolveAfterBattle_MasterLoop:
 
 	; Spiky-eared Pichu cannot evolve
 	ld a, [wTempMonSpecies]
-	cp PICHU
+	cp LOW(PICHU)
 	jr nz, .not_spiky_eared_pichu
 	ld a, [wTempMonForm]
+	assert !HIGH(PICHU)
 	and SPECIESFORM_MASK
-	cp 2
+	cp PICHU_SPIKY_EARED_FORM
 	jmp z, .dont_evolve_2
 
 .not_spiky_eared_pichu
@@ -136,7 +216,7 @@ EvolveAfterBattle_MasterLoop:
 	cp TR_MORNDAY
 	jr z, .happiness_daylight
 
-; TR_EVENITE
+.happiness_nighttime
 	ld a, [wTimeOfDay]
 	cp NITE
 	jmp c, .dont_evolve_3
@@ -161,12 +241,61 @@ EvolveAfterBattle_MasterLoop:
 	ld a, [wLinkMode]
 	and a
 	jmp nz, .dont_evolve_3
-	call ChangeFormOnItemEvolution
+	jmp .proceed
+
+.party
+	ld a, [hli]
+	ld d, a ; species
+	ld a, [hli]
+	ld e, a ; ext species + form
+	push hl
+	ld hl, wPartyMon1Species
+	ld a, [wPartyCount]
+	ld b, a
+.party_loop
+	ld a, [hl]
+	cp d
+	jr nz, .party_next
+	push hl
+	push de
+	ld de, MON_FORM - MON_SPECIES
+	add hl, de
+	ld a, [hl]
+	pop de
+	pop hl
+	and SPECIESFORM_MASK
+	cp e
+	jr z, .party_ok
+.party_next
+	push de
+	ld de, PARTYMON_STRUCT_LENGTH
+	add hl, de
+	pop de
+	dec b
+	jr nz, .party_loop
+	pop hl
+	jmp .dont_evolve_3
+
+.party_ok
+	pop hl
 	jr .proceed
 
 .holding
 	ld a, [hli]
 	ld b, a
+	ld a, [hli]
+	cp TR_ANYTIME
+	jr z, .check_held_item
+	cp TR_MORNDAY
+	ld a, [wTimeOfDay]
+	jr z, .holding_daylight
+	cp NITE
+	jmp c, .dont_evolve_3
+	jr .check_held_item
+.holding_daylight
+	cp NITE
+	jmp nc, .dont_evolve_3
+.check_held_item
 	ld a, [wTempMonItem]
 	cp b
 	jmp nz, .dont_evolve_3
@@ -185,7 +314,7 @@ EvolveAfterBattle_MasterLoop:
 	ld b, a
 	ld a, [hli]
 	cp b
-	jmp nz, .dont_evolve_3
+	jr nz, .dont_evolve_3
 	jr .proceed
 
 .move
@@ -194,33 +323,33 @@ EvolveAfterBattle_MasterLoop:
 	push bc
 	ld b, a
 	ld hl, wTempMonMoves
-rept NUM_MOVES
+rept NUM_MOVES - 1
 	ld a, [hli]
 	cp b
 	jr z, .move_proceed
 endr
-	pop bc
-	pop hl
-	jmp .dont_evolve_3
-
+	ld a, [hl]
+	cp b
 .move_proceed
 	pop bc
 	pop hl
+	jr nz, .dont_evolve_3
 	jr .proceed
 
-.evs
-	ld a, [hli]
+.crit
+	inc hl
 	push hl
 	push bc
-	ld hl, wTempMonSpecies
+	ld hl, wCriticalCount
+	ld a, [wCurPartyMon]
 	ld c, a
 	ld b, 0
 	add hl, bc
 	ld a, [hl]
+	cp 3
 	pop bc
 	pop hl
-	cp EVS_TO_EVOLVE
-	jmp c, .dont_evolve_3
+	jr c, .dont_evolve_3
 	jr .proceed
 
 .level
@@ -228,28 +357,45 @@ endr
 	ld b, a
 	ld a, [wTempMonLevel]
 	cp b
-	jmp c, .dont_evolve_3
+	jr c, .dont_evolve_3
 	call IsMonHoldingEverstone
-	jmp z, .dont_evolve_3
-	call ChangeFormOnLevelEvolution
+	jr z, .dont_evolve_3
 
 .proceed
 	ld a, [wTempMonLevel]
 	ld [wCurPartyLevel], a
-	ld a, [wTempMonForm]
-	and SPECIESFORM_MASK
-	ld [wCurForm], a
-	ld a, $1
-	ld [wMonTriedToEvolve], a
 
-	push hl
-
+	ld a, [hli]
+	ld [wEvolutionNewSpecies], a
 	ld a, [hl]
-	ld [wBuffer2], a
+	ld c, a
+	and FORM_MASK
+	ld a, [wTempMonForm]
+	jr z, .keep_old_form
+	and ~SPECIESFORM_MASK
+.keep_old_form
+	and ~EXTSPECIES_MASK
+	or c
+	ld [wEvolutionNewForm], a
 	ld a, [wCurPartyMon]
 	ld hl, wPartyMonNicknames
 	call GetNickname
 	call CopyName1
+
+	ld a, TRUE
+	and a
+	ret
+
+.dont_evolve_1
+	inc hl
+.dont_evolve_2
+	inc hl
+.dont_evolve_3
+	inc hl
+	inc hl
+	jmp .loop
+
+TryToEvolve:
 	ld hl, Text_WhatEvolving
 	call PrintText
 
@@ -271,38 +417,36 @@ endr
 	push af
 	call ClearSprites
 	pop af
-	jmp c, CancelEvolution
+	ret c
 
 	ld hl, Text_CongratulationsYourPokemon
 	call PrintText
 
-	pop hl
-
-	ld a, [hl]
+	ld hl, wEvolutionNewSpecies
+	ld a, [hli]
 	ld [wCurSpecies], a
 	ld [wTempMonSpecies], a
-	ld [wBuffer2], a
 	ld [wNamedObjectIndex], a
-	call GetPokemonName
 
-	push hl
+	ld a, [hl]
+	ld [wCurForm], a
+	ld [wTempMonForm], a
+	ld [wNamedObjectIndex+1], a
+
+	call GetPokemonName
 	ld hl, Text_EvolvedIntoPKMN
 	call PrintTextboxText
 
-	ld de, MUSIC_NONE
+	ld e, MUSIC_NONE
 	call PlayMusic
 	ld de, SFX_CAUGHT_MON
-	call PlaySFX
-	call WaitSFX
+	call PlayWaitSFX
 
 	ld c, 40
 	call DelayFrames
 
 	call ClearTileMap
 	call UpdateSpeciesNameIfNotNicknamed
-	ld a, [wTempMonForm]
-	and SPECIESFORM_MASK
-	ld [wCurForm], a
 	call GetBaseData
 
 	ld hl, wTempMonEVs - 1
@@ -346,92 +490,23 @@ endr
 	ld [wMonType], a
 	ld a, [wCurSpecies]
 	ld [wTempSpecies], a
-	dec a
+	ld c, a
+	ld a, [wCurForm]
+	ld b, a
 	call SetSeenAndCaughtMon
 
-	ld a, [wTempSpecies]
-	cp UNOWN
-	jr nz, .skip_unown
-
-	ld hl, wTempMonForm
-	predef GetVariant
-	farcall UpdateUnownDex
-
-.skip_unown
-	pop de
-	pop hl
-	ld a, [wTempMonSpecies]
-	ld [hl], a
-	push hl
-	push de
 	call LearnEvolutionMove
 	call LearnLevelMoves
-	pop de
-	ld l, e
-	ld h, d
-	jmp EvolveAfterBattle_MasterLoop
 
-.dont_evolve_1
-	inc hl
-.dont_evolve_2
-	inc hl
-.dont_evolve_3
-	inc hl
-	jmp .loop
-
-.ReturnToMap:
-	pop de
-	pop bc
-	pop hl
-	ld a, [wLinkMode]
 	and a
-	ret nz
-	ld a, [wBattleMode]
-	and a
-	ret nz
-	ld a, [wMonTriedToEvolve]
-	and a
-	call nz, RestartMapMusic
 	ret
-
-ChangeFormOnLevelEvolution:
-; These Pokémon evolve into plain forms by level.
-	ld a, [wTempMonSpecies]
-	cp CUBONE
-	jr z, _PlainFormOnEvolution
-	cp KOFFING
-	ret nz
-
-_PlainFormOnEvolution:
-	ld a, PLAIN_FORM
-_ChangeFormOnEvolution:
-	ld b, a
-	ld a, [wTempMonForm]
-	and $ff - SPECIESFORM_MASK
-	or b
-	ld [wTempMonForm], a
-	ret
-
-ChangeFormOnItemEvolution:
-; These Pokémon evolve into different forms with different items.
-	ld a, [wTempMonSpecies]
-	cp PIKACHU
-	jr z, .ok
-	cp EXEGGCUTE
-	jr z, .ok
-	cp CUBONE
-	ret nz
-
-.ok
-	ld a, [wCurItem]
-	cp ODD_SOUVENIR
-	ld a, ALOLAN_FORM
-	jr z, _ChangeFormOnEvolution
-	jr _PlainFormOnEvolution
 
 UpdateSpeciesNameIfNotNicknamed:
+	ld hl, wNamedObjectIndex
 	ld a, [wEvolutionOldSpecies]
-	ld [wNamedObjectIndex], a
+	ld [hli], a
+	ld a, [wEvolutionOldForm]
+	ld [hl], a
 	call GetPokemonName
 	ld hl, wStringBuffer1
 	ld de, wStringBuffer2
@@ -441,7 +516,7 @@ UpdateSpeciesNameIfNotNicknamed:
 	cp [hl]
 	inc hl
 	ret nz
-	cp "@"
+	cp '@'
 	jr nz, .loop
 
 	ld a, [wCurPartyMon]
@@ -449,8 +524,11 @@ UpdateSpeciesNameIfNotNicknamed:
 	ld hl, wPartyMonNicknames
 	rst AddNTimes
 	push hl
+	ld hl, wNamedObjectIndex
 	ld a, [wCurSpecies]
-	ld [wNamedObjectIndex], a
+	ld [hli], a
+	ld a, [wCurForm]
+	ld [hl], a
 	call GetPokemonName
 	ld hl, wStringBuffer1
 	pop de
@@ -461,9 +539,7 @@ UpdateSpeciesNameIfNotNicknamed:
 CancelEvolution:
 	ld hl, Text_StoppedEvolving
 	call PrintText
-	call ClearTileMap
-	pop hl
-	jmp EvolveAfterBattle_MasterLoop
+	jmp ClearTileMap
 
 IsMonHoldingEverstone:
 	push hl
@@ -505,28 +581,47 @@ LearnEvolutionMove:
 	ld a, [wCurForm]
 	ld b, a
 	; bc = index
+	push bc
 	call GetSpeciesAndFormIndex
-	dec bc
 	ld hl, EvolutionMoves
 	add hl, bc
 	ld a, [hl]
 	and a
-	ret z
+	jr z, .pop_bc_and_ret
 
 	ld d, a
-	ld hl, wPartyMon1Moves
-	ld a, [wCurPartyMon]
-	ld bc, PARTYMON_STRUCT_LENGTH
-	rst AddNTimes
+	ld a, MON_MOVES
+	call GetPartyParamLocationAndValue
 
 	ld b, NUM_MOVES
-.check_move
+.check_cur_moves
 	ld a, [hli]
 	cp d
-	ret z
+	jr z, .pop_bc_and_ret
 	dec b
-	jr nz, .check_move
+	jr nz, .check_cur_moves
 
+	; don't teach move already learned at this level
+	pop bc
+	call GetEvosAttacksPointer
+.skip_evos
+	ld a, [hli]
+	inc a
+	jr nz, .skip_evos
+
+.check_level_moves
+	ld a, [hli]
+	ld b, a
+	ld a, [wCurPartyLevel]
+	cp b
+	ld a, [hli]
+	jr c, .ok
+	jr nz, .check_level_moves
+	cp d
+	jr nz, .check_level_moves
+	ret
+
+.ok
 	ld a, d
 	ld [wPutativeTMHMMove], a
 	ld [wNamedObjectIndex], a
@@ -540,21 +635,29 @@ LearnEvolutionMove:
 	ld [wTempSpecies], a
 	ret
 
+.pop_bc_and_ret
+	pop bc
+	ret
+
 LearnLevelMoves:
 	ld a, [wTempSpecies]
 	ld [wCurPartySpecies], a
-	call GetPartyEvosAttacksPointer
+	ld c, a
+	; b = form
+	ld a, [wCurForm]
+	ld b, a
+	call GetEvosAttacksPointer
 
 .skip_evos
 	ld a, [hli]
-	and a
+	inc a
 	jr nz, .skip_evos
 
 .find_move
 	ld a, [hli]
-	and a
+	inc a
 	ret z
-
+	dec a
 	ld b, a
 	ld a, [wCurPartyLevel]
 	cp b
@@ -600,7 +703,7 @@ FillMoves:
 	call GetEvosAttacksPointer
 .GoToAttacks:
 	ld a, [hli]
-	and a
+	inc a
 	jr nz, .GoToAttacks
 	jr .GetLevel
 
@@ -701,80 +804,10 @@ EvoFlagAction:
 	pop de
 	ret
 
-GetBaseEvolution:
-; Find the first mon in the evolution chain including wCurPartySpecies.
-
-; Return carry and the new species in wCurPartySpecies
-; if a base evolution is found.
-
-	call GetPreEvolution
-GetPreEvolution:
-; Find the first mon to evolve into wCurPartySpecies.
-
-; Return carry and the new species in wCurPartySpecies
-; if a pre-evolution is found.
-
-	ld c, 0
-.loop ; For each Pokemon...
-	ld hl, EvosAttacksPointers
-	; this does not need to use the extended GetSpeciesAndFormIndex
-	ld b, 0
-	add hl, bc
-	add hl, bc
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
-.loop2 ; For each evolution...
-	ld a, [hli]
-	and a
-	jr z, .no_evolve ; If we jump, this Pokemon does not evolve into wCurPartySpecies.
-	cp EVOLVE_STAT ; This evolution type has the extra parameter of stat comparison.
-	jr nz, .not_tyrogue
-	inc hl
-
-.not_tyrogue
-	inc hl
-	ld a, [wCurPartySpecies]
-	cp [hl]
-	jr z, .found_preevo
-	inc hl
-	ld a, [hl]
-	and a
-	jr nz, .loop2
-
-.no_evolve
-	inc c
-	ld a, c
-	cp NUM_POKEMON
-	jr c, .loop
-	and a
-	ret
-
-.found_preevo
-	inc c
-	ld a, c
-	ld [wCurPartySpecies], a
-	scf
-	ret
-
-GetPartyEvosAttacksPointer:
-	push af
-	; b = form
-	ld a, [wCurPartyMon]
-	ld hl, wPartyMon1Form
-	ld bc, PARTYMON_STRUCT_LENGTH
-	rst AddNTimes
-	ld a, [hl]
-	and SPECIESFORM_MASK
-	ld b, a
-	; c = species
-	pop af
-	ld c, a
 GetEvosAttacksPointer:
 ; input: b = form, c = species
-	; bc = index
+; output: bc = index, hl = pointer
 	call GetSpeciesAndFormIndex
-	dec bc
 	ld hl, EvosAttacksPointers
 	add hl, bc
 	add hl, bc
@@ -782,3 +815,122 @@ GetEvosAttacksPointer:
 	ld h, [hl]
 	ld l, a
 	ret
+
+GetEvolutionData:
+; input: b = form, c = species
+; output: a = EVOLVE_* constant, wStringBuffer4 = parameter 1, wStringBuffer5 = parameter 2
+	assert MON_IS_EGG == MON_EXTSPECIES && MON_EXTSPECIES == MON_FORM
+	bit MON_IS_EGG_F, b
+	jr z, .not_egg
+	ld a, EVOLVE_EGG
+	ret
+.not_egg
+	ld a, b
+	and SPECIESFORM_MASK
+	ld b, a
+	ld hl, MultipleEvolutions
+	ld de, 3
+	call IsInWordArray
+	jr nc, .not_multiple
+	inc hl
+	inc hl
+	ld a, [hl]
+	ret
+.not_multiple
+	call GetEvosAttacksPointer
+	ld a, [hli]
+	inc a ; no evolutions?
+	ret z ; EVOLVE_NONE == 0
+	dec a
+	push af
+	ld a, [hld] ; parameter 1
+	ld [wStringBuffer4], a
+	ld a, [hli] ; evolution method
+	cp EVOLVE_ITEM
+	jr z, .get_item_name
+	cp EVOLVE_TRADE
+	jr z, .get_trade_item
+	cp EVOLVE_HOLDING
+	jr z, .get_item_name_and_time
+	cp EVOLVE_LOCATION
+	jr z, .get_landmark_name
+	cp EVOLVE_MOVE
+	jr z, .get_move_name
+	cp EVOLVE_PARTY
+	jr z, .get_mon_name
+.done
+	pop af
+	ret
+
+.get_trade_item:
+	; Copy item constant to wStringBuffer5 so we can check it later.
+	ld a, [hl]
+	ld [wStringBuffer5], a
+	jr .get_item_name
+.get_item_name_and_time:
+	inc hl
+	ld a, [hld] ; parameter 2 (time)
+	ld [wStringBuffer5], a
+.get_item_name:
+	ld a, [hl] ; parameter 1 (item)
+	ld [wNamedObjectIndex], a
+	call GetItemName
+	jr .copy_string
+
+.get_landmark_name:
+	ld e, [hl] ; parameter 1 (landmark)
+	farcall GetLandmarkName
+	jr .copy_string
+
+.get_move_name:
+	ld a, [hl] ; parameter 1 (move)
+	ld [wNamedObjectIndex], a
+	call GetMoveName
+	jr .copy_string
+
+.get_mon_name:
+	ld a, [hli] ; parameter 1 low (species)
+	ld e, a
+	ld a, [hl] ; parameter 1 high (ext species/form)
+	ld hl, wNamedObjectIndex+1
+	ld [hld], a
+	ld [hl], e
+	call GetPokemonName
+.copy_string:
+	ld de, wStringBuffer1
+	ld hl, wStringBuffer4
+	call CopyName2
+	jr .done
+
+INCLUDE "data/pokemon/multi_evos.asm"
+
+GetNextMove:
+; input: b = form, c = species, d = level
+; output: a = level of next move (0 if none, -1 if egg), d = id of next move (0 if none/egg)
+	assert MON_IS_EGG == MON_EXTSPECIES && MON_EXTSPECIES == MON_FORM
+	bit MON_IS_EGG_F, b
+	jr z, .not_egg
+	ld a, -1
+.no_move
+	ld d, 0
+	ret
+.not_egg
+	call GetEvosAttacksPointer
+.skip_evos
+	ld a, [hli]
+	inc a
+	jr nz, .skip_evos
+.find_move
+	ld a, [hli]
+	inc a
+	jr z, .no_move
+	dec a
+	cp d
+	jr c, .next_move
+	jr z, .next_move
+	; got move
+	ld d, [hl]
+	ret
+.next_move
+	inc hl
+	jr .find_move

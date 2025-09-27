@@ -1,4 +1,3 @@
-
 ResetClock_GetWraparoundTime:
 	push hl
 	dec a
@@ -8,12 +7,12 @@ ResetClock_GetWraparoundTime:
 rept 4
 	add hl, de
 endr
-	ld e, [hl]
-	inc hl
-	ld d, [hl]
-	inc hl
-	ld b, [hl]
-	inc hl
+	ld a, [hli]
+	ld e, a
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld b, a
 	ld c, [hl]
 	pop hl
 	ret
@@ -37,7 +36,8 @@ RestartClock:
 	push af
 	set NO_TEXT_SCROLL, [hl]
 	call LoadStandardMenuHeader
-	call ClearTileMap
+	ld a, '<BLACK>'
+	call FillTileMap
 	ld hl, .Text_SetWithControlPad
 	call PrintText
 	call .SetClock
@@ -200,10 +200,10 @@ RestartClock:
 	decoord 11, 8
 	farcall PrintHoursMins
 	ld a, [wBuffer2]
-	lb de, " ", " "
+	lb de, ' ', ' '
 	call .PlaceChars
 	ld a, [wBuffer1]
-	lb de, "▲", "▼"
+	lb de, '▲', '▼'
 	call .PlaceChars
 	ld a, [wBuffer1]
 	ld [wBuffer2], a

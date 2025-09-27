@@ -1,6 +1,6 @@
 # Features
 
-These are *most* of the new features as of 2.2.0. Some would be spoilers.
+These are *some* of the new features as of 2.2.0. Some would be spoilers.
 
 > We've been greedy in the amount of gameplay elements we've squeezed in there. There's so much included that I even had colleagues saying to me: "Are you sure you should be going this far with a remake?" In that sense, it's not simply a remake—I think it's more than that. For that reason, I would like to see these games enjoyed by as large a number of people as possible.
 >
@@ -21,7 +21,7 @@ These are *most* of the new features as of 2.2.0. Some would be spoilers.
 ## Moves
 
 * Added: Aerial Ace, Air Slash, Aqua Tail, Astonish, Avalanche, Bug Buzz, Bulk Up, Bullet Punch, Calm Mind, Dark Pulse, DazzlinGleam, Disarm Voice, Dragon Claw, Dragon Dance, Dragon Pulse, Drain Kiss, Earth Power, Energy Ball, Extrasensory, Fairy Wind, Flare Blitz, Flash Cannon, Focus Blast, Gunk Shot, Hail, Hex, Hone Claws, Hurricane, Hyper Voice, Ice Shard, Icicle Crash, Iron Head, Metal Sound, Moonblast, Nasty Plot, Night Slash, Play Rough, Poison Jab, Power Gem, Psystrike, Scald, Seed Bomb, Shadow Claw, Stone Edge, Water Pulse, Wild Charge, Will-O-Wisp, X-Scissor, and Zen Headbutt.
-* Removed: Acid Armor, Amnesia, Barrage, Beat Up, Bide, Bind, Bone Club, Bone Rush, Bubble, Clamp, Comet Punch, Constrict, Conversion2, Cotton Spore, Detect, Fissure, Frustration, Guillotine, Horn Drill, Jump Kick, Kinesis, Lovely Kiss, Meditate, Mega Kick, Mega Punch, Mimic, Mind Reader, Mirror Move, Poison Gas, Powder Snow, Present, Psych Up, Psywave, Razor Wind, Rolling Kick, Sharpen, Skull Bash, Smog, Snore, Spider Web, Spite, Sweet Scent, Synthesis, Tail Whip, Vice Grip, and Withdraw.
+* Removed: Acid Armor, Amnesia, Barrage, Beat Up, Bide, Bind, Bone Club, Bone Rush, Bubble, Clamp, Comet Punch, Constrict, Conversion2, Cotton Spore, Detect, Fissure, Frustration, Guillotine, Horn Drill, Jump Kick, Kinesis, Lovely Kiss, Meditate, Mega Kick, Mega Punch, Mimic, Mind Reader, Mirror Move, Poison Gas, Powder Snow, Present, Psych Up, Psywave, Razor Wind, Rolling Kick, Sharpen, Skull Bash, Smog, Snore, Spider Web, Spite, Sweet Scent, Synthesis, Tail Whip, Twister, Vice Grip, and Withdraw.
 * Learnsets have been updated close to Gen VI, with missing moves replaced by similar, egg, TM, or event-exclusive moves.
 
 
@@ -77,17 +77,6 @@ These are *most* of the new features as of 2.2.0. Some would be spoilers.
 * Maximum $9,999,999 money and 50,000 coins.
 * Maximum 30 items and 16 Balls in your bag pocket.
 * Bill calls to switch boxes when one is full.
-
-
-## Nuzlocke Mode
-
-* Available in the Option menu at any time.
-* A fainted Pokémon can't be revived, by items, Pokémon Centers, or events. The only exception is your first rival battle, when you just have your starter. (Also when you deposit them into the PC, since current HP is not stored.)
-* You can only catch the first Pokémon you encounter in a new location. "Location" is defined with the Town Map mechanics, so Sprout Tower is separate from Violet City, but multiple floors of Union Cave or multiple sections of the Safari Zone count as one location. And nothing is counted until you receive your first five Poké Balls.
-* Every Pokémon gets a nickname, no asking whether you want to or not. Of course, you can cancel out to give the default name.
-* The dupes clause is in effect. If you've caught a Pidgey and encounter one on a new route, it won't count unless you catch it.
-* The shiny clause is also in effect. Shinies can always be caught.
-* Gift Pokémon do not count as encounters. Static encounters like Sudowoodo, Snorlax, and Suicune do.
 
 
 ## Maps
@@ -240,7 +229,7 @@ I know that not everyone likes this kind of change, so I've provided two ROM pat
 * Flash does not require the Zephyr Badge.
 * Updated language (Pack → Bag, Enemy → Foe, Cooltrainer → Ace Trainer, Fisher → Fisherman, Elixer → Elixir, Pink Bow → Silk Scarf, new Berry names, etc).
 * Brass Tower → Gong Tower (かね *kane* can mean 金 "metal" or 鉦, a gong-like bell).
-* Janine's pink badge is called the Marsh Badge; Sabrina's gold badge is called the Soul Badge.
+* Janine's pink badge is called the Marsh Badge; Sabrina's gold badge is called the Soul Badge. (The [Teraleak](https://en.wikipedia.org/wiki/Nintendo_data_leak#:~:text=Teraleak) confirmed this to be a [translation error](https://bsky.app/profile/mrcheeze.github.io/post/3lahqvymdpc2p).)
 * Fly to the Rock Tunnel/Power Plant Pokémon Center.
 * Fishing works 75% of the time, not 50%.
 * Nidorina and Nidoqueen can breed, and will produce eggs of either Nidoran gender.

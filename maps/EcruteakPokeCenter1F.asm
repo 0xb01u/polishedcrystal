@@ -1,6 +1,5 @@
 EcruteakPokeCenter1F_MapScriptHeader:
 	def_scene_scripts
-	scene_script EcruteakPokeCenter1FBillWalksUpTrigger
 
 	def_callbacks
 
@@ -15,50 +14,15 @@ EcruteakPokeCenter1F_MapScriptHeader:
 	bg_event 10,  1, BGEVENT_READ, PokemonJournalMortyScript
 
 	def_object_events
-	object_event  6,  3, SPRITE_BILL, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, EcruteakPokeCenter1FBillScript, EVENT_ECRUTEAK_POKE_CENTER_BILL
+	object_event  6,  3, SPRITE_BILL, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, EcruteakPokeCenter1FBillScript, EVENT_ECRUTEAK_POKE_CENTER_BILL
 	pc_nurse_event  5, 1
-	object_event 11,  6, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, EcruteakPokeCenter1FPokefanMScript, -1
-	object_event 11,  5, SPRITE_CUTE_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, EcruteakPokeCenter1FLassScript, -1
-	object_event  1,  4, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, EcruteakPokeCenter1FCooltrainerFText, -1
-	object_event  8,  1, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_COMMAND, jumptextfaceplayer, EcruteakPokeCenter1FGymGuyText, -1
+	object_event 11,  6, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, EcruteakPokeCenter1FPokefanMScript, -1
+	object_event 11,  5, SPRITE_CUTE_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, EcruteakPokeCenter1FLassScript, -1
+	object_event  1,  4, SPRITE_ACE_TRAINER_F, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, 0, OBJECTTYPE_COMMAND, jumptextfaceplayer, EcruteakPokeCenter1FCooltrainerFText, -1
+	object_event  8,  1, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_GREEN, OBJECTTYPE_COMMAND, jumptextfaceplayer, EcruteakPokeCenter1FGymGuyText, -1
 
 	object_const_def
 	const ECRUTEAKPOKECENTER1F_BILL
-
-EcruteakPokeCenter1FBillWalksUpTrigger:
-	sdefer .Script
-	end
-
-.Script:
-	pause 30
-	moveobject ECRUTEAKPOKECENTER1F_BILL, 0, 7
-	playsound SFX_EXIT_BUILDING
-	appear ECRUTEAKPOKECENTER1F_BILL
-	turnobject ECRUTEAKPOKECENTER1F_BILL, RIGHT
-	waitsfx
-	applymovement ECRUTEAKPOKECENTER1F_BILL, .Movement1
-	pause 60
-	applymovement ECRUTEAKPOKECENTER1F_BILL, .Movement2
-	setscene $1
-	end
-
-.Movement1:
-	step_right
-	step_right
-	step_up
-	step_up
-	step_up
-	step_up
-	step_right
-	step_right
-	step_right
-	turn_head_up
-	step_end
-
-.Movement2:
-	step_right
-	turn_head_down
-	step_end
 
 PokemonJournalMortyScript:
 	setflag ENGINE_READ_MORTY_JOURNAL
@@ -91,7 +55,7 @@ EcruteakPokeCenter1FBillScript:
 	faceplayer
 	opentext
 	checkevent EVENT_LISTENED_TO_BILL_INTRO
-	iftrue .heardintro
+	iftruefwd .heardintro
 	writetext .IntroText
 	waitbutton
 	setevent EVENT_LISTENED_TO_BILL_INTRO
@@ -103,8 +67,8 @@ EcruteakPokeCenter1FBillScript:
 	promptbutton
 	waitsfx
 	readvar VAR_PARTYCOUNT
-	ifequal PARTY_LENGTH, .NoRoom
-	givepoke EEVEE, NO_FORM, 5, NO_ITEM, GREAT_BALL
+	ifequalfwd PARTY_LENGTH, .NoRoom
+	givepoke EEVEE, PLAIN_FORM, 5, NO_ITEM, GREAT_BALL
 	givepokemail .GiftEeveeMail
 	callasm .SetEeveeMailOT
 	setevent EVENT_GOT_EEVEE
@@ -209,8 +173,10 @@ EcruteakPokeCenter1FBillScript:
 
 .GiftEeveeMail:
 	db   EON_MAIL
+	setcharmap no_ngrams
 	db   "Please keep this"
-	next "#mon safe!@@@@@@"
+	next "Pokémon safe!@@"
+	setcharmap default
 
 .SetEeveeMailOT:
 	ld hl, sPartyMon1MailAuthor
@@ -265,7 +231,7 @@ EcruteakPokeCenter1FLassScript:
 	opentext
 	writetext .QuestionText
 	yesorno
-	iffalse .No
+	iffalsefwd .No
 	checkevent EVENT_ECRUTEAK_POKE_CENTER_BILL
 	iffalse_jumpopenedtext .HereText
 	jumpthisopenedtext

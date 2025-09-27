@@ -17,9 +17,21 @@ BattleText_PlayerPickedUpPayDayMoney:
 
 WildPokemonAppearedText:
 	text "A wild "
+	stop_compressing_text ; fallthrough
 LegendaryAppearedText:
 	text_ram wEnemyMonNickname
 	line "appeared!"
+	prompt
+
+GhostAppearedText:
+	text "A Ghost"
+	line "appeared!"
+	prompt
+
+SilphScopeRevealText:
+	text "SilphScope2"
+	line "unveiled the"
+	cont "Ghost's identity!"
 	prompt
 
 HookedPokemonAttackedText:
@@ -47,6 +59,7 @@ WantToBattleText::
 
 BattleText_WildFled:
 	text "Wild "
+	stop_compressing_text ; fallthrough
 BattleText_LegendaryFled:
 	text_ram wEnemyMonNickname
 	line "fled!"
@@ -626,14 +639,6 @@ BecameConfusedDueToFatigueText:
 	cont "due to fatigue!"
 	prompt
 
-BattleText_ItemHealedConfusion: ; ItemHealedConfusion
-	text "A "
-	text_ram wStringBuffer1
-	text " rid"
-	line "<USER>"
-	cont "of its confusion."
-	prompt
-
 AlreadyConfusedText:
 	text "<TARGET> is"
 	line "already confused!"
@@ -838,6 +843,11 @@ CriticalHitText:
 	text "A critical hit!"
 	prompt
 
+ExtremelyEffectiveText:
+	text "It's extremely"
+	line "effective!"
+	prompt
+
 SuperEffectiveText:
 	text "It's super"
 	line "effective!"
@@ -848,10 +858,17 @@ NotVeryEffectiveText:
 	line "effective…"
 	prompt
 
+MostlyIneffectiveText:
+	text "It's mostly"
+	line "ineffective…"
+	prompt
+
 TookDownWithItText:
-	text "<TARGET>"
-	line "took <USER>"
-	cont "down with it!"
+	text "<TARGET>'s"
+	line "bond took"
+
+	para "<USER>"
+	line "down with it!"
 	prompt
 
 RageBuildingText:
@@ -948,19 +965,9 @@ WasBurnedText:
 	line "was burned!"
 	prompt
 
-DefrostedOpponentText:
-	text "<TARGET>"
-	line "was defrosted!"
-	prompt
-
 AlreadyBurnedText:
 	text "<TARGET> is"
 	line "already burned!"
-	prompt
-
-WasFrozenText:
-	text "<TARGET>"
-	line "was frozen solid!"
 	prompt
 
 WontRiseAnymoreText:
@@ -1035,21 +1042,25 @@ FledInFearText:
 	line "fled in fear!"
 	prompt
 
-Hit1TimeText:
-	text "Hit "
-	text_decimal wStringBuffer1, 1, 1
-	text " time!"
-	prompt
-
 HitNTimesText:
 	text "Hit "
-	text_decimal wStringBuffer1, 1, 1
-	text " times!"
+	text_decimal wItemQuantityChangeBuffer, 1, 2
+	text " time"
+	text_plural
+	text "!"
 	prompt
 
 MistText:
 	text "<USER>'s"
 	line "shrouded in mist!"
+	prompt
+
+ProtectedByItemText:
+	text "<TARGET> is"
+	line "protected by"
+	cont ""
+	text_ram wStringBuffer1
+	text "."
 	prompt
 
 ProtectedByMistText:
@@ -1154,7 +1165,7 @@ TrickRoomEndedText:
 
 LightScreenEffectText:
 	text "<USER>'s"
-	line "Spcl.Def rose!"
+	line "Sp.Def rose!"
 	prompt
 
 ReflectEffectText:
@@ -1169,10 +1180,6 @@ NothingHappenedText:
 
 ButItFailedText:
 	text "But it failed!"
-	prompt
-
-ItFailedText:
-	text "It failed!"
 	prompt
 
 DidntAffectText:
@@ -1307,10 +1314,15 @@ IdentifiedText:
 	cont "<TARGET>!"
 	prompt
 
-StartPerishText:
+StartPerishSongText:
 	text "#mon that heard"
 	line "the song will"
 	cont "faint in 3 turns!"
+	prompt
+
+StartPerishBodyText:
+	text "Both #mon will"
+	line "faint in 3 turns!"
 	prompt
 
 SandstormBrewedText:
@@ -1409,6 +1421,64 @@ BecameHealthyText:
 	line "became healthy!"
 	prompt
 
+PlayerAffectionEndureText:
+	text "<USER>"
+	line "toughed it out so"
+
+	para "<PLAYER>"
+	line "wouldn't feel sad!"
+	prompt
+
+EnemyAffectionEndureText:
+	text "<USER>"
+	line "toughed it out so"
+
+	para "<ENEMY>"
+	line "wouldn't feel sad!"
+	prompt
+
+PlayerAffectionEvasionText:
+	text "<USER>"
+	line "avoided the move"
+
+	para "in time with"
+	line "<PLAYER>'s"
+	cont "shout!"
+	prompt
+
+EnemyAffectionEvasionText:
+	text "<USER>"
+	line "avoided the move"
+
+	para "in time with"
+	line "<ENEMY>'s"
+	cont "shout!"
+	prompt
+
+PlayerAffectionSelfCureText:
+	text "<USER>"
+	line "became healthy so"
+
+	para "<PLAYER>"
+	line "wouldn't worry!"
+	prompt
+
+EnemyAffectionSelfCureText:
+	text "<USER>"
+	line "became healthy so"
+
+	para "<ENEMY>"
+	line "wouldn't worry!"
+	prompt
+
+AffectionCriticalText: ; same for both player and enemy
+	text "<USER>"
+	line "landed a critical"
+
+	para "hit, wishing to be"
+	line "praised!"
+	prompt
+
 NotifyAirBalloonText:
 	text "<USER>"
 	line "floats in the air"
@@ -1423,12 +1493,6 @@ TraceActivationText:
 	cont ""
 	text_ram wStringBuffer1
 	text "!"
-	prompt
-
-TraceFailureText:
-	text "<USER>"
-	line "failed to trace"
-	cont "<TARGET>!"
 	prompt
 
 BattleText_IntimidateResisted:
@@ -1589,6 +1653,7 @@ GetOutText:
 
 CarrieFinalPkmnText:
 CalFinalPkmnText:
+JackyFinalPkmnText:
 	text "I still have one"
 	line "#mon!"
 	prompt
@@ -1720,7 +1785,7 @@ BlueFinalPkmnText:
 	line "knock you down!"
 	prompt
 
-RedFinalPkmnText:
+RedFinalPkmnText: ; text > text
 LeafFinalPkmnText:
 	text "………………"
 	prompt
@@ -1893,6 +1958,10 @@ PalmerFinalPkmnText:
 	text "Bravo!"
 	prompt
 
+ThortonFinalPkmnText:
+	text "Wow!"
+	prompt
+
 JessieJamesFinalPkmnText:
 	text "We have a proud"
 	line "tradition of fail-"
@@ -1992,12 +2061,12 @@ MayleneFinalPkmnText:
 	line "end, my friend!"
 	prompt
 
-SkylaFinalPkmnText:
-	text "This is my last"
-	line "#mon…"
+MarlonFinalPkmnText:
+	text "Awww, dude…"
 
-	para "But I'll never"
-	line "give up hope!"
+	para "I know I'm about"
+	line "done, but I'm still"
+	cont "just so pumped up!"
 	prompt
 
 ValerieFinalPkmnText:
@@ -2007,6 +2076,21 @@ ValerieFinalPkmnText:
 KukuiFinalPkmnText:
 	text "My soul burns hot,"
 	line "yeah!"
+	prompt
+
+PiersFinalPkmnText:
+	text "I don't do encores,"
+	line "get it?"
+
+	para "Not songs…"
+	line "Not moves…"
+	cont "Not #mon!"
+	prompt
+
+KatyFinalPkmnText:
+	text "Oh? How should I"
+	line "roll things out"
+	cont "from here?"
 	prompt
 
 BillFinalPkmnText:

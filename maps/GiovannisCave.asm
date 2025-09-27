@@ -15,9 +15,9 @@ GiovannisCave_MapScriptHeader:
 	bg_event 12,  6, BGEVENT_ITEM + BERSERK_GENE, EVENT_GIOVANNIS_CAVE_HIDDEN_BERSERK_GENE
 
 	def_object_events
-	object_event 15,  6, SPRITE_CELEBI, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_GIOVANNIS_CAVE_CELEBI
-	object_event 14,  5, SPRITE_LYRA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_GIOVANNIS_CAVE_LYRA
-	object_event 15,  3, SPRITE_GIOVANNI, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_GIOVANNIS_CAVE_GIOVANNI
+	object_event 15,  6, SPRITE_CELEBI, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_GIOVANNIS_CAVE_CELEBI
+	object_event 14,  5, SPRITE_LYRA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_GIOVANNIS_CAVE_LYRA
+	object_event 15,  3, SPRITE_GIOVANNI, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_GIOVANNIS_CAVE_GIOVANNI
 	smashrock_event 13, 6
 	smashrock_event 16, 2
 
@@ -73,7 +73,7 @@ GiovannisCaveCelebiEventScript:
 	special FadeOutPalettes
 	special LoadMapPalettes
 	pause 30
-	special FadeInPalettes
+	special FadeInPalettes_EnableDynNoApply
 	waitsfx
 	showemote EMOTE_SHOCK, PLAYER, 15
 	applymovement PLAYER, GiovannisCave_PlayerStepsAsideMovementData
@@ -93,7 +93,7 @@ GiovannisCaveCelebiEventScript:
 
 GiovannisCaveRadioScript:
 	checkevent EVENT_TIME_TRAVEL_FINISHED
-	iftrue .AfterTimeTravel
+	iftruefwd .AfterTimeTravel
 	jumptext GiovannisCaveRadioText
 .AfterTimeTravel
 	jumptext GiovannisCaveRadioAfterTimeTravelText

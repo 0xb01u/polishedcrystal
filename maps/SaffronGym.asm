@@ -44,21 +44,21 @@ SaffronGym_MapScriptHeader:
 	bg_event  8, 15, BGEVENT_READ, SaffronGymStatue
 
 	def_object_events
-	object_event  9,  8, SPRITE_SABRINA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, SaffronGymSabrinaScript, -1
-	object_event  2,  3, SPRITE_GRANNY, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerMediumDoris, -1
-	object_event  9,  3, SPRITE_PSYCHIC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPsychicLeon, -1
-	object_event 17,  3, SPRITE_PSYCHIC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPsychicJared, -1
-	object_event  2,  9, SPRITE_HEX_MANIAC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerHexManiacLuna, -1
-	object_event 17,  9, SPRITE_HEX_MANIAC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerHexManiacNatalie, -1
-	object_event  2, 15, SPRITE_PSYCHIC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPsychicFranklin, -1
-	object_event 17, 15, SPRITE_GRANNY, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerMediumRebecca, -1
-	object_event  9, 14, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, SaffronGymGuyScript, -1
+	object_event  9,  8, SPRITE_SABRINA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, SaffronGymSabrinaScript, -1
+	object_event  2,  3, SPRITE_GRANNY, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerMediumDoris, -1
+	object_event  9,  3, SPRITE_PSYCHIC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPsychicLeon, -1
+	object_event 17,  3, SPRITE_PSYCHIC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPsychicJared, -1
+	object_event  2,  9, SPRITE_HEX_MANIAC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerHexManiacLuna, -1
+	object_event 17,  9, SPRITE_HEX_MANIAC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerHexManiacNatalie, -1
+	object_event  2, 15, SPRITE_PSYCHIC, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerPsychicFranklin, -1
+	object_event 17, 15, SPRITE_GRANNY, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, 0, OBJECTTYPE_GENERICTRAINER, 3, GenericTrainerMediumRebecca, -1
+	object_event  9, 14, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, SaffronGymGuyScript, -1
 
 SaffronGymSabrinaScript:
 	faceplayer
 	opentext
 	checkflag ENGINE_SOULBADGE
-	iftrue .FightDone
+	iftruefwd .FightDone
 	writetext SabrinaIntroText
 	waitbutton
 	closetext
@@ -75,25 +75,8 @@ SaffronGymSabrinaScript:
 	setevent EVENT_BEAT_PSYCHIC_FRANKLIN
 	setevent EVENT_BEAT_MEDIUM_REBECCA
 	opentext
-	writetext ReceivedMarshBadgeText
-	playsound SFX_GET_BADGE
-	waitsfx
-	setflag ENGINE_SOULBADGE
-	readvar VAR_BADGES
-	ifequal 9, .FirstBadge
-	ifequal 10, .SecondBadge
-	ifequal 12, .LyrasEgg
-	sjump .FightDone
-.FirstBadge:
-	specialphonecall SPECIALCALL_FIRSTBADGE
-	sjump .FightDone
-.SecondBadge:
-	checkevent EVENT_GOT_GS_BALL_FROM_POKECOM_CENTER
-	iftrue .FightDone
-	specialphonecall SPECIALCALL_SECONDBADGE
-	sjump .FightDone
-.LyrasEgg:
-	specialphonecall SPECIALCALL_LYRASEGG
+	givebadge SOULBADGE, KANTO_REGION
+	callstd kantopostgymevents
 .FightDone:
 	checkevent EVENT_GOT_TM29_PSYCHIC
 	iftrue_jumpopenedtext SabrinaFightDoneText
@@ -106,12 +89,11 @@ SaffronGymSabrinaScript:
 	text "TM29 is Psychic."
 
 	para "It may lower the"
-	line "target's Spcl.Def."
+	line "target's Sp.Def."
 
 	para "You will become a"
 	line "celebrated and"
-
-	para "beloved Champion!"
+	cont "beloved Champion!"
 	done
 
 GenericTrainerMediumDoris:
@@ -180,9 +162,9 @@ SaffronGymGuyScript:
 	jumptextfaceplayer SaffronGymGuyText
 
 SaffronGymStatue:
-	gettrainername SABRINA, 1, $1
+	gettrainername SABRINA, 1, STRING_BUFFER_4
 	checkflag ENGINE_SOULBADGE
-	iftrue .Beaten
+	iftruefwd .Beaten
 	jumpstd gymstatue1
 .Beaten:
 	jumpstd gymstatue2
@@ -232,15 +214,6 @@ if DEF(FAITHFUL)
 	cont "the Marsh Badge."
 else
 	cont "the Soul Badge."
-endc
-	done
-
-ReceivedMarshBadgeText:
-	text "<PLAYER> received"
-if DEF(FAITHFUL)
-	line "the Marsh Badge."
-else
-	line "the Soul Badge."
 endc
 	done
 

@@ -15,13 +15,13 @@ SafariZoneWardensHome_MapScriptHeader:
 	bg_event  9,  0, BGEVENT_JUMPTEXT, SafariZonePhotoText
 
 	def_object_events
-	object_event  2,  4, SPRITE_CUTE_GIRL, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, WardensGranddaughter, -1
+	object_event  2,  4, SPRITE_CUTE_GIRL, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, WardensGranddaughter, -1
 
 WardensGranddaughter:
 	faceplayer
 	opentext
 	checkevent EVENT_TALKED_TO_WARDENS_GRANDDAUGHTER
-	iftrue .AlreadyMet
+	iftruefwd .AlreadyMet
 	writetext WardensGranddaughterText1
 	waitbutton
 	closetext

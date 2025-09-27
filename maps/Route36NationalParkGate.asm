@@ -20,18 +20,18 @@ Route36NationalParkGate_MapScriptHeader:
 	bg_event  6,  0, BGEVENT_JUMPTEXT, BugCatchingContestExplanationText
 
 	def_object_events
-	object_event  0,  3, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, Route36OfficerScriptContest, EVENT_ROUTE_36_NATIONAL_PARK_GATE_OFFICER_CONTEST_DAY
-	object_event  2,  5, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant1BScript, EVENT_BUG_CATCHING_CONTESTANT_1B
-	object_event  4,  5, SPRITE_BUG_MANIAC, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant2BScript, EVENT_BUG_CATCHING_CONTESTANT_2B
-	object_event  2,  6, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant3BScript, EVENT_BUG_CATCHING_CONTESTANT_3B
-	object_event  6,  5, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant4BScript, EVENT_BUG_CATCHING_CONTESTANT_4B
-	object_event  2,  7, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant5BScript, EVENT_BUG_CATCHING_CONTESTANT_5B
-	object_event  5,  6, SPRITE_CAMPER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant6BScript, EVENT_BUG_CATCHING_CONTESTANT_6B
-	object_event  3,  6, SPRITE_PICNICKER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant7BScript, EVENT_BUG_CATCHING_CONTESTANT_7B
-	object_event  4,  7, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant8BScript, EVENT_BUG_CATCHING_CONTESTANT_8B
-	object_event  6,  7, SPRITE_SCHOOLBOY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant9BScript, EVENT_BUG_CATCHING_CONTESTANT_9B
-	object_event  6,  6, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant10BScript, EVENT_BUG_CATCHING_CONTESTANT_10B
-	object_event  3,  2, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, Route36NationalParkGateOfficerScript, EVENT_ROUTE_36_NATIONAL_PARK_GATE_OFFICER_NOT_CONTEST_DAY
+	object_event  0,  3, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, Route36OfficerScriptContest, EVENT_ROUTE_36_NATIONAL_PARK_GATE_OFFICER_CONTEST_DAY
+	object_event  2,  5, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant1BScript, EVENT_BUG_CATCHING_CONTESTANT_1B
+	object_event  4,  5, SPRITE_BUG_MANIAC, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant2BScript, EVENT_BUG_CATCHING_CONTESTANT_2B
+	object_event  2,  6, SPRITE_ACE_TRAINER_M, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant3BScript, EVENT_BUG_CATCHING_CONTESTANT_3B
+	object_event  6,  5, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant4BScript, EVENT_BUG_CATCHING_CONTESTANT_4B
+	object_event  2,  7, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant5BScript, EVENT_BUG_CATCHING_CONTESTANT_5B
+	object_event  5,  6, SPRITE_CAMPER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant6BScript, EVENT_BUG_CATCHING_CONTESTANT_6B
+	object_event  3,  6, SPRITE_PICNICKER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant7BScript, EVENT_BUG_CATCHING_CONTESTANT_7B
+	object_event  4,  7, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant8BScript, EVENT_BUG_CATCHING_CONTESTANT_8B
+	object_event  6,  7, SPRITE_SCHOOLBOY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant9BScript, EVENT_BUG_CATCHING_CONTESTANT_9B
+	object_event  6,  6, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, 0, OBJECTTYPE_SCRIPT, 0, BugCatchingContestant10BScript, EVENT_BUG_CATCHING_CONTESTANT_10B
+	object_event  3,  2, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, Route36NationalParkGateOfficerScript, EVENT_ROUTE_36_NATIONAL_PARK_GATE_OFFICER_NOT_CONTEST_DAY
 
 	object_const_def
 	const ROUTE36NATIONALPARKGATE_OFFICER1
@@ -55,7 +55,7 @@ Route36NationalParkGateTrigger1:
 
 Route36NationalParkGateCheckIfContestRunning:
 	checkflag ENGINE_BUG_CONTEST_TIMER
-	iftrue .BugContestIsRunning
+	iftruefwd .BugContestIsRunning
 	setscene $0
 	endcallback
 
@@ -65,13 +65,13 @@ Route36NationalParkGateCheckIfContestRunning:
 
 Route36NationalParkGateCheckIfContestAvailable:
 	checkevent EVENT_WARPED_FROM_ROUTE_35_NATIONAL_PARK_GATE
-	iftrue .Return
+	iftruefwd .Return
 	readvar VAR_WEEKDAY
-	ifequal TUESDAY, .SetContestOfficer
-	ifequal THURSDAY, .SetContestOfficer
-	ifequal SATURDAY, .SetContestOfficer
+	ifequalfwd TUESDAY, .SetContestOfficer
+	ifequalfwd THURSDAY, .SetContestOfficer
+	ifequalfwd SATURDAY, .SetContestOfficer
 	checkflag ENGINE_BUG_CONTEST_TIMER
-	iftrue .SetContestOfficer
+	iftruefwd .SetContestOfficer
 	disappear ROUTE36NATIONALPARKGATE_OFFICER1
 	appear ROUTE36NATIONALPARKGATE_OFFICER2
 	endcallback
@@ -87,21 +87,27 @@ Route36NationalParkGateLeftTheContestEarly:
 	opentext
 	readvar VAR_CONTESTMINUTES
 	addval $1
-	getnum $0
+	setquantity
 	writetext Route35NationalParkGateOfficer1WantToFinishText
 	yesorno
-	iffalse .GoBackToContest
+	iffalsefwd .GoBackToContest
 	writetext Route36NationalParkGateOfficer1WaitHereForAnnouncementText
 	waitbutton
 	closetext
 	special Special_FadeBlackQuickly
 	special Special_ReloadSpritesNoPalettes
+	callasm DisableDynPalUpdates
 	scall .CopyContestants
 	disappear ROUTE36NATIONALPARKGATE_OFFICER1
 	appear ROUTE36NATIONALPARKGATE_OFFICER2
 	applymovement PLAYER, Route36NationalParkGatePlayerWaitWithContestantsMovement
 	pause 15
-	special Special_FadeInQuickly
+	callasm SetBlackObjectPals
+	callasm ClearSavedObjPals
+	callasm EnableDynPalUpdatesNoApply
+	callasm _UpdateSprites
+	callasm DelayFrame
+	callasm FadeInPalettes
 	jumpstd bugcontestresults
 
 .GoBackToContest:
@@ -117,43 +123,43 @@ Route36NationalParkGateLeftTheContestEarly:
 
 .CopyContestants:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_1A
-	iftrue .Not1
+	iftruefwd .Not1
 	appear ROUTE36NATIONALPARKGATE_BUG_CATCHER1
 .Not1:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_2A
-	iftrue .Not2
+	iftruefwd .Not2
 	appear ROUTE36NATIONALPARKGATE_BUG_MANIAC
 .Not2:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_3A
-	iftrue .Not3
+	iftruefwd .Not3
 	appear ROUTE36NATIONALPARKGATE_COOLTRAINER_M
 .Not3:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_4A
-	iftrue .Not4
+	iftruefwd .Not4
 	appear ROUTE36NATIONALPARKGATE_POKEFAN_M
 .Not4:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_5A
-	iftrue .Not5
+	iftruefwd .Not5
 	appear ROUTE36NATIONALPARKGATE_BUG_CATCHER2
 .Not5:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_6A
-	iftrue .Not6
+	iftruefwd .Not6
 	appear ROUTE36NATIONALPARKGATE_YOUNGSTER1
 .Not6:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_7A
-	iftrue .Not7
+	iftruefwd .Not7
 	appear ROUTE36NATIONALPARKGATE_LASS
 .Not7:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_8A
-	iftrue .Not8
+	iftruefwd .Not8
 	appear ROUTE36NATIONALPARKGATE_BUG_CATCHER3
 .Not8:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_9A
-	iftrue .Not9
+	iftruefwd .Not9
 	appear ROUTE36NATIONALPARKGATE_YOUNGSTER2
 .Not9:
 	checkevent EVENT_BUG_CATCHING_CONTESTANT_10A
-	iftrue .Not10
+	iftruefwd .Not10
 	appear ROUTE36NATIONALPARKGATE_YOUNGSTER3
 .Not10:
 	special UpdateSprites
@@ -161,12 +167,12 @@ Route36NationalParkGateLeftTheContestEarly:
 
 Route36OfficerScriptContest:
 	readvar VAR_WEEKDAY
-	ifequal SUNDAY, .ContestNotOn
-	ifequal MONDAY, .ContestNotOn
-	ifequal WEDNESDAY, .ContestNotOn
-	ifequal FRIDAY, .ContestNotOn
+	ifequalfwd SUNDAY, .ContestNotOn
+	ifequalfwd MONDAY, .ContestNotOn
+	ifequalfwd WEDNESDAY, .ContestNotOn
+	ifequalfwd FRIDAY, .ContestNotOn
 	checkflag ENGINE_DAILY_BUG_CONTEST
-	iftrue Route36Officer_ContestHasConcluded
+	iftruefwd Route36Officer_ContestHasConcluded
 	faceplayer
 	opentext
 	callstd daytotext
