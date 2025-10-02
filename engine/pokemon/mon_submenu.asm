@@ -373,9 +373,9 @@ AddLearnableTMHMItems:
 	cp 4
 	jr z, .end
 	; TELEPORT:
-.teleport ; Omitted to make things more interesting
+.teleport ; Omitted as balancing choice (mons must know Teleport to use it).
 	; FRESH_SNACK:
-.fresh_snack ; Omitted to make things more interesting.
+.fresh_snack ; Omitted as balancing choice (mons must know Fresh Snack to use it).
 	; HEADBUTT:
 .headbutt
 	; ROCK_SMASH:
